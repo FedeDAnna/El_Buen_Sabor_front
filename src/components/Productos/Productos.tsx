@@ -3,6 +3,8 @@ import ProductosTabla from './ProductosTabla';
 import '../../estilos/Productos.css';
 
 export default function Productos() {
+
+  
   return (
     <section className="products-page">
       <div className="header">

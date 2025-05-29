@@ -5,6 +5,6 @@ export default class Categoria{
     denominacion: string = "";
     
     categoria_padre?:Categoria;
-    categorias_hijas : Categoria[] = [];
-    articulos: Articulo[]=[];
+    categorias_hijas ?: Categoria[] = [];
+    articulos ?: Articulo[]=[];
 }

@@ -1,37 +1,41 @@
 // src/components/Productos/ProductosTabla.tsx
-import React from 'react';
+import {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import '../../estilos/ProductosTabla.css';
-import type Articulo from '../../entidades/Articulo';
+import type Categoria from '../../entidades/Categoria';
+import {getCategoriasManufacturados} from '../../services/FuncionesApi';
 
-interface Categoria {
-  id: number;
-  denominacion: string;
-  articulos: Articulo[];
-}
 
-const mockData: Categoria[] = [
-  { id: 128, denominacion: 'Hamburguesas',articulos: [] },
-  /* … */
-];
 
-export default function ProductosTabla() {
+
+
+export default function ProductosTabla( ) {
+  const [categorias, setCategorias] = useState<Categoria[]>([]);
+
+  useEffect(() => {
+    const getCategoriaManufacturado = async () => {
+    const response:Categoria[] = await getCategoriasManufacturados();
+    setCategorias(response);};
+    getCategoriaManufacturado();
+  }, [])
+  
+
   return (
     <table className="products-table">
       <thead>
         <tr>
           <th>Código</th>
           <th>Categoría</th>
-          <th>Detalle</th>
+          
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        {mockData.map((c) => (
+        {categorias.map((c) => (
           <tr key={c.id}>
             <td>{c.id}</td>
             <td>{c.denominacion}</td>
-            <td>Detalle</td>
+            
             <td>
               <Link to={`/admin/productos/${c.id}`} title="Ver productos">
                 <span role="img" aria-label="ver">👁️</span>
