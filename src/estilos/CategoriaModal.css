@@ -1,0 +1,120 @@
+/* src/componentes/Modal/CategoriaModal.css */
+
+.cm-overlay {
+  position: fixed;
+  top: 0; left: 0; right:0; bottom:0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cm-modal {
+  background: #fff;
+  border-radius: 8px;
+  width: 600px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.cm-header {
+  background: #ffc107;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cm-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.cm-body {
+  padding: 1rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.cm-nodo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;   
+  flex-direction: column;
+}
+
+.cm-nodo input {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  margin-right: 0.5rem;
+}
+
+.cm-add-btn {
+  background: #ffc107;   /* amarillo */
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+
+.cm-footer {
+  padding: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  border-top: 1px solid #ddd;
+}
+
+.cm-cancel {
+  background: #ccc;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cm-save {
+  background: #ffc107;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cm-subheader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+}
+.cm-add-root-btn {
+  background: #e74c3c;      /* rojo */
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.cm-root-input {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+}
+
+.cm-add-sibling-btn {
+  background: #e74c3c;   /* rojo */
+  color: #fff;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+  cursor: pointer;
+}

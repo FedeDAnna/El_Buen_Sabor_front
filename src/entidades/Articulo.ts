@@ -8,7 +8,7 @@ export default class Articulo {
     precio_venta: number = 0;
     imagen?: Imagen;
     unidad_de_medida?: UnidadDeMedida;
-    categoria?:Categoria[]=[];
+    
 }
 
 

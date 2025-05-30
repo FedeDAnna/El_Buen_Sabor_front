@@ -1,10 +1,12 @@
 import type Articulo from "./Articulo";
+import type TipoCategoria from "./TipoCategoria";
+
 
 export default class Categoria{
-    id: number =0;
+    id?: number;
     denominacion: string = "";
     
-    categoria_padre?:Categoria;
-    categorias_hijas ?: Categoria[] = [];
+    categorias_hijas?:Categoria[]=[];
     articulos ?: Articulo[]=[];
+    tipo_categoria ?: TipoCategoria;
 }
