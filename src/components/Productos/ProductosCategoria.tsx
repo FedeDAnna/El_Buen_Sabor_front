@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-//import { fetchArticulosPorCategoria } from '../../services/FuncionesApi';
 import '../../estilos/Productos.css';           // reutiliza estilos de sección
 import '../../estilos/ProductosTabla.css';      // o crea uno nuevo si lo prefieres
 import { getArticulosManufacturadoPorCategoria } from '../../services/FuncionesApi';
 import type ArticuloManufacturado from '../../entidades/ArticuloManufacturado';
+import ProductoManufacturadoModal from './ProductoManufacturadoModal';
 
 
 export default function ProductosCategoria() {
@@ -12,6 +12,8 @@ export default function ProductosCategoria() {
   const [articulos, setArticulos] = useState<ArticuloManufacturado[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string|null>(null);
+  const [prodModalOpen, setProdModalOpen] = useState(false)
+  const [selectedCatId] = useState(Number(categoriaId))
 
   useEffect(() => {
     if (!categoriaId) return;
@@ -31,7 +33,17 @@ export default function ProductosCategoria() {
       <div className="header">
         <h2>Productos de: CATEGORIA</h2>
         
-        <button className="btn-add">Agregar +</button>
+        <button onClick={() => setProdModalOpen(true)}>Agregar +</button>
+        {prodModalOpen && (
+          <ProductoManufacturadoModal
+            categoriaId={selectedCatId}
+            onClose={() => setProdModalOpen(false)}
+            onSave={newProd => {
+              setArticulos(prev => [...prev, newProd])
+              setProdModalOpen(false)
+            }}
+          />
+        )}
       </div>
       <table className="products-table">
         <thead>

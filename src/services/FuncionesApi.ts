@@ -1,3 +1,4 @@
+import type ArticuloInsumo from "../entidades/ArticuloInsumo";
 import type ArticuloManufacturado from "../entidades/ArticuloManufacturado";
 import type Categoria from "../entidades/Categoria";
 import type TipoCategoria from "../entidades/TipoCategoria";
@@ -31,7 +32,6 @@ export async function guardarCategoriaConHijos(
   if (!res.ok) throw new Error(`Error ${res.status} guardando categorías`)
   return res.json()
 }
-
 
  export async function getCategoriasManufacturados(): Promise<Categoria[]> {
    const res = await fetch(`${API_URL}/categorias/manufacturados`,
@@ -71,4 +71,39 @@ export async function getArticulosManufacturadoPorCategoria(idCategoria: number)
     ...inst,
     id: inst.id
   }));
+}
+
+/**
+ * Carga todos los insumos disponibles
+ */
+export async function fetchInsumos(): Promise<ArticuloInsumo[]> {
+  const res = await fetch(`${API_URL}/articulos_insumos`, {
+    credentials: 'include',
+    headers: { 'Authorization': `Basic ${basic}` }
+  });
+  if (!res.ok) throw new Error(`Error ${res.status} cargando insumos`);
+  return res.json();
+}
+
+/**
+ * Guarda un ArticuloManufacturado bajo la categoría indicada
+ */
+export async function saveArticuloManufacturado(
+  categoriaId: number,
+  articulo: Partial<ArticuloManufacturado>
+): Promise<ArticuloManufacturado> {
+  const res = await fetch(
+    `${API_URL}/categorias/${categoriaId}/articulos_manufacturados`,
+    {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Authorization': `Basic ${basic}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(articulo),
+    }
+  );
+  if (!res.ok) throw new Error(`Error ${res.status} guardando producto`);
+  return res.json();
 }

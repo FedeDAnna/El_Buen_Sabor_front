@@ -1,12 +1,13 @@
 import Articulo from "./Articulo";
-import type PedidoDetalle from "./PedidoDetalle";
+import type ArticuloManufacturadoDetalle from "./ArticuloManufacturadoDetalle";
+
 
 export default class ArticuloManufacturado extends Articulo{
     
     descripcion: string = "";
-    tiempo_estimado_en_minutos: string ="";
+    tiempo_estimado_en_minutos: number =0;
     preparacion:string = "";
     
-    detalles: PedidoDetalle[] = [];
+    detalles: ArticuloManufacturadoDetalle[] = [];
 
 }

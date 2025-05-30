@@ -1,11 +1,10 @@
 // src/components/Modal/CategoriaModal.tsx
-import React, { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import { v4 as uuid }      from 'uuid'
 import Categoria           from '../../entidades/Categoria'
 import TipoCategoria       from '../../entidades/TipoCategoria'
-import '../../estilos/CategoriaModal.css'
 import { fetchTiposCategoria } from '../../services/FuncionesApi'
-
+import '../../estilos/CategoriaModal.css'
 
 export type CategoriaNode = {
   id: string
@@ -30,7 +29,7 @@ export default function CategoriaModal({ onClose, onSave }: Props) {
     fetchTiposCategoria()
       .then(setTipos)
       .catch(e => setTypeError(e.message))
-      .finally(() => {setLoadingTypes(false);console.log(tipos)})
+      .finally(() => setLoadingTypes(false))
   }, [])
 
   // Estado del árbol en memoria
@@ -51,14 +50,18 @@ export default function CategoriaModal({ onClose, onSave }: Props) {
     return { ...nodo, hijos: nodo.hijos.map(h => updateNombre(id, nombre, h)) }
   }
 
-  // Ajuste: permitir tipo null
-  const updateTipo = (
-    id: string,
-    tipoSeleccionado: TipoCategoria | null,
-    nodo: CategoriaNode
-  ): CategoriaNode => {
-    if (nodo.id === id) return { ...nodo, tipo: tipoSeleccionado }
-    return { ...nodo, hijos: nodo.hijos.map(h => updateTipo(id, tipoSeleccionado, h)) }
+  // Aplica tipo a toda la subrama
+  const applyTipoRecursively = (
+    nodo: CategoriaNode,
+    tipo: TipoCategoria
+  ): CategoriaNode => ({
+    ...nodo,
+    tipo,
+    hijos: nodo.hijos.map(h => applyTipoRecursively(h, tipo)),
+  })
+
+  const setTipoGlobal = (tipo: TipoCategoria) => {
+    setRoot(r => applyTipoRecursively(r, tipo))
   }
 
   const addHijo = (
@@ -70,7 +73,7 @@ export default function CategoriaModal({ onClose, onSave }: Props) {
         ...nodo,
         hijos: [
           ...nodo.hijos,
-          { id: uuid(), nombre: '', hijos: [], tipo: null },
+          { id: uuid(), nombre: '', hijos: [], tipo: nodo.tipo },
         ],
       }
     }
@@ -91,32 +94,25 @@ export default function CategoriaModal({ onClose, onSave }: Props) {
         onChange={e => setRoot(r => updateNombre(nodo.id, e.target.value, r))}
       />
 
-      {/* Select de tipo */}
-      <select
-        disabled={loadingTypes}
-        value={nodo.tipo?.id ?? ''}
-        onChange={e => {
-          const found = tipos.find(t => t.id === Number(e.target.value)) || null
-          setRoot(r => updateTipo(nodo.id, found, r))
-        }}
-        style={{ marginLeft: 8 }}
-      >
-        <option value="" disabled>
-          {loadingTypes ? 'Cargando tipos...' : 'Seleccione un tipo'}
-        </option>
-        {tipos.map(t => (
-          <option key={t.id} value={t.id}>{t.descripcion}</option>
-        ))}
-      </select>
-
-      {/* Descripción de solo lectura */}
-      <input
-        type="text"
-        readOnly
-        placeholder="Descripción del Tipo"
-        value={nodo.tipo?.descripcion ?? ''}
-        style={{ marginLeft: 8 }}
-      />
+      {/* Select de tipo solo en raíz */}
+      {nivel === 0 && (
+        <select
+          disabled={loadingTypes}
+          value={root.tipo?.id ?? ''}
+          onChange={e => {
+            const tipoSel = tipos.find(t => t.id === Number(e.target.value))
+            if (tipoSel) setTipoGlobal(tipoSel)
+          }}
+          style={{ marginLeft: 8 }}
+        >
+          <option value="" disabled>
+            {loadingTypes ? 'Cargando tipos...' : 'Seleccione un tipo'}
+          </option>
+          {tipos.map(t => (
+            <option key={t.id} value={t.id}>{t.descripcion}</option>
+          ))}
+        </select>
+      )}
 
       {/* Añadir hijo */}
       <button
@@ -146,8 +142,8 @@ export default function CategoriaModal({ onClose, onSave }: Props) {
   // Mapear al objeto Categoria
   const mapNodeToCategoria = (node: CategoriaNode): Categoria => {
     const cat = new Categoria()
-    cat.denominacion    = node.nombre
-    cat.tipo_categoria  = node.tipo ?? new TipoCategoria()
+    cat.denominacion     = node.nombre
+    cat.tipo_categoria   = node.tipo ?? new TipoCategoria()
     cat.categorias_hijas = node.hijos.map(mapNodeToCategoria)
     cat.articulos        = []
     return cat
@@ -170,7 +166,7 @@ export default function CategoriaModal({ onClose, onSave }: Props) {
           <button className="cm-cancel" onClick={onClose}>Cancelar</button>
           <button
             className="cm-save"
-            disabled={!root.nombre.trim() || root.tipo === null}
+            disabled={!root.nombre.trim() || !root.tipo}
             onClick={() => onSave(mapNodeToCategoria(root))}
           >
             Guardar

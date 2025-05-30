@@ -1,19 +1,37 @@
 // src/components/ProductsPage/ProductsPage.tsx
 import ProductosTabla from './ProductosTabla';
 import '../../estilos/Productos.css';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import CategoriaModal from './CategoriaModal';
-import { guardarCategoriaConHijos } from '../../services/FuncionesApi';
+import { getCategoriasManufacturados, guardarCategoriaConHijos } from '../../services/FuncionesApi';
 import type Categoria from '../../entidades/Categoria';
 
 export default function Productos() {
+  // 1) Estado de la lista aquí
+  const [categorias, setCategorias] = useState<Categoria[]>([])
   const [modalAbierto, setModalAbierto] = useState(false)
 
+  // 2) Función para recargar las categorías
+  const reload = useCallback(async () => {
+    try {
+      const data = await getCategoriasManufacturados()
+      setCategorias(data)
+    } catch (e) {
+      console.error('No se pudieron cargar categorías:', e)
+    }
+  }, [])
+
+  // 3) Al montar, carga inicial
+  useEffect(() => {
+    reload()
+  }, [reload])
+
+  // 4) Al salvar una nueva categoría, guardamos y recargamos
   const handleSave = async (cat: Categoria) => {
     try {
-      const creada = await guardarCategoriaConHijos(cat)
-      console.log('Guardado:', creada)
-      // recarga o muestra feedback…
+      await guardarCategoriaConHijos(cat)
+      // Después de guardar, recargamos la lista
+      await reload()
     } catch (e) {
       console.error(e)
       alert('Falló al guardar la categoría')
@@ -30,7 +48,10 @@ export default function Productos() {
           Agregar +
         </button>
       </div>
-      <ProductosTabla />
+
+      {/* 5) Pasamos la lista ya cargada */}
+      <ProductosTabla categorias={categorias} />
+
       {modalAbierto && (
         <CategoriaModal
           onClose={() => setModalAbierto(false)}
