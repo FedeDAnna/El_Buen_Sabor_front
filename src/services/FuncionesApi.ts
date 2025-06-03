@@ -93,9 +93,7 @@ export async function fetchInsumos(): Promise<ArticuloInsumo[]> {
 /**
  * Guarda un ArticuloManufacturado bajo la categoría indicada
  */
-export async function saveArticuloManufacturado(
-  articulo: ArticuloManufacturado
-): Promise<ArticuloManufacturado> {
+export async function saveArticuloManufacturado(articulo: ArticuloManufacturado): Promise<ArticuloManufacturado> {
 
   console.log("Dentro de APIS FUNCIONES")
 
@@ -112,8 +110,6 @@ export async function saveArticuloManufacturado(
     }
   );
   if (!res.ok) throw new Error(`Error ${res.status} guardando producto`);
-  const data = await res.json();
-  console.log("DATA: " , data)
   return res.json();
 }
 
@@ -132,5 +128,15 @@ export async function fetchUnidadesDeMedida(): Promise<UnidadDeMedida[]> {
     headers: { 'Authorization': `Basic ${basic}` }
   })
   if (!res.ok)throw new Error(`Error ${res.status} al traer la categoria`)
+  return res.json()
+}
+
+export async function deleteProductosById(idProduc :Number): Promise<boolean> {
+  const res = await fetch(`${API_URL}/articulos_manufacturados/${idProduc}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: { 'Authorization': `Basic ${basic}` }
+  })
+  if (!res.ok)throw new Error(`Error ${res.status} al borrar el producto manufacturado`)
   return res.json()
 }
