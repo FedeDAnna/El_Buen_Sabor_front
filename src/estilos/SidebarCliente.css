@@ -1,0 +1,96 @@
+/* src/estilos/Sidebar.css */
+
+/* Overlay que cubre toda la pantalla */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: -100vw;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  /* Incrementamos bastante el z-index */
+  z-index: 2000;
+  transition: left 0.3s ease-out;
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* Cuando está abierto, left: 0 para que se vea el overlay */
+.sidebar-overlay.open {
+  left: 0;
+}
+
+
+/* El contenedor real del sidebar */
+.sidebar {
+  background: #fff;
+  width: 280px;
+  max-width: 80%;
+  height: 100%;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-top: 1rem;
+  /* Aseguramos que el sidebar interior esté por encima del overlay semitransparente */
+  z-index: 2001;
+}
+
+/* Botón para cerrar (la X) */
+.sb-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333;
+}
+
+/* Navegación interna */
+.sb-nav {
+  margin-top: 2rem;
+  flex: 1; /* para que ocupe todo el espacio vertical */
+}
+
+.sb-nav ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.sb-nav li {
+  margin: 0;
+}
+
+/* Estilo de cada link del menú */
+.sb-nav a {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.sb-nav a:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+.sb-nav a.active {
+  background: rgba(0,0,0,0.1);
+}
+
+/* Icono dentro del link */
+.sb-icon {
+  margin-right: 0.75rem;
+  font-size: 1.1rem;
+}
+
+/* Separadores */
+.sb-nav hr {
+  margin: 0.5rem 1rem;
+  border: none;
+  border-top: 1px solid #eee;
+}

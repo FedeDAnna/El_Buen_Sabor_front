@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Editor } from '@tinymce/tinymce-react'
 import {
-  fetchCategoriaById,
+  
   fetchInsumos,
   fetchUnidadesDeMedida,
   saveArticuloManufacturado,

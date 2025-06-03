@@ -1,0 +1,110 @@
+/* src/estilos/CategoriaProductosPage.css */
+
+.cpp-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.cpp-carrusel-wrapper {
+  background-color: #fafafa;
+  padding: 1rem 0;
+}
+
+.cpp-content {
+  flex: 1;
+  padding: 1rem;
+}
+
+.cpp-title {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.cpp-search-bar {
+  margin: 0 auto 1.5rem;
+  max-width: 500px;
+  text-align: center;
+}
+
+.cpp-search-bar input {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.cpp-loading,
+.cpp-error,
+.cpp-no-results {
+  text-align: center;
+  color: #555;
+  margin-top: 2rem;
+}
+
+.cpp-grid {
+  display: grid;
+  gap: 1rem;
+  /* 4 columnas en desktop, 2 en tablet, 1 en móvil */
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.cpp-card {
+  text-decoration: none;
+  color: #333;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.cpp-card:hover {
+  transform: translateY(-4px);
+}
+
+.cpp-card-img {
+  width: 100%;
+  height: 140px;
+  background: #f2f2f2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.cpp-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cpp-card-noimg {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.cpp-card-body {
+  padding: 0.75rem 0.5rem;
+  background: #f9f9f9;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cpp-card-name {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.cpp-card-price {
+  font-size: 0.95rem;
+  color: #e74c3c;
+  font-weight: 600;
+}

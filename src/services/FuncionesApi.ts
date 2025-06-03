@@ -7,6 +7,23 @@ import type UnidadDeMedida from "../entidades/UnidadDeMedida";
 const API_URL = "http://localhost:8080";
 const basic   = btoa(`admin:admin123`);
 
+export async function getArticuloManufacturadoById(
+  id: number
+): Promise<ArticuloManufacturado> {
+  const res = await fetch(`${API_URL}/articulos_manufacturados/${id}`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Authorization': `Basic ${basic}`,
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`Error ${res.status} obteniendo el artículo con ID ${id}`);
+  }
+  return res.json();
+}
+
 // Carga los tipos disponibles	
 export async function fetchTiposCategoria(): Promise<TipoCategoria[]> {
   const res = await fetch(`${API_URL}/tipo_categorias`, {
