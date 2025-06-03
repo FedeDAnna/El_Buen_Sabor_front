@@ -4,6 +4,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import AdminPantalla from '../src/components/AdminPantalla'
 import Productos from './components/Productos/Productos';
 import ProductosCategoria from './components/Productos/ProductosCategoria';
+import Pedidos from './components/Pedidos/Pedidos';
+import Estadisticas from './components/Estadisticas/Estadisticas';
+
 
 export default function App() {
   return (
@@ -28,6 +31,25 @@ export default function App() {
             </AdminPantalla>
           }
         />
+
+        <Route
+          path="/admin/ordenes"
+          element={
+            <AdminPantalla>
+              <Pedidos />
+            </AdminPantalla>
+          }
+        />
+
+        <Route
+          path="/admin/stadisticas"
+          element={
+            <AdminPantalla>
+              <Estadisticas />
+            </AdminPantalla>
+          }
+        />
+
 
         <Route path="*" element={<p>Página no encontrada</p>} />
       </Routes>

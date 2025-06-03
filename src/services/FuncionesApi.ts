@@ -1,6 +1,8 @@
 import type ArticuloInsumo from "../entidades/ArticuloInsumo";
 import type ArticuloManufacturado from "../entidades/ArticuloManufacturado";
 import type Categoria from "../entidades/Categoria";
+import type Pedido from "../entidades/Pedido";
+
 import type TipoCategoria from "../entidades/TipoCategoria";
 
 const API_URL = "http://localhost:8080";
@@ -105,5 +107,19 @@ export async function saveArticuloManufacturado(
     }
   );
   if (!res.ok) throw new Error(`Error ${res.status} guardando producto`);
+  return res.json();
+}
+
+export async function getPedidos(): Promise<Pedido[]> {
+  const res = await fetch(`${API_URL}/pedidos`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Authorization': `Basic ${basic}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!res.ok) throw new Error(`Error ${res.status} cargando pedidos`);
   return res.json();
 }

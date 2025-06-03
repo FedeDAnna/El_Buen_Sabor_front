@@ -14,7 +14,7 @@ export default class Pedido{
     total_costo: number =0;
     estado_pedido?: Estado;
     tipo_envio?: TipoEnvio;
-    forma_pago?: FormaPago;
+    forma_pago?: FormaPago; 
     fecha_pedido : Date =  new Date();
 
     domicilio?: Domicilio;

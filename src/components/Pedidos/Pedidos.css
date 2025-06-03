@@ -1,0 +1,74 @@
+.pedidos-page {
+  padding: 1rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.acciones-superior {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.input-buscar {
+  padding: 0.4rem;
+}
+
+.btn-buscar, .btn-agregar {
+  padding: 0.4rem 0.6rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  background-color: #f4c542;
+  color: black;
+  font-weight: bold;
+}
+
+.pedidos-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1rem;
+}
+
+.pedidos-table thead {
+  background-color: #e0e0e0;
+}
+
+.pedidos-table th,
+.pedidos-table td {
+  text-align: left;
+  padding: 0.75rem 1rem;
+}
+
+.pedidos-table th {
+  border-bottom: 2px solid #ccc;
+}
+
+.pedidos-table tbody tr {
+  background-color: #f8f8f8;
+}
+
+.pedidos-table tbody tr:nth-child(even) {
+  background-color: #eaeaea;
+}
+
+.pedidos-table tbody tr:hover {
+  background-color: #ddd;
+}
+
+.pedidos-table td button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  font-size: 1.1rem;
+  transition: color 0.2s;
+}
+
+.pedidos-table td button:hover {
+  color: #b52e31;
+}
