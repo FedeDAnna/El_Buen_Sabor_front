@@ -1,4 +1,4 @@
-// src/components/Productos/ProductosTabla.tsx
+
 
 import { Link } from 'react-router-dom';
 import '../../estilos/ProductosTabla.css';

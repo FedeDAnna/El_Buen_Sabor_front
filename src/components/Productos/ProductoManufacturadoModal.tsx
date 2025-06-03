@@ -1,11 +1,14 @@
-// src/components/Modal/ProductoManufacturadoModal.tsx
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect,  } from 'react'
+import ChangeEvent from 'react';
 import { Editor } from '@tinymce/tinymce-react'
-import { fetchInsumos, saveArticuloManufacturado } from '../../services/FuncionesApi'
+import { fetchCategoriaById, fetchInsumos, fetchUnidadesDeMedida, saveArticuloManufacturado } from '../../services/FuncionesApi'
 import ArticuloManufacturado from '../../entidades/ArticuloManufacturado'
 import ArticuloInsumo from '../../entidades/ArticuloInsumo'
 import ArticuloManufacturadoDetalle from '../../entidades/ArticuloManufacturadoDetalle'
 import '../../estilos/ProductoModal.css'
+import Imagen from '../../entidades/Imagen'
+import Categoria from '../../entidades/Categoria'
+import UnidadDeMedida from '../../entidades/UnidadDeMedida';
 
 interface Props {
   categoriaId: number
@@ -14,14 +17,20 @@ interface Props {
 }
 
 export default function ProductoManufacturadoModal({ categoriaId, onClose, onSave }: Props) {
-  // Campos básicos
+  
   const [denominacion, setDenominacion] = useState('')
   const [descripcion, setDescripcion] = useState('')
   const [tiempo, setTiempo] = useState<number>(0)
   const [precio, setPrecio] = useState<number>(0)
   const [preparacion, setPreparacion] = useState('')
+  const [imagenData, setImagenData] = useState<string>('') // base64
+  const [categoria, setCategoria] = useState<Categoria>();
 
-  // Catálogo de insumos
+    // Unidad de medida para el producto manufacturado
+  const [unidades, setUnidades] = useState<UnidadDeMedida[]>([])
+  const [selectedUnidadId, setSelectedUnidadId] = useState<number | ''>('')
+  
+
   const [insumos, setInsumos] = useState<ArticuloInsumo[]>([])
   const [loadingInsumos, setLoadingInsumos] = useState(true)
 
@@ -29,15 +38,27 @@ export default function ProductoManufacturadoModal({ categoriaId, onClose, onSav
   const [detalles, setDetalles] = useState<ArticuloManufacturadoDetalle[]>([])
 
   useEffect(() => {
+      if (!categoriaId) return;
+      fetchCategoriaById(Number(categoriaId))
+        .then(setCategoria)
+        .catch((e) => (console.error(e.message)))
+   }, [categoriaId]);
+
+  useEffect(() => {
     fetchInsumos()
       .then(setInsumos)
       .catch(console.error)
       .finally(() => setLoadingInsumos(false))
+
+     fetchUnidadesDeMedida()
+      .then(setUnidades)
+      .catch(console.error)
+       
   }, [])
 
   const addDetalle = () => {
     const nuevo = new ArticuloManufacturadoDetalle()
-    nuevo.id = 0
+    
     nuevo.cantidad = 0
     setDetalles(ds => [...ds, nuevo])
   }
@@ -63,27 +84,51 @@ export default function ProductoManufacturadoModal({ categoriaId, onClose, onSav
 
   const canSave = () => {
     return (
-      denominacion.trim() && descripcion.trim() && tiempo > 0 && precio > 0 &&
-      detalles.length > 0 && detalles.every(d => d.articulo_insumo && d.cantidad > 0)
+      denominacion.trim() && descripcion.trim() && tiempo > 0 && precio > 0 
     )
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement> ) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        setImagenData(reader.result)
+      }
+    }
+    reader.readAsDataURL(file)
   }
 
   const handleSubmit = async () => {
     if (!canSave()) return
-    // Construir ArticuloManufacturado
+    // Construir instancia de ArticuloManufacturado
     const art = new ArticuloManufacturado()
     art.denominacion = denominacion
     art.descripcion = descripcion
     art.tiempo_estimado_en_minutos = tiempo
     art.precio_venta = precio
     art.preparacion = preparacion
-    // asociar detalles
-    art.detalles = detalles.map(d => {
-      // cada d es ArticuloManufacturadoDetalle con articulo_insumo
-      return d
-    })
+    if (selectedUnidadId !== '') {
+      
+      const unidad = unidades.find(u => u.id === selectedUnidadId)
+      if (unidad) art.unidad_de_medida = unidad
+    }
+    // Asociar imagen si existe
+    if (imagenData) {
+      const img = new Imagen()
+      img.src = imagenData
+      img.alt = denominacion
+      art.imagen = img
+    }
+    // Asociar categoría
+    
+    art.categoria = categoria
+    // Asociar detalles (instancias completas utilizan toJSON)
+    art.detalles = detalles
+
     try {
-      const created = await saveArticuloManufacturado(categoriaId, art)
+      const created = await saveArticuloManufacturado(art)
       onSave(created)
     } catch (e) {
       console.error(e)
@@ -113,26 +158,47 @@ export default function ProductoManufacturadoModal({ categoriaId, onClose, onSav
           />
           <label>Tiempo en minutos:</label>
           <input
-            type="text"
+            type="number"
             placeholder="Tiempo en minutos"
-            value={tiempo}
+            value={tiempo || ''}
             onChange={e => setTiempo(Number(e.target.value))}
           />
           <label>Precio Venta:</label>
           <input
-            type="text"
+            type="number"
             placeholder="Precio Venta"
-            value={precio}
+            value={precio || ''}
             onChange={e => setPrecio(Number(e.target.value))}
           />
+          <label>Unidad de Medida:</label>
+
+          <select
+            value={selectedUnidadId}
+            onChange={e => setSelectedUnidadId(Number(e.target.value))}
+            
+          >
+            <option value="" disabled>Seleccione una unidad</option>
+            {unidades.map(u => (
+              <option key={u.id} value={u.id}>{u.denominacion}</option>
+            ))}
+          </select>
+
+          <label>Preparación:</label>
           <div className="pm-editor">
             <Editor
               init={{ height: 200, menubar: false }}
-              initialValue='<p>INGRESE SU RECETA!</p>'
               value={preparacion}
               onEditorChange={setPreparacion}
             />
           </div>
+          
+
+          <label>Imagen:</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+          />
 
           <div className="pm-insumos-header">
             <h3>Lista Insumos</h3>

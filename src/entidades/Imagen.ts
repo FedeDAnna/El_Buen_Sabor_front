@@ -1,5 +1,5 @@
 export default class Imagen {
-    id: number =0;
+    id?: number;
     src: string = "";   
     alt: string = "";
 }

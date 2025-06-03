@@ -2,6 +2,7 @@ import type ArticuloInsumo from "../entidades/ArticuloInsumo";
 import type ArticuloManufacturado from "../entidades/ArticuloManufacturado";
 import type Categoria from "../entidades/Categoria";
 import type TipoCategoria from "../entidades/TipoCategoria";
+import type UnidadDeMedida from "../entidades/UnidadDeMedida";
 
 const API_URL = "http://localhost:8080";
 const basic   = btoa(`admin:admin123`);
@@ -28,9 +29,11 @@ export async function guardarCategoriaConHijos(
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(categoria),
-  })
-  if (!res.ok) throw new Error(`Error ${res.status} guardando categorías`)
-  return res.json()
+  });
+  if (!res.ok) throw new Error(`Error ${res.status} guardando categorías`);
+  // Sólo parseamos JSON una vez
+  const data = await res.json();
+  return data;
 }
 
  export async function getCategoriasManufacturados(): Promise<Categoria[]> {
@@ -54,7 +57,8 @@ export async function guardarCategoriaConHijos(
 }
 
 export async function getArticulosManufacturadoPorCategoria(idCategoria: number): Promise<ArticuloManufacturado[]>{
-    const res = await fetch(`${API_URL}/articulos-manufacturados/byCategoria/${idCategoria}`,
+    
+    const res = await fetch(`${API_URL}/articulos_manufacturados/byCategoria/${idCategoria}`,
     {
     method: 'GET',
     credentials: 'include',  
@@ -66,6 +70,7 @@ export async function getArticulosManufacturadoPorCategoria(idCategoria: number)
   );
   if (!res.ok) throw new Error("Error al obtener articulos");
   const data = await res.json();
+  
 
   return data.map((inst: ArticuloManufacturado) => ({
     ...inst,
@@ -89,11 +94,13 @@ export async function fetchInsumos(): Promise<ArticuloInsumo[]> {
  * Guarda un ArticuloManufacturado bajo la categoría indicada
  */
 export async function saveArticuloManufacturado(
-  categoriaId: number,
-  articulo: Partial<ArticuloManufacturado>
+  articulo: ArticuloManufacturado
 ): Promise<ArticuloManufacturado> {
+
+  console.log("Dentro de APIS FUNCIONES")
+
   const res = await fetch(
-    `${API_URL}/categorias/${categoriaId}/articulos_manufacturados`,
+    `${API_URL}/articulos_manufacturados`,
     {
       method: 'POST',
       credentials: 'include',
@@ -105,5 +112,25 @@ export async function saveArticuloManufacturado(
     }
   );
   if (!res.ok) throw new Error(`Error ${res.status} guardando producto`);
+  const data = await res.json();
+  console.log("DATA: " , data)
   return res.json();
+}
+
+export async function fetchCategoriaById(idCategoria: number): Promise<Categoria> {
+  const res = await fetch(`${API_URL}/categorias/${idCategoria}`, {
+    credentials: 'include',
+    headers: { 'Authorization': `Basic ${basic}` }
+  })
+  if (!res.ok)throw new Error(`Error ${res.status} al traer la categoria`)
+  return res.json()
+}
+
+export async function fetchUnidadesDeMedida(): Promise<UnidadDeMedida[]> {
+  const res = await fetch(`${API_URL}/unidades_de_medidas`, {
+    credentials: 'include',
+    headers: { 'Authorization': `Basic ${basic}` }
+  })
+  if (!res.ok)throw new Error(`Error ${res.status} al traer la categoria`)
+  return res.json()
 }

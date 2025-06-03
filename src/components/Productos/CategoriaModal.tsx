@@ -1,4 +1,4 @@
-// src/components/Modal/CategoriaModal.tsx
+
 import { useState, useEffect } from 'react'
 import { v4 as uuid }      from 'uuid'
 import Categoria           from '../../entidades/Categoria'
@@ -145,7 +145,6 @@ export default function CategoriaModal({ onClose, onSave }: Props) {
     cat.denominacion     = node.nombre
     cat.tipo_categoria   = node.tipo ?? new TipoCategoria()
     cat.categorias_hijas = node.hijos.map(mapNodeToCategoria)
-    cat.articulos        = []
     return cat
   }
 

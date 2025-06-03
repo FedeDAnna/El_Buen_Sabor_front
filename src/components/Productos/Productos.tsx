@@ -1,4 +1,4 @@
-// src/components/ProductsPage/ProductsPage.tsx
+
 import ProductosTabla from './ProductosTabla';
 import '../../estilos/Productos.css';
 import { useCallback, useEffect, useState } from 'react';
@@ -29,10 +29,15 @@ export default function Productos() {
   // 4) Al salvar una nueva categoría, guardamos y recargamos
   const handleSave = async (cat: Categoria) => {
     try {
+      console.log("ANTES")
       await guardarCategoriaConHijos(cat)
       // Después de guardar, recargamos la lista
+      console.log("Guarda")
       await reload()
+      console.log("Reload")
+      
     } catch (e) {
+      
       console.error(e)
       alert('Falló al guardar la categoría')
     } finally {

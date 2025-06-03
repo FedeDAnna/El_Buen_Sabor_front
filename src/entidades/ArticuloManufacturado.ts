@@ -10,4 +10,5 @@ export default class ArticuloManufacturado extends Articulo{
     
     detalles: ArticuloManufacturadoDetalle[] = [];
 
+    
 }
