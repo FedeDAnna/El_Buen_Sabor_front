@@ -1,0 +1,15 @@
+.footer {
+  background-color: #800000; /* Rojo oscuro como el header */
+  color: #fff;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  padding: 1rem;
+  font-size: 0.9rem;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 1000;
+  height: 20px;
+}
