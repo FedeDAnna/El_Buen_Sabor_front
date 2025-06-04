@@ -4,20 +4,17 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import AdminPantalla from '../src/components/AdminPantalla'
 import Productos from './components/Productos/Productos';
 import ProductosCategoria from './components/Productos/ProductosCategoria';
-<<<<<<< HEAD
+import Layout from './components/Layout/Layout';
 import HomePage from './components/Cliente/HomePage';
 import ProductosCategoriaCliente from './components/Cliente/ProductosCategoriaCliente';
 import ProductoEnDetalleCliente from './components/Cliente/ProductoEnDetalleCliente';
-=======
-import Layout from './components/Layout/Layout';
->>>>>>> origin/ailen
 
 export default function App() {
   return (
     <BrowserRouter>
-<<<<<<< HEAD
-      <Routes>
-        <Route path="/" element={<Navigate to="/HomePage" replace />} />
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Navigate to="/HomePage" replace />} />
 
         <Route path="/HomePage" element={<HomePage />} />
 
@@ -25,19 +22,6 @@ export default function App() {
 
         <Route path="/articulo/:id" element={<ProductoEnDetalleCliente/>} />
         
-        <Route
-          path="/admin/productos"
-          element={
-            <AdminPantalla>
-              <Productos />
-            </AdminPantalla>
-          }
-        />
-=======
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Navigate to="/admin/productos" replace />} />
-
           <Route
             path="/admin/productos"
             element={
@@ -46,7 +30,6 @@ export default function App() {
               </AdminPantalla>
             }
           />
->>>>>>> origin/ailen
 
           <Route
             path="/admin/productos/:categoriaId"
