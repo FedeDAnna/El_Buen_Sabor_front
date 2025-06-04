@@ -4,16 +4,16 @@ import type { FormaPago } from "./FormaPago";
 import type Sucursal from "./Sucursal";
 import type { TipoEnvio } from "./TipoEnvio";
 import type Usuario from "./Usuario";
-import {DateTime} from 'luxon';
+import { DateTime } from "luxon";
+
 
 export default class Pedido{
-    id: number = 0;
-    hora_estimada_finalizacion: DateTime = new DateTime();
+    id?: number ;
+    hora_estimada_finalizacion: string = "";
     total: number =0;
-    total_costo: number =0;
     estado_pedido?: Estado;
     tipo_envio?: TipoEnvio;
-    forma_pago?: FormaPago;
+    forma_pago?: FormaPago; 
     fecha_pedido : Date =  new Date();
     domicilio?: Domicilio;
     sucursal?: Sucursal;

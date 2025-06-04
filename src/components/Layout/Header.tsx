@@ -8,7 +8,7 @@ const Header = () => {
 
   return (
     <header className="header">
-      <button className="menu-btn">☰</button>
+      
       <div className="titulo">EL BUEN SABOR</div>
 
       <div className="perfil-container">
