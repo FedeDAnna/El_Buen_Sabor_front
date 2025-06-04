@@ -1,6 +1,5 @@
 import type Domicilio from "./Domicilio";
 import type { Estado } from "./Estado";
-import type Factura from "./Factura";
 import type { FormaPago } from "./FormaPago";
 import type Sucursal from "./Sucursal";
 import type { TipoEnvio } from "./TipoEnvio";
@@ -16,9 +15,7 @@ export default class Pedido{
     tipo_envio?: TipoEnvio;
     forma_pago?: FormaPago;
     fecha_pedido : Date =  new Date();
-
     domicilio?: Domicilio;
     sucursal?: Sucursal;
     usuario?: Usuario;
-    factura?: Factura;
 }

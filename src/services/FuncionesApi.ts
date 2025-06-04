@@ -193,3 +193,25 @@ export async function deleteCategoriaById(idCategoria :Number): Promise<boolean>
   if (!res.ok)throw new Error(`Error ${res.status} al borrar la categoria`)
   return res.json()
 }
+
+export async function getPedidos(): Promise<Pedido[]>{
+    
+    const res = await fetch(`${API_URL}/articulos_manufacturados`,
+    {
+    method: 'GET',
+    credentials: 'include',  
+    headers: {
+      'Authorization': `Basic ${basic}`,
+      'Content-Type': 'application/json'
+    }
+  }
+  );
+  if (!res.ok) throw new Error("Error al obtener articulos");
+  const data = await res.json();
+  
+
+  return data.map((inst: ArticuloManufacturado) => ({
+    ...inst,
+    id: inst.id
+  }));
+}
