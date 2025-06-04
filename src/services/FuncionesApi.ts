@@ -95,6 +95,31 @@ export async function getArticulosManufacturadoPorCategoria(idCategoria: number)
   }));
 }
 
+
+
+export async function getArticulosManufacturados(): Promise<ArticuloManufacturado[]>{
+    
+    const res = await fetch(`${API_URL}/articulos_manufacturados`,
+    {
+    method: 'GET',
+    credentials: 'include',  
+    headers: {
+      'Authorization': `Basic ${basic}`,
+      'Content-Type': 'application/json'
+    }
+  }
+  );
+  if (!res.ok) throw new Error("Error al obtener articulos");
+  const data = await res.json();
+  
+
+  return data.map((inst: ArticuloManufacturado) => ({
+    ...inst,
+    id: inst.id
+  }));
+}
+
+
 /**
  * Carga todos los insumos disponibles
  */

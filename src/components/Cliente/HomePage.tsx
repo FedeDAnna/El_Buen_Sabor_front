@@ -1,21 +1,29 @@
 // src/components/HomePage/HomePage.tsx
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-//import Header from ''
-//import Footer from ''
 import SidebarCliente from './SidebarCliente'
-import '../../estilos/HomaPage.css'
-import CarruselCategorias from './CarruselCategorías'
+import '../../estilos/HomePage.css'
+import CarruselCategorias from './CarruselCategorias'
+
+// Icono de hamburguesa (puedes cambiarlo por un SVG más bonito si quieres)
+const HamburgerIcon = () => (
+  <span style={{ fontSize: '1.5rem', cursor: 'pointer' }}>☰</span>
+)
 
 export default function HomePage() {
-
   // Estado de sidebar abierto/cerrado
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true)
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false)
 
   return (
     <>
-        {/*<Header onMenuClick={() => setSidebarOpen(true)} />*/}
-    
+      {/* Botón hamburguesa siempre visible en el layout (por ejemplo en la esquina superior izquierda) */}
+      <button
+        className="hp-hamburger-btn"
+        onClick={() => setSidebarOpen(true)}
+      >
+        <HamburgerIcon />
+      </button>
+
       <SidebarCliente isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <main className="hp-main">
@@ -44,8 +52,6 @@ export default function HomePage() {
           <CarruselCategorias />
         </section>
       </main>
-
-    
     </>
   )
 }

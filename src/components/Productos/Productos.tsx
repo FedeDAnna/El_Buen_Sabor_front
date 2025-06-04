@@ -38,6 +38,7 @@ export default function Productos() {
   // 5) Al salvar (tanto crear como editar), envío al backend y recargo
   const handleSave = async (cat: Categoria) => {
     try {
+      console.log("Categoria en HandleSave", cat)
       await guardarCategoriaConHijos(cat)
       await reload()
     } catch (e) {
@@ -60,6 +61,7 @@ export default function Productos() {
         await deleteCategoriaById(id)
         // Quito de la lista local para no tener que recargar todo
         setListaCategorias(prev => prev.filter(c => c.id !== id))
+        await reload()
       } catch (e: any) {
         console.error('Error al eliminar categoría:', e)
         alert('No se pudo eliminar la categoría')
@@ -69,6 +71,7 @@ export default function Productos() {
 
   // 7) Abrir el modal para ver o editar. Si viene una categoría, la paso como “editable” si edit=true
   const openModal = (edit: boolean, isOpen: boolean, cat?: Categoria) => {
+    console.log("categoria:" , cat);
     setEditable(edit)
     setCategoriaEnModal(cat)
     setModalAbierto(isOpen)
@@ -98,23 +101,19 @@ export default function Productos() {
               <td>{c.id}</td>
               <td>{c.denominacion}</td>
               <td>
-                {/* Enlace a ver productos manufacturados en esa categoría */}
                 <Link to={`/admin/productos/${c.id}`} title="Ver productos">INGRESAR</Link>{' '}
                 &nbsp;
 
-                {/* Botón “Ver” (solo lectura) */}
                 <button onClick={() => openModal(false, true, c)} title="Ver">
                   👁️
                 </button>{' '}
                 &nbsp;
 
-                {/* Botón “Editar” */}
                 <button onClick={() => openModal(true, true, c)} title="Editar">
                   ✏️
                 </button>{' '}
                 &nbsp;
 
-                {/* Botón “Borrar” */}
                 <button onClick={handleDelete(c.id)} title="Borrar">
                   🗑️
                 </button>
@@ -135,13 +134,10 @@ export default function Productos() {
       {/* 9) Modal para crear/editar categoría */}
       {modalAbierto && (
         <CategoriaModal
-          onClose={() => {
-            setModalAbierto(false)
-            setCategoriaEnModal(undefined)
-          }}
+          onClose={() => setModalAbierto(false)}
           onSave={handleSave}
           initialData={categoriaEnModal} // Puedes pasar la categoría si es edición o undefined si es nueva
-          readOnly={!editable}           // Si editable==false, el modal será solo de consulta
+          editable={editable}           // Si editable==false, el modal será solo de consulta
         />
       )}
     </section>

@@ -29,7 +29,7 @@ export default function ProductoManufacturadoModal({
   onClose,
   onSave,
 }: Props) {
-  console.log("Edit?", editable)
+  
   // Si llega ProductoManu, vamos a editar. Si no, se crea nuevo.
   const [denominacion, setDenominacion] = useState('')
   const [descripcion, setDescripcion] = useState('')

@@ -59,7 +59,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             </li>
             <li>
               <Link
-                to="/categorias"
+                to="/categorias/0"
                 className={location.pathname.startsWith('/categorias') ? 'active' : ''}
                 onClick={onClose}
               >

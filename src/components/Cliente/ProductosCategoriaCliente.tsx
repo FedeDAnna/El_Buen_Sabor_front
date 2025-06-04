@@ -1,12 +1,11 @@
-// src/components/CategoriaProductosPage/CategoriaProductosPage.tsx
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 //import Header from '../Layout/Header'
 //import Footer from '../Layout/Footer'
 import '../../estilos/ProductosCategoriaCliente.css'
 import type ArticuloManufacturado from '../../entidades/ArticuloManufacturado'
-import { fetchCategoriaById, getArticulosManufacturadoPorCategoria } from '../../services/FuncionesApi'
-import CarruselCategorias from './CarruselCategorías'
+import { fetchCategoriaById, getArticulosManufacturadoPorCategoria, getArticulosManufacturados } from '../../services/FuncionesApi'
+import CarruselCategorias from './CarruselCategorias'
 import type Categoria from '../../entidades/Categoria'
 
 export default function ProductosCategoriaCliente() {
@@ -31,18 +30,32 @@ export default function ProductosCategoriaCliente() {
   
   useEffect(() => {
     if (!categoriaId) return
+
     setLoading(true)
     setError(null)
 
-    getArticulosManufacturadoPorCategoria(Number(categoriaId))
-      .then(data => {
-        setProductos(data)
-      })
-      .catch(err => {
-        console.error(err)
-        setError('No se pudieron cargar los productos.')
-      })
-      .finally(() => setLoading(false))
+    if(categoriaId == "0"){
+      getArticulosManufacturados()
+        .then(data => {
+          setProductos(data)
+        })
+        .catch(err => {
+          console.error(err)
+          setError('No se pudieron cargar los productos.')
+        })
+        .finally(() => setLoading(false))
+    }else{
+      getArticulosManufacturadoPorCategoria(Number(categoriaId))
+        .then(data => {
+          setProductos(data)
+        })
+        .catch(err => {
+          console.error(err)
+          setError('No se pudieron cargar los productos.')
+        })
+        .finally(() => setLoading(false))
+    }
+    
   }, [categoriaId])
 
   // Filtrar productos según searchTerm (por denominacion o descripcion, toLowerCase)
@@ -67,7 +80,7 @@ export default function ProductosCategoriaCliente() {
 
         <section className="cpp-content">
           <h2 className="cpp-title">
-            {categoria?.denominacion ? categoria?.denominacion : 'Categoria'}
+            {categoria?.denominacion ? categoria?.denominacion : 'Productos'}
           </h2>
 
           <div className="cpp-search-bar">

@@ -15,16 +15,29 @@ export type CategoriaNode = {
 
 interface Props {
   initialData?: Categoria
-  readOnly?: boolean
+  editable?: boolean
   onClose: () => void
   onSave: (categoria: Categoria) => void
 }
 
-export default function CategoriaModal({ onClose, onSave }: Props) {
+export default function CategoriaModal({
+  onClose,
+  onSave,
+  initialData,   // puede venir undefined si estamos “creando nueva categoría”
+  editable = false  // por defecto false (modo editable)
+}: Props) {
   // Lista de tipos desde el backend
   const [tipos, setTipos] = useState<TipoCategoria[]>([])
   const [loadingTypes, setLoadingTypes] = useState(true)
   const [typeError, setTypeError] = useState<string | null>(null)
+  // Estado del árbol en memoria
+  const [root, setRoot] = useState<CategoriaNode>({
+    id: uuid(),
+    nombre: '',
+    hijos: [],
+    tipo: null,
+  })
+
 
   // Cargar tipos al montar
   useEffect(() => {
@@ -34,14 +47,33 @@ export default function CategoriaModal({ onClose, onSave }: Props) {
       .finally(() => setLoadingTypes(false))
   }, [])
 
-  // Estado del árbol en memoria
-  const [root, setRoot] = useState<CategoriaNode>({
-    id: uuid(),
-    nombre: '',
-    hijos: [],
-    tipo: null,
-  })
+  
+  console.log("Initiall data: ", initialData)
+  useEffect(() => {
+    if (!initialData) {
+      console.log("dentro")
+      setRoot({
+        id: uuid(),
+        nombre: '',
+        hijos: [],
+        tipo: null,
+      })
+      return
+    }
+   
+    const mapCategoriaToNode = (cat: Categoria): CategoriaNode => ({
+      id: cat.id ? cat.id.toString() : uuid(),
+      nombre: cat.denominacion,
+      tipo: cat.tipo_categoria!,
+      hijos: (cat.categorias_hijas ?? []).map(mapCategoriaToNode),
+    })
+    
 
+    setRoot(mapCategoriaToNode(initialData))
+    
+    
+  }, [initialData])
+console.log("Root ",root)
   // Funciones de árbol
   const updateNombre = (
     id: string,
@@ -93,13 +125,18 @@ export default function CategoriaModal({ onClose, onSave }: Props) {
         type="text"
         placeholder={nivel === 0 ? 'Nombre de la Categoría' : 'SubCategoría'}
         value={nodo.nombre}
-        onChange={e => setRoot(r => updateNombre(nodo.id, e.target.value, r))}
+        readOnly={!editable}
+        onChange={e => {
+          if (editable) {
+            setRoot(r => updateNombre(nodo.id, e.target.value, r))
+          }
+        }}
       />
 
       {/* Select de tipo solo en raíz */}
       {nivel === 0 && (
         <select
-          disabled={loadingTypes}
+          disabled={!editable}
           value={root.tipo?.id ?? ''}
           onChange={e => {
             const tipoSel = tipos.find(t => t.id === Number(e.target.value))
@@ -116,21 +153,29 @@ export default function CategoriaModal({ onClose, onSave }: Props) {
         </select>
       )}
 
-      {/* Añadir hijo */}
       <button
         type="button"
         className="cm-add-btn"
-        onClick={() => setRoot(r => addHijo(nodo.id, r))}
+        disabled={!editable}
+        onClick={() => {
+          if (editable) {
+            setRoot(r => addHijo(nodo.id, r))
+          }
+        }}
       >
         Añadir Subcategoría
       </button>
 
-      {/* Añadir hermana (salvo raíz) */}
       {parentId && (
         <button
           type="button"
           className="cm-add-sibling-btn"
-          onClick={() => setRoot(r => addHijo(parentId, r))}
+          disabled={!editable}
+          onClick={() => {
+            if (editable) {
+              setRoot(r => addHijo(parentId, r))
+            }
+          }}
         >
           Añadir Hermana
         </button>
@@ -144,17 +189,29 @@ export default function CategoriaModal({ onClose, onSave }: Props) {
   // Mapear al objeto Categoria
   const mapNodeToCategoria = (node: CategoriaNode): Categoria => {
     const cat = new Categoria()
-    cat.denominacion     = node.nombre
-    cat.tipo_categoria   = node.tipo ?? new TipoCategoria()
+    // Convertir el ID de string a number, si aplica:
+    const numericId = Number(node.id)
+    if (!isNaN(numericId)) {
+      cat.id = numericId
+    }
+    cat.denominacion = node.nombre
+    cat.tipo_categoria = node.tipo ?? new TipoCategoria()
     cat.categorias_hijas = node.hijos.map(mapNodeToCategoria)
     return cat
   }
 
+  
   return (
     <div className="cm-overlay">
       <div className="cm-modal">
         <header className="cm-header">
-          <h2>Nueva Categoría</h2>
+          <h2>
+            {initialData
+              ? editable
+                ? 'Editar Categoría'
+                : 'Ver Categoría'
+              : 'Nueva Categoría'}
+          </h2>
           <button className="cm-close" onClick={onClose}>×</button>
         </header>
 
@@ -164,10 +221,16 @@ export default function CategoriaModal({ onClose, onSave }: Props) {
         </div>
 
         <footer className="cm-footer">
-          <button className="cm-cancel" onClick={onClose}>Cancelar</button>
+          <button className="cm-cancel" onClick={onClose}>
+            {editable ? 'Cancelar' : 'Cerrar'}
+          </button>
           <button
             className="cm-save"
-            disabled={!root.nombre.trim() || !root.tipo}
+            disabled={
+              !editable || // si no es editable, no permita guardar
+              !root.nombre.trim() || // nombre obligatorio
+              root.tipo === null // tipo obligatorio en la raíz
+            }
             onClick={() => onSave(mapNodeToCategoria(root))}
           >
             Guardar
