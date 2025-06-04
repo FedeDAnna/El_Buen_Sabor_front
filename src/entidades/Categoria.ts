@@ -7,6 +7,5 @@ export default class Categoria{
     denominacion: string = "";
     
     categorias_hijas?:Categoria[]=[];
-    articulos ?: Articulo[]=[];
     tipo_categoria ?: TipoCategoria;
 }

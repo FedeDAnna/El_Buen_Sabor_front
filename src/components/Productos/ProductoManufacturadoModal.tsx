@@ -77,6 +77,7 @@ export default function ProductoManufacturadoModal({ categoriaId, onClose, onSav
     art.tiempo_estimado_en_minutos = tiempo
     art.precio_venta = precio
     art.preparacion = preparacion
+    
     // asociar detalles
     art.detalles = detalles.map(d => {
       // cada d es ArticuloManufacturadoDetalle con articulo_insumo

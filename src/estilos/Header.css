@@ -1,0 +1,81 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #800000; /* rojo oscuro */
+  color: white;
+  padding: 1rem 2rem;
+  height: 40px;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.menu-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.perfil-container {
+  position: relative;
+}
+
+.perfil-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.menu-perfil {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: rgb(255, 255, 255);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  border-radius: 8px;
+  padding: 10px 15px;
+  z-index: 100;
+  width: 200px;
+}
+.menu-perfil svg {
+  stroke: currentColor;
+  fill: none;
+  padding-right: 15px;
+}
+
+.menu-perfil h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: black;
+   display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.menu-perfil ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  
+}
+
+.menu-perfil li {
+  display: flex;
+  align-items: center;
+  padding: 6px 0;
+  cursor: pointer;
+  transition: background 0.2s;
+  color: black;
+}
+
+.menu-perfil li:hover {
+  background-color: #c2c2c2;
+}

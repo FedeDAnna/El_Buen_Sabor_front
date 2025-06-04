@@ -54,7 +54,7 @@ export async function guardarCategoriaConHijos(
 }
 
 export async function getArticulosManufacturadoPorCategoria(idCategoria: number): Promise<ArticuloManufacturado[]>{
-    const res = await fetch(`${API_URL}/articulos-manufacturados/byCategoria/${idCategoria}`,
+    const res = await fetch(`${API_URL}/articulos_manufacturados/byCategoria/${idCategoria}`,
     {
     method: 'GET',
     credentials: 'include',  
@@ -93,7 +93,7 @@ export async function saveArticuloManufacturado(
   articulo: Partial<ArticuloManufacturado>
 ): Promise<ArticuloManufacturado> {
   const res = await fetch(
-    `${API_URL}/categorias/${categoriaId}/articulos_manufacturados`,
+    `${API_URL}/categorias/articulos_manufacturados/${categoriaId}`,
     {
       method: 'POST',
       credentials: 'include',
