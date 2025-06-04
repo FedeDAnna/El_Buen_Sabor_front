@@ -15,6 +15,7 @@ import Categoria from '../../entidades/Categoria'
 import UnidadDeMedida from '../../entidades/UnidadDeMedida'
 
 interface Props {
+  editable: boolean
   categoria?: Categoria
   ProductoManu?: ArticuloManufacturado
   onClose: () => void
@@ -22,11 +23,13 @@ interface Props {
 }
 
 export default function ProductoManufacturadoModal({
+  editable,
   categoria,
   ProductoManu,
   onClose,
   onSave,
 }: Props) {
+  console.log("Edit?", editable)
   // Si llega ProductoManu, vamos a editar. Si no, se crea nuevo.
   const [denominacion, setDenominacion] = useState('')
   const [descripcion, setDescripcion] = useState('')
@@ -36,7 +39,7 @@ export default function ProductoManufacturadoModal({
   const [imagenData, setImagenData] = useState<string>('') // base64
 
   // Unidad de medida para el producto manufacturado
-  const [unidades, setUnidades] = useState<UnidadDeMedida[]>([])
+const [unidades, setUnidades] = useState<UnidadDeMedida[]>([])
   const [selectedUnidadId, setSelectedUnidadId] = useState<number | ''>('')
 
   const [insumos, setInsumos] = useState<ArticuloInsumo[]>([])
@@ -176,13 +179,14 @@ export default function ProductoManufacturadoModal({
       alert('Error al guardar el producto')
     }
   }
-
+  
   return (
     <div className="pm-overlay">
       <div className="pm-modal">
         <header className="pm-header">
           <h2>
-            {ProductoManu ? 'Editar Producto' : 'Nuevo Producto'}
+            
+            {editable ? ProductoManu ? 'Editar Producto' : 'Nuevo Producto': 'Ver Producto'}
           </h2>
           <button className="pm-close" onClick={onClose}>
             ×
@@ -194,12 +198,14 @@ export default function ProductoManufacturadoModal({
             placeholder="Nombre Producto"
             value={denominacion}
             onChange={(e) => setDenominacion(e.target.value)}
+            readOnly={!editable}
           />
           <input
             type="text"
             placeholder="Descripción"
             value={descripcion}
             onChange={(e) => setDescripcion(e.target.value)}
+            readOnly={!editable}
           />
           <label>Tiempo en minutos:</label>
           <input
@@ -207,6 +213,7 @@ export default function ProductoManufacturadoModal({
             placeholder="Tiempo en minutos"
             value={tiempo || ''}
             onChange={(e) => setTiempo(Number(e.target.value))}
+            readOnly={!editable}
           />
           <label>Precio Venta:</label>
           <input
@@ -214,11 +221,14 @@ export default function ProductoManufacturadoModal({
             placeholder="Precio Venta"
             value={precio || ''}
             onChange={(e) => setPrecio(Number(e.target.value))}
+            readOnly={!editable}
           />
           <label>Unidad de Medida:</label>
           <select
             value={selectedUnidadId}
+            disabled={!editable}
             onChange={(e) => setSelectedUnidadId(Number(e.target.value))}
+            
           >
             <option value="" disabled>
               Seleccione una unidad
@@ -236,21 +246,28 @@ export default function ProductoManufacturadoModal({
               init={{ height: 200, menubar: false }}
               value={preparacion}
               onEditorChange={setPreparacion}
+              disabled={!editable}
             />
           </div>
 
           <label>Imagen:</label>
-          <input
+          <img src={imagenData}></img>
+          {editable? (<input
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-          />
+            
+          />) : ''}
+          
 
           <div className="pm-insumos-header">
             <h3>Lista Insumos</h3>
-            <button className="btn-add" onClick={addDetalle}>
+            {editable? (
+              <button className="btn-add" onClick={addDetalle} >
               Agregar Insumo +
             </button>
+            ) : ''}
+            
           </div>
           <table className="pm-insumos-table">
             <thead>
@@ -272,7 +289,7 @@ export default function ProductoManufacturadoModal({
                         )
                         updateDetalle(i, 'articulo_insumo', ins)
                       }}
-                      disabled={loadingInsumos}
+                      disabled={!editable}
                     >
                       <option value="" disabled>
                         Seleccione un insumo
@@ -295,6 +312,7 @@ export default function ProductoManufacturadoModal({
                       onChange={(e) =>
                         updateDetalle(i, 'cantidad', e.target.value)
                       }
+                      readOnly={!editable}
                     />
                   </td>
                   <td>
@@ -306,16 +324,19 @@ export default function ProductoManufacturadoModal({
           </table>
         </div>
         <footer className="pm-footer">
+          
           <button className="btn-cancel" onClick={onClose}>
-            Cancelar
+            {editable ? 'Cancelar' : 'Cerrar'}
           </button>
-          <button
+
+          {editable ? (<button
             className="btn-save"
             disabled={!canSave()}
             onClick={handleSubmit}
           >
             {ProductoManu ? 'Actualizar' : 'Guardar'}
-          </button>
+          </button>) : ''}
+          
         </footer>
       </div>
     </div>

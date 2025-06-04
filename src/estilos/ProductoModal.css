@@ -148,3 +148,8 @@
 .btn-cancel:hover {
   opacity: 0.9;
 }
+
+img{
+  max-width: 200px;
+  border-radius: 15px;
+}

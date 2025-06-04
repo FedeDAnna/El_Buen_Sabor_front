@@ -10,7 +10,7 @@ import CarruselCategorias from './CarruselCategorías'
 export default function HomePage() {
 
   // Estado de sidebar abierto/cerrado
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false)
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true)
 
   return (
     <>

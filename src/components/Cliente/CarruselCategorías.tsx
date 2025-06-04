@@ -3,7 +3,7 @@ import { useRef, useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import '../../estilos/CarruselCategorias.css'
 import type Categoria from '../../entidades/Categoria'
-import { getCategoriasManufacturados } from '../../services/FuncionesApi'
+import { getCategoriasByTipo } from '../../services/FuncionesApi'
 
 interface Props {
   /** Si se quiere remapear el clic para algo distinto, 
@@ -19,7 +19,7 @@ export default function CarruselCategorias({ onCategoryClick }: Props) {
   const location = useLocation()
 
   useEffect(() => {
-    getCategoriasManufacturados()
+    getCategoriasByTipo(2)
       .then(data => setCategorias(data))
       .catch(console.error)
       .finally(() => setLoading(false))

@@ -53,8 +53,8 @@ export async function guardarCategoriaConHijos(
   return data;
 }
 
- export async function getCategoriasManufacturados(): Promise<Categoria[]> {
-   const res = await fetch(`${API_URL}/categorias/manufacturados`,
+ export async function getCategoriasByTipo(idTipo: number): Promise<Categoria[]> {
+   const res = await fetch(`${API_URL}/categorias/manufacturados/${idTipo}`,
      {
      method: 'GET',
      credentials: 'include',  
@@ -155,5 +155,16 @@ export async function deleteProductosById(idProduc :Number): Promise<boolean> {
     headers: { 'Authorization': `Basic ${basic}` }
   })
   if (!res.ok)throw new Error(`Error ${res.status} al borrar el producto manufacturado`)
+  return res.json()
+}
+
+
+export async function deleteCategoriaById(idCategoria :Number): Promise<boolean> {
+  const res = await fetch(`${API_URL}/categorias/${idCategoria}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: { 'Authorization': `Basic ${basic}` }
+  })
+  if (!res.ok)throw new Error(`Error ${res.status} al borrar la categoria`)
   return res.json()
 }

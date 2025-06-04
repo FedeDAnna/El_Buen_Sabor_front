@@ -14,6 +14,8 @@ export type CategoriaNode = {
 }
 
 interface Props {
+  initialData?: Categoria
+  readOnly?: boolean
   onClose: () => void
   onSave: (categoria: Categoria) => void
 }

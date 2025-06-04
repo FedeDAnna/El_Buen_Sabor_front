@@ -16,6 +16,7 @@ export default function ProductosCategoria() {
   const [articulos, setArticulos] = useState<ArticuloManufacturado[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [editable, setEditable] = useState<boolean>();
 
   const [prodModalOpen, setProdModalOpen] = useState(false);
   const [modalProducto, setModalProductoId] = useState<ArticuloManufacturado | undefined>(undefined);
@@ -42,8 +43,9 @@ export default function ProductosCategoria() {
   if (cargando) return <p>Cargando productos…</p>;
   if (error) return <p>{error}</p>;
 
-  // Función para abrir el modal (edición o nuevo)
-  function openModal(isOpen: boolean, ProduManu?: ArticuloManufacturado) {
+  // Función para abrir el modal (edición, nuevo o ver)
+  function openModal(edit: boolean,isOpen: boolean, ProduManu?: ArticuloManufacturado) {
+    setEditable(edit);
     setModalProductoId(ProduManu);
     setProdModalOpen(isOpen);
   }
@@ -64,7 +66,7 @@ export default function ProductosCategoria() {
     <section className="products-page">
       <div className="header">
         <h2>Productos de: {categoria?.denominacion}</h2>
-        <button onClick={() => openModal(true)}>Agregar +</button>
+        <button onClick={() => openModal(true,true)}>Agregar +</button>
       </div>
 
       <table className="products-table">
@@ -87,21 +89,20 @@ export default function ProductosCategoria() {
               <td>{a.tiempo_estimado_en_minutos}</td>
               <td>${a.precio_venta}</td>
               <td>
-                <button title="Ver">👁️</button>
+                <button 
+                  title="Ver"
+                  onClick={() => openModal(false, true, a!)}
+                >👁️</button>
 
                 <button
                   title="Editar"
-                  onClick={() => openModal(true, a!)}
-                >
-                  ✏️
-                </button>
+                  onClick={() => openModal(true, true, a!)}
+                >✏️</button>
 
                 <button
                   title="Borrar"
                   onClick={deleteProducto(a.id!)}
-                >
-                  🗑️
-                </button>
+                >🗑️</button>
               </td>
             </tr>
           ))}
@@ -117,7 +118,8 @@ export default function ProductosCategoria() {
       {/* Aquí va la condición para pintar el modal, fuera de la función openModal */}
       {prodModalOpen && (
         <ProductoManufacturadoModal
-          categoria={categoria}
+        editable={editable!}
+        categoria={categoria}
           ProductoManu={modalProducto}
           onClose={() => setProdModalOpen(false)}
           onSave={(newProd) => {
