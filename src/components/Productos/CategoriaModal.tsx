@@ -10,12 +10,13 @@ export type CategoriaNode = {
   id: string
   nombre: string
   hijos: CategoriaNode[]
-  tipo: TipoCategoria | null
+  tipo: TipoCategoria
 }
 
 interface Props {
   initialData?: Categoria
   editable?: boolean
+  idTipo: number
   onClose: () => void
   onSave: (categoria: Categoria) => void
 }
@@ -23,6 +24,7 @@ interface Props {
 export default function CategoriaModal({
   onClose,
   onSave,
+  idTipo,
   initialData,   // puede venir undefined si estamos “creando nueva categoría”
   editable = false  // por defecto false (modo editable)
 }: Props) {
@@ -35,7 +37,7 @@ export default function CategoriaModal({
     id: uuid(),
     nombre: '',
     hijos: [],
-    tipo: null,
+    tipo: new TipoCategoria(),
   })
 
 
@@ -48,32 +50,41 @@ export default function CategoriaModal({
   }, [])
 
   
-  console.log("Initiall data: ", initialData)
+
   useEffect(() => {
-    if (!initialData) {
-      console.log("dentro")
+    if (loadingTypes) return
+
+    // buscamos el tipo que viene por props
+    const tipoSeleccionado =
+      tipos.find(t => t.id === idTipo) ?? new TipoCategoria()
+
+    // función recursiva para aplicar el tipo a toda la rama
+    const applyTipo = (node: CategoriaNode): CategoriaNode => ({
+      ...node,
+      tipo: tipoSeleccionado,
+      hijos: node.hijos.map(applyTipo),
+    })
+
+    if (initialData) {
+      // mapeo initialData → tree node
+      const mapCatToNode = (cat: Categoria): CategoriaNode => ({
+        id: cat.id?.toString() ?? uuid(),
+        nombre: cat.denominacion,
+        tipo: tipoSeleccionado,
+        hijos: (cat.categorias_hijas ?? []).map(mapCatToNode),
+      })
+      setRoot(applyTipo(mapCatToNode(initialData)))
+    } else {
+      // nueva categoría: sólo raíz con tipo
       setRoot({
         id: uuid(),
         nombre: '',
         hijos: [],
-        tipo: null,
+        tipo: tipoSeleccionado,
       })
-      return
     }
-   
-    const mapCategoriaToNode = (cat: Categoria): CategoriaNode => ({
-      id: cat.id ? cat.id.toString() : uuid(),
-      nombre: cat.denominacion,
-      tipo: cat.tipo_categoria!,
-      hijos: (cat.categorias_hijas ?? []).map(mapCategoriaToNode),
-    })
-    
+  }, [loadingTypes, tipos, idTipo, initialData])
 
-    setRoot(mapCategoriaToNode(initialData))
-    
-    
-  }, [initialData])
-console.log("Root ",root)
   // Funciones de árbol
   const updateNombre = (
     id: string,
@@ -82,20 +93,6 @@ console.log("Root ",root)
   ): CategoriaNode => {
     if (nodo.id === id) return { ...nodo, nombre }
     return { ...nodo, hijos: nodo.hijos.map(h => updateNombre(id, nombre, h)) }
-  }
-
-  // Aplica tipo a toda la subrama
-  const applyTipoRecursively = (
-    nodo: CategoriaNode,
-    tipo: TipoCategoria
-  ): CategoriaNode => ({
-    ...nodo,
-    tipo,
-    hijos: nodo.hijos.map(h => applyTipoRecursively(h, tipo)),
-  })
-
-  const setTipoGlobal = (tipo: TipoCategoria) => {
-    setRoot(r => applyTipoRecursively(r, tipo))
   }
 
   const addHijo = (
@@ -121,6 +118,28 @@ console.log("Root ",root)
     parentId: string | null
   ) => (
     <div key={nodo.id} className="cm-nodo" style={{ marginLeft: nivel * 20 }}>
+
+      {nivel === 0 && (
+        <h3>{tipos.find(t => t.id === idTipo)?.descripcion}</h3>
+        
+        // <select
+        //   disabled={!editable}
+        //   value={root.tipo?.id ?? ''}
+        //   onChange={e => {
+        //     const tipoSel = tipos.find(t => t.id === Number(e.target.value))
+        //     if (tipoSel) setTipoGlobal(tipoSel)
+        //   }}
+        //   style={{ marginLeft: 8 }}
+        // >
+        //   <option value="" disabled>
+        //     {loadingTypes ? 'Cargando tipos...' : 'Seleccione un tipo'}
+        //   </option>
+        //   {tipos.map(t => (
+        //     <option key={t.id} value={t.id}>{t.descripcion}</option>
+        //   ))}
+        // </select>
+      )}
+      
       <input
         type="text"
         placeholder={nivel === 0 ? 'Nombre de la Categoría' : 'SubCategoría'}
@@ -134,24 +153,6 @@ console.log("Root ",root)
       />
 
       {/* Select de tipo solo en raíz */}
-      {nivel === 0 && (
-        <select
-          disabled={!editable}
-          value={root.tipo?.id ?? ''}
-          onChange={e => {
-            const tipoSel = tipos.find(t => t.id === Number(e.target.value))
-            if (tipoSel) setTipoGlobal(tipoSel)
-          }}
-          style={{ marginLeft: 8 }}
-        >
-          <option value="" disabled>
-            {loadingTypes ? 'Cargando tipos...' : 'Seleccione un tipo'}
-          </option>
-          {tipos.map(t => (
-            <option key={t.id} value={t.id}>{t.descripcion}</option>
-          ))}
-        </select>
-      )}
 
       <button
         type="button"
@@ -195,7 +196,7 @@ console.log("Root ",root)
       cat.id = numericId
     }
     cat.denominacion = node.nombre
-    cat.tipo_categoria = node.tipo ?? new TipoCategoria()
+    cat.tipo_categoria = node.tipo
     cat.categorias_hijas = node.hijos.map(mapNodeToCategoria)
     return cat
   }

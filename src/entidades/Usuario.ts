@@ -6,7 +6,7 @@ import type Sucursal from "./Sucursal";
 import type UsuarioA0 from "./UsuarioA0";
 
 export default class Usuario {
-    id: number =0;
+    id?: number =0;
     nombre: string = "";
     apellido: string ="";
     telefono: string = "";

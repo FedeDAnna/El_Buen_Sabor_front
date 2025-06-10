@@ -2,80 +2,214 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #800000; /* rojo oscuro */
-  color: white;
-  padding: 1rem 2rem;
-  height: 40px;
+  background-color: #8B1414; /* color rojo */
+  padding: 0.5rem 1rem;
+  color: #fff;
+  position: relative;
+  z-index: 2000;
 }
 
-.logo {
-  font-size: 1.8rem;
-  font-weight: bold;
-}
-
-.menu-btn {
-  background: none;
+/* Botón hamburguesa */
+.header-hamburger-btn {
+  background: transparent;
   border: none;
-  color: white;
+  color: #fff;
   font-size: 1.5rem;
   cursor: pointer;
 }
-.perfil-container {
+
+/* Título */
+.header-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  flex: 1;
+  text-align: center;
+}
+
+/* Contenedor de carrito */
+.header-cart-container {
   position: relative;
+  margin-right: 1rem;
 }
 
-.perfil-btn {
-  background: none;
+.header-cart-btn {
+  background: transparent;
   border: none;
+  color: #fff;
   cursor: pointer;
-  color: #ffffff;
+  position: relative;
+  font-size: 1.2rem;
 }
 
-.menu-perfil {
+/* Badge con la cantidad total de ítems */
+.cart-badge {
   position: absolute;
-  top: 40px;
-  right: 0;
-  background: rgb(255, 255, 255);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  border-radius: 8px;
-  padding: 10px 15px;
-  z-index: 100;
-  width: 200px;
-}
-.menu-perfil svg {
-  stroke: currentColor;
-  fill: none;
-  padding-right: 15px;
+  top: -6px;
+  right: -6px;
+  background-color: #FFD700;
+  color: #333;
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 0 4px;
+  border-radius: 10px;
 }
 
-.menu-perfil h4 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  color: black;
-   display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 6px 0;
-  cursor: pointer;
-  transition: background 0.2s;
+/* Menú desplegable del carrito */
+.header-cart-menu {
+  position: absolute;
+  right: -10px; /* Ajustar según lo necesites */
+  top: 100%;
+  width: 280px;
+  background: #fff;
+  color: #333;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  margin-top: 0.5rem;
+  z-index: 2001;
+  padding: 0.75rem;
 }
 
-.menu-perfil ul {
-  list-style: none;
-  padding: 0;
+/* Encabezado del carrito */
+.header-cart-menu h4 {
   margin: 0;
-  
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  color: #444;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 0.25rem;
 }
 
-.menu-perfil li {
+/* Cuando no hay itens */
+.empty-cart {
+  text-align: center;
+  padding: 0.5rem 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Lista de ítems del carrito */
+.cart-items-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.cart-item {
   display: flex;
   align-items: center;
-  padding: 6px 0;
-  cursor: pointer;
-  transition: background 0.2s;
-  color: black;
+  margin: 0.5rem 0;
 }
 
-.menu-perfil li:hover {
-  background-color: #c2c2c2;
+.cart-item-img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-right: 0.75rem;
+}
+
+.cart-item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-item-name {
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.cart-item-price {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Pie del menú del carrito */
+.cart-menu-footer {
+  margin-top: 0.75rem;
+  border-top: 1px solid #ddd;
+  padding-top: 0.5rem;
+}
+
+.cart-total {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.cart-total-amount {
+  color: #000;
+}
+
+.btn-view-cart {
+  display: inline-block;
+  text-decoration: none;
+  background-color: #FFD700;
+  color: #333;
+  font-weight: bold;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  text-align: center;
+  width: 100%;
+}
+
+/* Perfil (igual que antes) */
+.header-profile-container {
+  position: relative;
+  margin-left: 1rem;
+}
+
+.header-profile-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+.header-profile-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: #fff;
+  color: #333;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  margin-top: 0.25rem;
+  min-width: 180px;
+  z-index: 2001;
+}
+
+.header-profile-menu h4 {
+  margin: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  color: #444;
+}
+
+.header-profile-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.header-profile-menu li {
+  display: flex;
+  align-items: center;
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #333;
+}
+
+.header-profile-menu li:hover {
+  background-color: #f0f0f0;
+}
+
+.header-profile-menu li span {
+  margin-left: 0.5rem;
 }

@@ -3,7 +3,7 @@ import type Pedido from "./Pedido";
 
 
 export default class Factura {
-    id: number = 0;
+    id?: number;
     fecha_facturacion: Date = new Date();
     mp_payment_id: number = 0;
     mp_merchant_order_id: number = 0;

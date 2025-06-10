@@ -1,7 +1,7 @@
 import type Localidad from "./Localidad";
 
 export default class Domicilio {
-    id: number =0;
+    id?: number;
     calle: string = "";
     numero: number = 0;
     cp: number = 0;

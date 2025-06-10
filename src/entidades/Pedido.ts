@@ -2,6 +2,7 @@ import type Domicilio from "./Domicilio";
 import type { Estado } from "./Estado";
 import type Factura from "./Factura";
 import type { FormaPago } from "./FormaPago";
+import type PedidoDetalle from "./PedidoDetalle";
 import type Sucursal from "./Sucursal";
 import type { TipoEnvio } from "./TipoEnvio";
 import type Usuario from "./Usuario";
@@ -10,15 +11,41 @@ import { DateTime } from "luxon";
 
 export default class Pedido{
     id?: number ;
-    hora_estimada_finalizacion: string = "";
+    hora_estimada_finalizacion: DateTime = DateTime.now();
     total: number =0;
     estado_pedido?: Estado;
     tipo_envio?: TipoEnvio;
-    forma_pago?: FormaPago; 
-    fecha_pedido : Date =  new Date();
-
+    forma_pago?: FormaPago;
+    fecha_pedido : DateTime =  DateTime.now();
     domicilio?: Domicilio;
     sucursal?: Sucursal;
     usuario?: Usuario;
     factura?: Factura;
+    detalles: PedidoDetalle[]=[];
+
+    /**  
+   * Este método será llamado automáticamente por JSON.stringify(obj)
+   * y nos permite transformar campos DateTime en strings adecuados.
+   */
+  toJSON() {
+    return {
+      // Sólo incluyo las props que quiere tu back
+      id: this.id,
+      hora_estimada_finalizacion: this.hora_estimada_finalizacion.toFormat('HH:mm:ss'),
+      total: this.total,
+      estado_pedido: this.estado_pedido,
+      tipo_envio: this.tipo_envio,
+      forma_pago: this.forma_pago,
+      fecha_pedido: this.fecha_pedido.toISODate(),        // "YYYY-MM-DD"
+      domicilio: this.domicilio ? { id: this.domicilio.id } : undefined,
+      sucursal: this.sucursal ? { id: this.sucursal.id } : undefined,
+      usuario: this.usuario ? { id: this.usuario.id } : undefined,
+      factura: this.factura ? { id: this.factura.id } : undefined,
+      detalles: this.detalles.map(d => ({
+        cantidad: d.cantidad,
+        subtotal: d.subtotal,
+        articulo: { id: d.articulo!.id }
+      })),
+    }
+  }
 }

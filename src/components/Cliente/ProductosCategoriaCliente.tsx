@@ -128,6 +128,8 @@ export default function ProductosCategoriaCliente() {
           ← Volver
         </Link>
         </div>
+        <br></br>
+        <br></br>
       </main>
 
       {/*<Footer />*/}

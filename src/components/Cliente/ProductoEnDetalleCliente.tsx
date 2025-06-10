@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getArticuloManufacturadoById } from '../../services/FuncionesApi'
 import type ArticuloManufacturado from '../../entidades/ArticuloManufacturado'
-//import Header from '../Layout/Header'
-//import Footer from '../Layout/Footer'
+
 
 import '../../estilos/ProductoDetalleCliente.css'
+import { useCart } from '../CartContext'
 
 
 export default function ProductoEnDetalleCliente() {
@@ -19,6 +19,8 @@ export default function ProductoEnDetalleCliente() {
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   
+  // Consumo el carrito global
+  const { addToCart } = useCart()
 
   // Control de cantidad (para el input +/-)
   const [cantidad, setCantidad] = useState<number>(1)
@@ -43,11 +45,12 @@ export default function ProductoEnDetalleCliente() {
       .finally(() => setLoading(false))
   }, [id])
 
-  const handleAgregarAlCarrito = () => {
-    // Aquí podrías invocar tu lógica de carrito (Redux, Context, localStorage, etc.)
-    // Por simplicidad, por ahora alertamos
-    alert(`Se agregaron ${cantidad} unidades de "${articulo?.denominacion}" al carrito.`)
-  }
+ const handleAgregarAlCarrito = () => {
+   if (!articulo) return
+   addToCart(articulo, cantidad)
+   // Opcional: podrías mostrar un toast o mensaje breve
+   alert(`Se agregaron ${cantidad} × "${articulo.denominacion}" al carrito.`)
+ }
 
   const incrementar = () => setCantidad(prev => prev + 1)
   const decrementar = () => {
@@ -56,7 +59,6 @@ export default function ProductoEnDetalleCliente() {
 
   return (
     <>
-      {/*<Header onMenuClick={() => setSidebarOpen(true)} />*/}
       
       <main className="adp-main">
         <button className="adp-back" onClick={() => navigate(-1)}>
@@ -115,7 +117,6 @@ export default function ProductoEnDetalleCliente() {
         )}
       </main>
 
-      {/*<Footer />*/}
-    </>
+</>
   )
 }

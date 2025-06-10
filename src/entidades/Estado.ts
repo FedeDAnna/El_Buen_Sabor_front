@@ -1,7 +1,7 @@
 export enum Estado {
-  PREPARACION = 'preparacion',
-  PENDIENTE   = 'pendiente',
-  CANCELADO   = 'cancelado',
-  RECHAZADO   = 'rechazado',
-  ENTREGADO   = 'entregado',
+  PREPARACION = 'PREPARACION',
+  PENDIENTE   = 'PENDIENTE',
+  CANCELADO   = 'CANCELADO',
+  RECHAZADO   = 'RECHAZADO',
+  ENTREGADO   = 'ENTREGADO',
 }

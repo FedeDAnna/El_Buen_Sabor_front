@@ -1,8 +1,12 @@
 import type ArticuloInsumo from "../entidades/ArticuloInsumo";
 import type ArticuloManufacturado from "../entidades/ArticuloManufacturado";
 import type Categoria from "../entidades/Categoria";
+import type Domicilio from "../entidades/Domicilio";
+import type Pedido from "../entidades/Pedido";
+import type Sucursal from "../entidades/Sucursal";
 import type TipoCategoria from "../entidades/TipoCategoria";
 import type UnidadDeMedida from "../entidades/UnidadDeMedida";
+import type Usuario from "../entidades/Usuario";
 
 const API_URL = "http://localhost:8080";
 const basic   = btoa(`admin:admin123`);
@@ -95,7 +99,27 @@ export async function getArticulosManufacturadoPorCategoria(idCategoria: number)
   }));
 }
 
+export async function getArticulosInsumoPorCategoria(idCategoria: number): Promise<ArticuloInsumo[]>{
+    
+    const res = await fetch(`${API_URL}/articulos_insumos/byCategoria/${idCategoria}`,
+    {
+    method: 'GET',
+    credentials: 'include',  
+    headers: {
+      'Authorization': `Basic ${basic}`,
+      'Content-Type': 'application/json'
+    }
+  }
+  );
+  if (!res.ok) throw new Error("Error al obtener articulos");
+  const data = await res.json();
+  
 
+  return data.map((inst: ArticuloInsumo) => ({
+    ...inst,
+    id: inst.id
+  }));
+}
 
 export async function getArticulosManufacturados(): Promise<ArticuloManufacturado[]>{
     
@@ -119,10 +143,6 @@ export async function getArticulosManufacturados(): Promise<ArticuloManufacturad
   }));
 }
 
-
-/**
- * Carga todos los insumos disponibles
- */
 export async function fetchInsumos(): Promise<ArticuloInsumo[]> {
   const res = await fetch(`${API_URL}/articulos_insumos`, {
     credentials: 'include',
@@ -132,9 +152,6 @@ export async function fetchInsumos(): Promise<ArticuloInsumo[]> {
   return res.json();
 }
 
-/**
- * Guarda un ArticuloManufacturado bajo la categoría indicada
- */
 export async function saveArticuloManufacturado(articulo: ArticuloManufacturado): Promise<ArticuloManufacturado> {
 
   console.log("Dentro de APIS FUNCIONES")
@@ -152,6 +169,24 @@ export async function saveArticuloManufacturado(articulo: ArticuloManufacturado)
     }
   );
   if (!res.ok) throw new Error(`Error ${res.status} guardando producto`);
+  return res.json();
+}
+
+export async function saveArticuloInsumo(articulo: ArticuloInsumo): Promise<ArticuloInsumo> {
+
+  const res = await fetch(
+    `${API_URL}/articulos_insumos`,
+    {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Authorization': `Basic ${basic}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(articulo),
+    }
+  );
+  if (!res.ok) throw new Error(`Error ${res.status} guardando el insumo`);
   return res.json();
 }
 
@@ -191,5 +226,48 @@ export async function deleteCategoriaById(idCategoria :Number): Promise<boolean>
     headers: { 'Authorization': `Basic ${basic}` }
   })
   if (!res.ok)throw new Error(`Error ${res.status} al borrar la categoria`)
+  return res.json()
+}
+
+export async function fetchDomiciliosUsuario(): Promise<Domicilio[]> {
+  const res = await fetch(`${API_URL}/domicilios`, {
+    credentials: 'include',
+    headers: { Authorization: `Basic ${basic}` }
+  });
+  if (!res.ok) throw new Error(`Error ${res.status} cargando domicilios`);
+  return res.json();
+}
+
+export async function savePedido(
+  pedido: Pedido
+): Promise<Pedido> {
+  const res = await fetch(`${API_URL}/pedidos`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      Authorization: `Basic ${basic}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(pedido)
+  });
+  if (!res.ok) throw new Error(`Error ${res.status} guardando pedido`);
+  return res.json();
+}
+
+export async function getUsuarioById(idUsuario: number): Promise<Usuario> {
+  const res = await fetch(`${API_URL}/usuarios/${idUsuario}`, {
+    credentials: 'include',
+    headers: { 'Authorization': `Basic ${basic}` }
+  })
+  if (!res.ok)throw new Error(`Error ${res.status} al traer el usuario`)
+  return res.json()
+}
+
+export async function getSucursalById(idSucuarsal: number): Promise<Sucursal> {
+  const res = await fetch(`${API_URL}/sucursales/${idSucuarsal}`, {
+    credentials: 'include',
+    headers: { 'Authorization': `Basic ${basic}` }
+  })
+  if (!res.ok)throw new Error(`Error ${res.status} al traer la sucursal`)
   return res.json()
 }
