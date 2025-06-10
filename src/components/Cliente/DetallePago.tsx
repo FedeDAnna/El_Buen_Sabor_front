@@ -14,6 +14,7 @@ import { FormaPago } from '../../entidades/FormaPago';
 import { Estado } from '../../entidades/Estado';
 import Usuario from '../../entidades/Usuario';
 import Sucursal from '../../entidades/Sucursal';
+import ArticuloManufacturado from '../../entidades/ArticuloManufacturado';
 
 export default function DetallePago() {
   const { cartItems, total, clearCart } = useCart();
@@ -54,12 +55,21 @@ export default function DetallePago() {
     }
     // 3.1) Fecha actual
     const ahora = DateTime.local()
+    
     // 3.2) Calcular hora estimada: busco el mayor tiempo entre los productos
     const maxMin = Math.max(
       0,
-      ...cartItems.map(i => i.producto.tiempo_estimado_en_minutos)
+      ...cartItems.map(i => (i.producto as ArticuloManufacturado).tiempo_estimado_en_minutos)
     )
-    const horaEstimada = ahora.plus({ minutes: maxMin })
+    let horaEstimada = null;
+
+    if(maxMin == 0){
+      horaEstimada = ahora.plus({ minutes: 15 })  
+    }else{
+      horaEstimada = ahora.plus({ minutes: maxMin })
+    }
+    
+
     
     // 3.3) Construir detalles de pedido
     const detalles = cartItems.map(ci => {
@@ -71,7 +81,9 @@ export default function DetallePago() {
     })
 
     // 3.4) Construir la instancia de Pedido
+    
     const pedido = new Pedido()
+
     pedido.tipo_envio =tipoEnvio
     pedido.forma_pago = formaPago
     pedido.hora_estimada_finalizacion = horaEstimada

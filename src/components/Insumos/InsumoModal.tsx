@@ -35,9 +35,6 @@ export default function InsumoModal({
   const [unidades, setUnidades] = useState<UnidadDeMedida[]>([])
   const [selectedUnidadId, setSelectedUnidadId] = useState<number | ''>('')
 
-  const [insumos, setInsumos] = useState<ArticuloInsumo[]>([]) 
-  const [loadingInsumos, setLoadingInsumos] = useState(true)
-
   useEffect(()=>{
     fetchUnidadesDeMedida()
           .then(setUnidades)

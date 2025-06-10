@@ -1,10 +1,11 @@
-import { createContext, useContext, useState, useMemo } from 'react'
+import { createContext, useContext, useState} from 'react'
 import type { ReactNode } from 'react'
 import type ArticuloManufacturado from '../entidades/ArticuloManufacturado'
+import type ArticuloInsumo from '../entidades/ArticuloInsumo'
 
 
 export interface CartItem {
-  producto: ArticuloManufacturado
+  producto: ArticuloManufacturado | ArticuloInsumo
   cantidad: number
   subtotal: number;
 } 
@@ -16,7 +17,7 @@ export interface CartItem {
 interface CartContextType {
   cartItems: CartItem[]
   total: number
-  addToCart: (producto: ArticuloManufacturado, cantidad?: number) => void
+  addToCart: (producto: ArticuloManufacturado | ArticuloInsumo , cantidad?: number) => void
   removeFromCart: (productoId: number) => void
   updateQuantity: (productoId: number, nuevaCantidad: number) => void
   clearCart: () => void
@@ -45,7 +46,7 @@ export function CartProvider({ children }: CartProviderProps) {
    * Agrega un producto al carrito.
    * Si ya existía, suma la cantidad; si no, lo inserta.
    */
-  function addToCart(producto: ArticuloManufacturado, cantidad: number = 1) {
+  function addToCart(producto: ArticuloManufacturado | ArticuloInsumo, cantidad: number = 1) {
     setCartItems(prev => {
       const idx = prev.findIndex(i => i.producto.id === producto.id)
       if (idx >= 0) {

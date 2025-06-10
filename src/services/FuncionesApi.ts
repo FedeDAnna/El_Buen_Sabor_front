@@ -57,8 +57,29 @@ export async function guardarCategoriaConHijos(
   return data;
 }
 
- export async function getCategoriasByTipo(idTipo: number): Promise<Categoria[]> {
+export async function getCategoriasByTipo(idTipo: number): Promise<Categoria[]> {
    const res = await fetch(`${API_URL}/categorias/manufacturados/${idTipo}`,
+     {
+     method: 'GET',
+     credentials: 'include',  
+     headers: {
+       'Authorization': `Basic ${basic}`,
+       'Content-Type': 'application/json'
+    }
+  }
+  );
+  if (!res.ok) throw new Error("Error al obtener categorias");
+  const data = await res.json();
+
+  return data.map((inst: Categoria) => ({
+    ...inst,
+    id: inst.id
+  }));
+}
+
+export async function findCategoriaParaVentas(): Promise<Categoria[]>{
+
+  const res = await fetch(`${API_URL}/categorias/ventas`,
      {
      method: 'GET',
      credentials: 'include',  
@@ -154,7 +175,10 @@ export async function fetchInsumos(): Promise<ArticuloInsumo[]> {
 
 export async function saveArticuloManufacturado(articulo: ArticuloManufacturado): Promise<ArticuloManufacturado> {
 
-  console.log("Dentro de APIS FUNCIONES")
+  const payload = {
+    _type: 'manufacturado' as const,
+    ...articulo
+  }
 
   const res = await fetch(
     `${API_URL}/articulos_manufacturados`,
@@ -165,7 +189,7 @@ export async function saveArticuloManufacturado(articulo: ArticuloManufacturado)
         'Authorization': `Basic ${basic}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(articulo),
+      body: JSON.stringify(payload),
     }
   );
   if (!res.ok) throw new Error(`Error ${res.status} guardando producto`);
@@ -173,6 +197,11 @@ export async function saveArticuloManufacturado(articulo: ArticuloManufacturado)
 }
 
 export async function saveArticuloInsumo(articulo: ArticuloInsumo): Promise<ArticuloInsumo> {
+
+  const payload = {
+    _type: 'insumo' as const,
+    ...articulo
+  }
 
   const res = await fetch(
     `${API_URL}/articulos_insumos`,
@@ -183,7 +212,7 @@ export async function saveArticuloInsumo(articulo: ArticuloInsumo): Promise<Arti
         'Authorization': `Basic ${basic}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(articulo),
+      body: JSON.stringify(payload),
     }
   );
   if (!res.ok) throw new Error(`Error ${res.status} guardando el insumo`);
@@ -217,7 +246,6 @@ export async function deleteProductosById(idProduc :Number): Promise<boolean> {
   if (!res.ok)throw new Error(`Error ${res.status} al borrar el producto manufacturado`)
   return res.json()
 }
-
 
 export async function deleteCategoriaById(idCategoria :Number): Promise<boolean> {
   const res = await fetch(`${API_URL}/categorias/${idCategoria}`, {

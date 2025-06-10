@@ -1,3 +1,4 @@
+import ArticuloManufacturado from "./ArticuloManufacturado";
 import type Domicilio from "./Domicilio";
 import type { Estado } from "./Estado";
 import type Factura from "./Factura";
@@ -44,7 +45,11 @@ export default class Pedido{
       detalles: this.detalles.map(d => ({
         cantidad: d.cantidad,
         subtotal: d.subtotal,
-        articulo: { id: d.articulo!.id }
+        articulo: {
+          _type: d.articulo instanceof ArticuloManufacturado ? 'manufacturado' : 'insumo',
+          id: d.articulo!.id,
+
+        }   
       })),
     }
   }

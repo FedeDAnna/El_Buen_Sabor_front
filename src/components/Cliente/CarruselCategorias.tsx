@@ -3,11 +3,9 @@ import { useRef, useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import '../../estilos/CarruselCategorias.css'
 import type Categoria from '../../entidades/Categoria'
-import { getCategoriasByTipo } from '../../services/FuncionesApi'
+import { findCategoriaParaVentas, getCategoriasByTipo } from '../../services/FuncionesApi'
 
 interface Props {
-  /** Si se quiere remapear el clic para algo distinto, 
-      se puede pasar onCategoryClick en lugar de Link por defecto */
   onCategoryClick?: (cat: Categoria) => void
 }
 
@@ -19,11 +17,13 @@ export default function CarruselCategorias({ onCategoryClick }: Props) {
   const location = useLocation()
 
   useEffect(() => {
-    getCategoriasByTipo(2)
+    findCategoriaParaVentas()
       .then(data => setCategorias(data))
       .catch(console.error)
       .finally(() => setLoading(false))
   }, [])
+
+  console.log("categorias ",categorias)
 
   const scrollLeft = () => {
     if (!carouselRef.current) return
@@ -31,7 +31,7 @@ export default function CarruselCategorias({ onCategoryClick }: Props) {
     setScrollPos(newPos)
     carouselRef.current.scrollTo({ left: newPos, behavior: 'smooth' })
   }
-
+  
   const scrollRight = () => {
     if (!carouselRef.current) return
     const maxScroll = carouselRef.current.scrollWidth - carouselRef.current.clientWidth
@@ -43,7 +43,7 @@ export default function CarruselCategorias({ onCategoryClick }: Props) {
   if (loading) {
     return <div className="cc-loading">Cargando categorías...</div>
   }
-
+  
   return (
     <div className="cc-container">
       <button className="cc-arrow cc-left" onClick={scrollLeft} aria-label="Anterior">

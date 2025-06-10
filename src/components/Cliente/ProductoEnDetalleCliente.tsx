@@ -12,14 +12,12 @@ import { useCart } from '../CartContext'
 export default function ProductoEnDetalleCliente() {
     
   const { id } = useParams<Record<'id', string>>() 
-  const navigate = useNavigate()
-  
+  const navigate = useNavigate()  
 
   const [articulo, setArticulo] = useState<ArticuloManufacturado | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   
-  // Consumo el carrito global
   const { addToCart } = useCart()
 
   // Control de cantidad (para el input +/-)
@@ -116,7 +114,6 @@ export default function ProductoEnDetalleCliente() {
           </div>
         )}
       </main>
-
 </>
   )
 }

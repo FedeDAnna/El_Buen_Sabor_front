@@ -1,6 +1,5 @@
 
 import type Categoria from "./Categoria";
-import type Categoria from "./Categoria";
 import Imagen from "./Imagen";
 import type UnidadDeMedida from "./UnidadDeMedida";
 
