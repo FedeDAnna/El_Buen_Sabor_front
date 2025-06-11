@@ -29,23 +29,24 @@ export default function ProductosCategoriaCliente() {
         setLoading(true)
         setError(null)
 
-        const cat = await fetchCategoriaById(Number(categoriaId))
-        setCategoria(cat)
-
         let data:
           | ArticuloManufacturado[]
           | ArticuloInsumo[] = []
 
-        if (cat.id === 0) {
-          data = await getArticulosManufacturados()
-        } else if (cat.tipo_categoria?.id === 1) {
-          data = await getArticulosInsumoPorCategoria(cat.id!)
-        } else {
+        if(Number(categoriaId) != 0){
+          const cat = await fetchCategoriaById(Number(categoriaId))
+          setCategoria(cat)
+          if(cat.tipo_categoria?.id === 1){
+            data = await getArticulosInsumoPorCategoria(cat.id!)
+          }else {
           data = await getArticulosManufacturadoPorCategoria(cat.id!)
+          }
+        }else{
+          data = await getArticulosManufacturados()
         }
 
         setProductos(data)
-      } catch (err) {
+      } catch (err) { 
         console.error(err)
         setError('No se pudieron cargar los productos.')
       } finally {
