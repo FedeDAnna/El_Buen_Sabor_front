@@ -49,7 +49,7 @@ export default function DetallePago() {
 
   const handleFinalizar = async () => {
 
-     if (!selectedDomId && tipoEnvio === TipoEnvio.DELIVERY) {
+    if (!selectedDomId && tipoEnvio === TipoEnvio.DELIVERY) {
       alert('Elija una dirección de envío')
       return
     }
@@ -57,20 +57,21 @@ export default function DetallePago() {
     const ahora = DateTime.local()
     
     // 3.2) Calcular hora estimada: busco el mayor tiempo entre los productos
-    const maxMin = Math.max(
-      0,
-      ...cartItems.map(i => (i.producto as ArticuloManufacturado).tiempo_estimado_en_minutos)
+    const tiempos = cartItems
+    .map(ci => ci.producto)
+    .filter((p): p is ArticuloManufacturado => 
+      'tiempo_estimado_en_minutos' in p
     )
-    let horaEstimada = null;
+    .map(m => m.tiempo_estimado_en_minutos)
 
-    if(maxMin == 0){
-      horaEstimada = ahora.plus({ minutes: 15 })  
-    }else{
-      horaEstimada = ahora.plus({ minutes: maxMin })
-    }
-    
+    // Si no hay manufacturados, por defecto 15 minutos
+    const maxMin = tiempos.length > 0
+      ? Math.max(...tiempos)
+      : 15
 
-    
+    // Ahora este plus nunca recibe NaN
+    const horaEstimada = ahora.plus({ minutes: maxMin })
+        
     // 3.3) Construir detalles de pedido
     const detalles = cartItems.map(ci => {
       const pd = new PedidoDetalle()

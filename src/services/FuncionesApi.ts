@@ -23,7 +23,24 @@ export async function getArticuloManufacturadoById(
     },
   });
   if (!res.ok) {
-    throw new Error(`Error ${res.status} obteniendo el artículo con ID ${id}`);
+    throw new Error(`Error ${res.status} obteniendo el artículo Manufacturado con ID ${id}`);
+  }
+  return res.json();
+}
+
+export async function getArticuloInsumoById(
+  id: number
+): Promise<ArticuloInsumo> {
+  const res = await fetch(`${API_URL}/articulos_insumos/${id}`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Authorization': `Basic ${basic}`,
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`Error ${res.status} obteniendo el artículo Insumo con ID ${id}`);
   }
   return res.json();
 }

@@ -20,14 +20,6 @@ export default function ProductosCategoriaCliente() {
 
   // Control del buscador
   const [searchTerm, setSearchTerm] = useState<string>('')
-
-  // useEffect(() => {
-  //    if (!categoriaId) return;
-  //    fetchCategoriaById(Number(categoriaId))
-  //      .then(setCategoria)
-  //      .catch((e) => console.error(e));
-  // }, [categoriaId]);
-
    
  useEffect(() => {
     if (!categoriaId) return
@@ -66,9 +58,10 @@ export default function ProductosCategoriaCliente() {
 
   console.log("Productos", productos)
 
-  function isManufacturado(p: ArticuloManufacturado | ArticuloInsumo):
-  p is ArticuloManufacturado {
-    return p instanceof ArticuloManufacturado;
+  function isManufacturado(
+    p: ArticuloManufacturado | ArticuloInsumo
+  ): p is ArticuloManufacturado {
+    return 'tiempo_estimado_en_minutos' in p
   }
 
   // Filtrar productos según searchTerm (por denominacion o descripcion, toLowerCase)
@@ -86,11 +79,10 @@ export default function ProductosCategoriaCliente() {
     }
   });
 
+  console.log()
+
   return (
     <>
-      {/*<Header onMenuClick={() => setSidebarOpen(true)} />*/}
-      
-
       <main className="cpp-main">
         {/* Carrusel siempre en la parte superior */}
         <section className="cpp-carrusel-wrapper">
@@ -121,6 +113,7 @@ export default function ProductosCategoriaCliente() {
                   <Link
                     key={prod.id}
                     to={`/articulo/${prod.id}`}
+                    state={{ tipo: (isManufacturado(prod) ? 'manufacturado' : 'insumo') }}
                     className="cpp-card"
                   >
                     <div className="cpp-card-img">
@@ -150,8 +143,6 @@ export default function ProductosCategoriaCliente() {
         <br></br>
         <br></br>
       </main>
-
-      {/*<Footer />*/}
     </>
   )
 }
