@@ -29,54 +29,39 @@ export default function ProductosCategoriaCliente() {
   // }, [categoriaId]);
 
    
-  useEffect(() => {
-    if (!categoriaId) return;
-     fetchCategoriaById(Number(categoriaId))
-       .then(setCategoria)
-       .catch((e) => console.error(e));
+ useEffect(() => {
+    if (!categoriaId) return
 
-    setLoading(true)
-    setError(null)
+    const load = async () => {
+      try {
+        setLoading(true)
+        setError(null)
 
-    if(categoriaId == "0"){
-      getArticulosManufacturados()
-        .then(data => {
-          setProductos(data)
-        })
-        .catch(err => {
-          console.error(err)
-          setError('No se pudieron cargar los productos.')
-        })
-        .finally(() => setLoading(false))
-    }else{
+        const cat = await fetchCategoriaById(Number(categoriaId))
+        setCategoria(cat)
 
-      console.log(" ACAAAA" ,categoria?.id)
+        let data:
+          | ArticuloManufacturado[]
+          | ArticuloInsumo[] = []
 
-      if(!(categoria?.tipo_categoria?.id === 1)){
-        getArticulosInsumoPorCategoria(Number(categoriaId))
-          .then(data => {
-            setProductos(data)
-            console.log("categoria: ", categoria?.id , "DATA: ",data)
-          })
-          .catch(err => {
-            console.error(err)
-            setError('No se pudieron cargar los productos.')
-          })
-          .finally(() => setLoading(false))
-      }else{
-        getArticulosManufacturadoPorCategoria(Number(categoriaId))
-          .then(data => {
-            setProductos(data)
-          })
-          .catch(err => {
-            console.error(err)
-            setError('No se pudieron cargar los productos.')
-          })
-          .finally(() => setLoading(false))
+        if (cat.id === 0) {
+          data = await getArticulosManufacturados()
+        } else if (cat.tipo_categoria?.id === 1) {
+          data = await getArticulosInsumoPorCategoria(cat.id!)
+        } else {
+          data = await getArticulosManufacturadoPorCategoria(cat.id!)
+        }
+
+        setProductos(data)
+      } catch (err) {
+        console.error(err)
+        setError('No se pudieron cargar los productos.')
+      } finally {
+        setLoading(false)
       }
-      
     }
-    
+
+    load()
   }, [categoriaId])
 
   console.log("Productos", productos)
