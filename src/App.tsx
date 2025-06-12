@@ -8,15 +8,12 @@ import Layout from './components/Layout/Layout';
 import HomePage from './components/Cliente/HomePage';
 import ProductosCategoriaCliente from './components/Cliente/ProductosCategoriaCliente';
 import ProductoEnDetalleCliente from './components/Cliente/ProductoEnDetalleCliente';
-<<<<<<< HEAD
 import OrdenesPantalla from './components/Ordenes/OrdenesPantalla';
-=======
 import { CartProvider } from './components/CartContext'
 import InsumosCategoria from './components/Insumos/InsumosCategoria';
 import CarritoPage from './components/Cliente/CarritoPage';
 import DetallePago from './components/Cliente/DetallePago';
 import PedidoConfirmado from './components/Cliente/PedidoConfirmado';
->>>>>>> fede
 
 export default function App() {
   return (
@@ -30,7 +27,6 @@ export default function App() {
 
             <Route path="/categorias/:categoriaId" element={<ProductosCategoriaCliente />} />
 
-<<<<<<< HEAD
         <Route path="/articulo/:id" element={<ProductoEnDetalleCliente/>} />
         <Route path="/Ordenes" element={<OrdenesPantalla/>} />
         
@@ -42,7 +38,6 @@ export default function App() {
               </AdminPantalla>
             }
           />
-=======
             <Route path="/articulo/:id" element={<ProductoEnDetalleCliente/>} />
             <Route path="/carrito" element={<CarritoPage />} />
             <Route
@@ -53,7 +48,6 @@ export default function App() {
                 </AdminPantalla>
               }
             />
->>>>>>> fede
 
             <Route
               path="/admin/productos/:categoriaId"
