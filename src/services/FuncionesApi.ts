@@ -1,6 +1,7 @@
 import type ArticuloInsumo from "../entidades/ArticuloInsumo";
 import type ArticuloManufacturado from "../entidades/ArticuloManufacturado";
 import type Categoria from "../entidades/Categoria";
+import type Pedido from "../entidades/Pedido";
 import type TipoCategoria from "../entidades/TipoCategoria";
 import type UnidadDeMedida from "../entidades/UnidadDeMedida";
 
@@ -196,7 +197,7 @@ export async function deleteCategoriaById(idCategoria :Number): Promise<boolean>
 
 export async function getPedidos(): Promise<Pedido[]>{
     
-    const res = await fetch(`${API_URL}/articulos_manufacturados`,
+    const res = await fetch(`${API_URL}/pedidos`,
     {
     method: 'GET',
     credentials: 'include',  
@@ -206,11 +207,11 @@ export async function getPedidos(): Promise<Pedido[]>{
     }
   }
   );
-  if (!res.ok) throw new Error("Error al obtener articulos");
+  if (!res.ok) throw new Error("Error al obtener pedidos");
   const data = await res.json();
-  
+  console.log("data apis",data)
 
-  return data.map((inst: ArticuloManufacturado) => ({
+  return data.map((inst: Pedido) => ({
     ...inst,
     id: inst.id
   }));

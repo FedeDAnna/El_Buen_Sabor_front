@@ -1,10 +1,10 @@
 import type Domicilio from "./Domicilio";
 import type { Estado } from "./Estado";
 import type { FormaPago } from "./FormaPago";
+import type PedidoDetalle from "./PedidoDetalle";
 import type Sucursal from "./Sucursal";
 import type { TipoEnvio } from "./TipoEnvio";
 import type Usuario from "./Usuario";
-import { DateTime } from "luxon";
 
 
 export default class Pedido{
@@ -18,4 +18,6 @@ export default class Pedido{
     domicilio?: Domicilio;
     sucursal?: Sucursal;
     usuario?: Usuario;
+    repartidor?:Usuario;
+    detalles: PedidoDetalle[]=[];
 }

@@ -8,6 +8,7 @@ import Layout from './components/Layout/Layout';
 import HomePage from './components/Cliente/HomePage';
 import ProductosCategoriaCliente from './components/Cliente/ProductosCategoriaCliente';
 import ProductoEnDetalleCliente from './components/Cliente/ProductoEnDetalleCliente';
+import OrdenesPantalla from './components/Ordenes/OrdenesPantalla';
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/categorias/:categoriaId" element={<ProductosCategoriaCliente />} />
 
         <Route path="/articulo/:id" element={<ProductoEnDetalleCliente/>} />
+        <Route path="/Ordenes" element={<OrdenesPantalla/>} />
         
           <Route
             path="/admin/productos"

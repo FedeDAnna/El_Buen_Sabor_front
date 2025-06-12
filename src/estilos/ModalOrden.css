@@ -1,0 +1,80 @@
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-contenido {
+  background: white;
+  width: 700px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  font-family: sans-serif;
+}
+
+.modal-header {
+  background-color: orange;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+}
+
+.tabs button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: #f3f3f3;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.tabs button.activo {
+  background: #fff;
+  border-bottom: 3px solid orange;
+}
+
+.tab-contenido {
+  padding: 20px;
+}
+
+.seccion {
+  margin-bottom: 20px;
+  background: #fff8e1;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.fila span {
+  flex: 1 1 40%;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+table th, table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
