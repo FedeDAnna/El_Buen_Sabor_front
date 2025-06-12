@@ -2,7 +2,7 @@ import type ArticuloInsumo from "./ArticuloInsumo";
 import type Sucursal from "./Sucursal";
 
 export default class StockInsumoSucursales {
-    id: number =0;
+    id?: number;
     precioCompra: number =0;
     sotckActual: number = 0;
     stockMaximo: number = 0;

@@ -1,6 +1,6 @@
 // src/components/Productos/Productos.tsx
 import { useState, useEffect, useCallback } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import '../../estilos/Productos.css'
 import '../../estilos/ProductosTabla.css'
 import CategoriaModal from './CategoriaModal'
@@ -12,30 +12,26 @@ import {
 import type Categoria from '../../entidades/Categoria'
 
 export default function Productos() {
-  // 1) Estado local para la lista de categorías
+  const { idTipo } = useParams();
   const [listaCategorias, setListaCategorias] = useState<Categoria[]>([])
 
-  // 2) Control del modal para crear/editar categoría
   const [modalAbierto, setModalAbierto] = useState(false)
   const [editable, setEditable] = useState(false)
   const [categoriaEnModal, setCategoriaEnModal] = useState<Categoria | undefined>(undefined)
 
-  // 3) Función para recargar el listado desde el backend
   const reload = useCallback(async () => {
     try {
-      const data = await getCategoriasByTipo(2) // 2 = tipo de categoría “manufacturado”
+      const data = await getCategoriasByTipo(Number(idTipo))
       setListaCategorias(data)
     } catch (e) {
       console.error('No se pudieron cargar categorías:', e)
     }
   }, [])
 
-  // 4) Al montar, hago la carga inicial
   useEffect(() => {
     reload()
   }, [reload])
 
-  // 5) Al salvar (tanto crear como editar), envío al backend y recargo
   const handleSave = async (cat: Categoria) => {
     try {
       console.log("Categoria en HandleSave", cat)
@@ -80,7 +76,7 @@ export default function Productos() {
   return (
     <section className="products-page">
       <div className="header">
-        <h2>Categorías</h2>
+        <h2>{idTipo === "2" ? 'Categorías Producto' : 'Categorías Insumo' }</h2>
         <button className="btn-add" onClick={() => openModal(true, true, undefined)}>
           Agregar +
         </button>
@@ -101,8 +97,13 @@ export default function Productos() {
               <td>{c.id}</td>
               <td>{c.denominacion}</td>
               <td>
-                <Link to={`/admin/productos/${c.id}`} title="Ver productos">INGRESAR</Link>{' '}
-                &nbsp;
+                { idTipo === "1"?
+                  <Link to={`/admin/insumos/${c.id}`} title="Ver insumos">INGRESAR</Link>
+                :
+                  <Link to={`/admin/productos/${c.id}`} title="Ver productos">INGRESAR</Link>
+                }
+                
+                
 
                 <button onClick={() => openModal(false, true, c)} title="Ver">
                   👁️
@@ -136,6 +137,7 @@ export default function Productos() {
         <CategoriaModal
           onClose={() => setModalAbierto(false)}
           onSave={handleSave}
+          idTipo={Number(idTipo)}
           initialData={categoriaEnModal} // Puedes pasar la categoría si es edición o undefined si es nueva
           editable={editable}           // Si editable==false, el modal será solo de consulta
         />

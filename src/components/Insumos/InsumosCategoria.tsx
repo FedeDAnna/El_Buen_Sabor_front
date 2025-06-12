@@ -3,24 +3,25 @@ import { useParams, Link } from 'react-router-dom';
 import '../../estilos/Productos.css';          
 import '../../estilos/ProductosTabla.css';     
 import {
-  getArticulosManufacturadoPorCategoria,
   fetchCategoriaById,
   deleteProductosById,
+  getArticulosInsumoPorCategoria,
 } from '../../services/FuncionesApi';
-import type ArticuloManufacturado from '../../entidades/ArticuloManufacturado';
 import type Categoria from '../../entidades/Categoria';
-import ProductoManufacturadoModal from './ProductoManufacturadoModal';
+import InsumoModal from './InsumoModal';
+import type ArticuloInsumo from '../../entidades/ArticuloInsumo';
 
-export default function ProductosCategoria() {
-  const { categoriaId } = useParams<{ categoriaId: string }>();
-  const [articulos, setArticulos] = useState<ArticuloManufacturado[]>([]);
+
+export default function InsumosCategoria() {
+  const { categoriaId } = useParams<{ categoriaId: string }>(); //check
+  const [articulos, setArticulos] = useState<ArticuloInsumo[]>([]);//check
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [editable, setEditable] = useState<boolean>();
 
-  const [prodModalOpen, setProdModalOpen] = useState(false);
-  const [modalProducto, setModalProductoId] = useState<ArticuloManufacturado | undefined>(undefined);
-  const [categoria, setCategoria] = useState<Categoria | undefined>();
+  const [insumModalOpen, setInsumModalOpen] = useState(false); //check
+  const [modalInsumo, setModalInsumo] = useState<ArticuloInsumo | undefined>(undefined); //check
+  const [categoria, setCategoria] = useState<Categoria | undefined>(); //check
 
   // Cargar la categoría
   useEffect(() => {
@@ -34,9 +35,9 @@ export default function ProductosCategoria() {
   useEffect(() => {
     if (!categoriaId) return;
     setCargando(true);
-    getArticulosManufacturadoPorCategoria(Number(categoriaId))
+    getArticulosInsumoPorCategoria(Number(categoriaId))
       .then(setArticulos)
-      .catch(() => setError('No se pudieron cargar los productos'))
+      .catch(() => setError('No se pudieron cargar los insumos'))
       .finally(() => setCargando(false));
   }, [categoriaId]);
 
@@ -44,10 +45,11 @@ export default function ProductosCategoria() {
   if (error) return <p>{error}</p>;
 
   // Función para abrir el modal (edición, nuevo o ver)
-  function openModal(edit: boolean,isOpen: boolean, ProduManu?: ArticuloManufacturado) {
+  function openModal(edit: boolean,isOpen: boolean, Insumo?: ArticuloInsumo) {
     setEditable(edit);
-    setModalProductoId(ProduManu);
-    setProdModalOpen(isOpen);
+    setInsumModalOpen(isOpen);
+    setModalInsumo(Insumo);
+    console.log(Insumo)
   }
 
   // Función para eliminar
@@ -74,9 +76,9 @@ export default function ProductosCategoria() {
           <tr>
             <th>Código</th>
             <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Tiempo (min)</th>
+            <th>Es para elaborar</th>
             <th>Precio Venta</th>
+            <th>Unidad Medida</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -85,9 +87,9 @@ export default function ProductosCategoria() {
             <tr key={a.id}>
               <td>{a.id}</td>
               <td>{a.denominacion}</td>
-              <td>{a.descripcion}</td>
-              <td>{a.tiempo_estimado_en_minutos}</td>
+              <td>{a.es_para_elaborar ? 'SI' : 'NO'}</td>
               <td>${a.precio_venta}</td>
+              <td>{a.unidad_de_medida?.denominacion}</td>
               <td>
                 <button 
                   title="Ver"
@@ -117,19 +119,19 @@ export default function ProductosCategoria() {
       </div>
 
       {/* Aquí va la condición para pintar el modal, fuera de la función openModal */}
-      {prodModalOpen && (
-        <ProductoManufacturadoModal
+      {insumModalOpen && (
+        <InsumoModal
         editable={editable!}
         categoria={categoria}
-          ProductoManu={modalProducto}
-          onClose={() => setProdModalOpen(false)}
+          ProductoInsumo={modalInsumo}
+          onClose={() => setInsumModalOpen(false)}
           onSave={(newProd) => {
             setArticulos((prev) =>
-              modalProducto
+              modalInsumo
                 ? prev.map((art) => (art.id === newProd.id ? newProd : art))
                 : [...prev, newProd]
             );
-            setProdModalOpen(false);
+            setInsumModalOpen(false);
           }}
         />
       )}

@@ -7,7 +7,7 @@ import type StockInsumoSucursales from "./StockInsumoSucursales";
 import type Usuario from "./Usuario";
 
 export default class Sucursal{
-    id: number =0;
+    id?: number;
     nombre: string = "";
     horarioApertura: Date = new Date();
     horarioCierre: Date = new Date();

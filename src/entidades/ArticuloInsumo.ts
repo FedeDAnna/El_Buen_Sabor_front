@@ -3,7 +3,7 @@ import type StockInsumoSucursales from "./StockInsumoSucursales";
 
 export default class ArticuloInsumo extends Articulo {
     
-    es_para_elaborar: boolean = false; //En el back está con snake_case
+    es_para_elaborar: boolean = false; 
 
     stock_insumo_sucursales: StockInsumoSucursales[] = [];
 

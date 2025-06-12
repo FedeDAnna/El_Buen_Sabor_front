@@ -4,8 +4,9 @@ import type Sucursal from './Sucursal';
 import type Articulo from './Articulo';
 import type Imagen from './Imagen';
 
+
 export default class Promocion {
-    id: number =0;
+    id?: number;
     denominacion: string = "";
     fecha_desde: Date = new Date();
     fecha_hasta: Date = new Date();

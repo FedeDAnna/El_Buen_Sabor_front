@@ -1,7 +1,7 @@
 import type Promocion from "./Promocion";
 
 export default class TipoPromocion{
-    id: number =0;
+    id?: number;
     descripcion: string ="";
     promociones: Promocion[]=[];
 
