@@ -15,6 +15,7 @@ import DetallePago from './components/Cliente/DetallePago';
 import PedidoConfirmado from './components/Cliente/PedidoConfirmado';
 import TipoPromocionesTabla from './components/Promociones/TipoPromocionesTabla';
 import PromocionTabla from './components/Promociones/PromocionTabla';
+import PromocionEnDetalle from './components/Promociones/PromocionEnDetalle';
 
 export default function App() {
   return (
@@ -37,6 +38,11 @@ export default function App() {
                   <Productos />
                 </AdminPantalla>
               }
+            />
+            
+            <Route
+              path="/promociones/:id"
+              element={<PromocionEnDetalle />}
             />
 
             <Route
@@ -66,13 +72,13 @@ export default function App() {
               <AdminPantalla>
                 <TipoPromocionesTabla/>
               </AdminPantalla>
-              }/>
+            }/>
 
             <Route path="/admin/promocion/:tipoPromocionId" element={
               <AdminPantalla>
                 <PromocionTabla/>
               </AdminPantalla>
-              }/>
+            }/>
 
 
             <Route path="*" element={<p>Página no encontrada</p>} />

@@ -240,6 +240,23 @@ export async function getTipoPromocionById(id: number): Promise<TipoPromocion> {
   return res.json();
 }
 
+export async function getPromocionById(id: number): Promise<Promocion> {
+  const res = await fetch(`${API_URL}/promociones/${id}`, {
+    credentials: 'include',
+    headers: { 'Authorization': `Basic ${basic}` }
+  })
+  if (!res.ok) throw new Error(`Error ${res.status}`)
+  const raw = await res.json()
+  return {
+    ...raw,
+    // transformar cadenas en instancias
+    fecha_desde: new Date(raw.fecha_desde),
+    fecha_hasta: new Date(raw.fecha_hasta),
+    hora_desde: DateTime.fromISO(raw.hora_desde),
+    hora_hasta: DateTime.fromISO(raw.hora_hasta),
+  }
+}
+
 export async function getPromocionesPorTipoPromocion(idTipoPromocion: number): Promise<Promocion[]>{
     const res = await fetch(`${API_URL}/promociones/byTipoPromocion/${idTipoPromocion}`,
     {

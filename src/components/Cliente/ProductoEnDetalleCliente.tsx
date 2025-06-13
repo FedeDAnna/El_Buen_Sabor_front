@@ -55,7 +55,7 @@ export default function ProductoEnDetalleCliente() {
 
  const handleAgregarAlCarrito = () => {
    if (!articulo) return
-   addToCart(articulo, cantidad)
+   addToCart(articulo, "articulo", cantidad)
    // Opcional: podrías mostrar un toast o mensaje breve
    alert(`Se agregaron ${cantidad} × "${articulo.denominacion}" al carrito.`)
  }

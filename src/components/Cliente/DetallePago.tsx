@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { fetchDomiciliosUsuario, getSucursalById, getUsuarioById, savePedido, savePedidoMP } from '../../services/FuncionesApi';
 import { DateTime } from 'luxon'
 import '../../estilos/DetallePago.css';
-import { useCart } from '../CartContext';
+import { useCart, type CartItem } from '../CartContext';
 import Domicilio from '../../entidades/Domicilio';
 import PedidoDetalle from '../../entidades/PedidoDetalle';
 import Pedido from '../../entidades/Pedido';
@@ -46,60 +46,91 @@ export default function DetallePago() {
 
   const formaPago = tipoEnvio === TipoEnvio.DELIVERY ? FormaPago.MERCADO_PAGO : FormaPago.EFECTIVO;
   
+  function calcularHoraEstimada(cartItems: CartItem[]): DateTime {
+    const ahora = DateTime.local();
 
-  function generarPedido() : Pedido | undefined {
+    // 1) Extraer **todos** los artículos (sueltos o dentro de promociones)
+    const todosLosArticulos = cartItems.flatMap(ci => {
+      if (ci.kind === 'articulo') {
+        return [ci.producto];
+      } else {
+        // es una promo: devolvemos su lista de artículos
+        return ci.promocion.articulos;
+      }
+    });
 
+    // 2) Filtrar sólo los manufacturados para leerles 'tiempo_estimado_en_minutos'
+    const manufacturados = todosLosArticulos.filter(
+      (p): p is ArticuloManufacturado =>
+        'tiempo_estimado_en_minutos' in p
+    );
+
+    // 3) Calcular el máximo de tiempo o 15' por defecto
+    const maxMin =
+      manufacturados.length > 0
+        ? Math.max(
+            ...manufacturados.map(m => m.tiempo_estimado_en_minutos)
+          )
+        : 15;
+
+    // 4) Sumar al now
+    return ahora.plus({ minutes: maxMin });
+  }
+
+
+  function generarPedido(): Pedido | undefined {
     if (!selectedDomId && tipoEnvio === TipoEnvio.DELIVERY) {
-      alert('Elija una dirección de envío')
-      return undefined
+      alert('Elija una dirección de envío');
+      return undefined;
     }
-    // 3.1) Fecha actual
-    const ahora = DateTime.local()
-    
-    // 3.2) Calcular hora estimada: busco el mayor tiempo entre los productos
-    const tiempos = cartItems
-    .map(ci => ci.producto)
-    .filter((p): p is ArticuloManufacturado => 
-      'tiempo_estimado_en_minutos' in p
-    )
-    .map(m => m.tiempo_estimado_en_minutos)
+    const horaEstimada = calcularHoraEstimada(cartItems);
+    // 2) desglosar items y promociones
+    const detalles: PedidoDetalle[] = [];
+    let totalLista = 0;
+    let totalPromo = 0;
 
-    // Si no hay manufacturados, por defecto 15 minutos
-    const maxMin = tiempos.length > 0
-      ? Math.max(...tiempos)
-      : 15
+    cartItems.forEach(ci => {
+      if (ci.kind === 'articulo') {
+        // artículo suelto
+        const pd = new PedidoDetalle();
+        pd.articulo = ci.producto;
+        pd.cantidad = ci.cantidad;
+        pd.subtotal = ci.subtotal;
+        detalles.push(pd);
+        totalLista += ci.subtotal;
+      } else {
+        // promoción: desmontar sus artículos
+        const promo = ci.promocion;
+        totalPromo += promo.precio_promocional * ci.cantidad;
+        promo.articulos.forEach(a => {
+          const pd = new PedidoDetalle();
+          pd.articulo = a;
+          pd.cantidad = ci.cantidad;
+          pd.subtotal = a.precio_venta * ci.cantidad;
+          detalles.push(pd);
+          totalLista += a.precio_venta * ci.cantidad;
+        });
+      }
+    });
 
-    // Ahora este plus nunca recibe NaN
-    const horaEstimada = ahora.plus({ minutes: maxMin })
-        
-    // 3.3) Construir detalles de pedido
-    const detalles = cartItems.map(ci => {
-      const pd = new PedidoDetalle()
-      pd.cantidad = ci.cantidad
-      pd.subtotal = ci.subtotal
-      pd.articulo = ci.producto
-      return pd
-    })
-
-    // 3.4) Construir la instancia de Pedido
-    
-    const pedido = new Pedido()
-    
-    pedido.tipo_envio =tipoEnvio
-    pedido.forma_pago = formaPago
-    pedido.hora_estimada_finalizacion = horaEstimada
-    pedido.total = total
-    pedido.estado_pedido = Estado.PENDIENTE
-    pedido.fecha_pedido = DateTime.local()
-    pedido.domicilio = domicilios.filter((d)=> d.id === selectedDomId)[0]
-    pedido.sucursal = sucursal
+    // 3) armar Pedido
+    const pedido = new Pedido();
+    pedido.tipo_envio = tipoEnvio;
+    pedido.forma_pago = formaPago;
+    pedido.hora_estimada_finalizacion = horaEstimada;
+    pedido.total = total;                   // lo que paga el cliente
+    pedido.descuento = totalLista - total;  // diferencia entre lista y precio final
+    pedido.estado_pedido = Estado.PENDIENTE;
+    pedido.fecha_pedido = DateTime.local();
+    pedido.domicilio = domicilios.find(d => d.id === selectedDomId)!;
+    pedido.sucursal = sucursal!;
+    pedido.usuario = usuario!;
     pedido.repartidor = undefined;
-    pedido.usuario = usuario
-    pedido.factura = undefined
-    pedido.detalles = detalles
+    pedido.factura = undefined;
+    pedido.detalles = detalles;
 
     return pedido;
-  }  
+  } 
   
   const handlefinalizarEfectivo = async() => {
     const pedido : Pedido|undefined = generarPedido()

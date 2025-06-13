@@ -27,50 +27,103 @@ export default function CarritoPage() {
 
       <div className="cart-content">
         <div className="cart-items-container">
-          {cartItems.map((item: CartItem) => (
-            <div key={item.producto.id} className="cart-item-row">
-              <img
-                src={item.producto.imagen?.src || '/assets/no-image.png'}
-                alt={item.producto.denominacion}
-                className="cart-item-img-large"
-              />
-              <div className="cart-item-details">
-                <h3>{item.producto.denominacion}</h3>
-                <p>
-                  Precio unitario: <strong>${item.producto.precio_venta.toLocaleString()}</strong>
-                </p>
-                <div className="cart-item-quantity">
-                  <button
-                    onClick={() =>
-                      updateQuantity(item.producto.id!, item.cantidad - 1)
-                    }
-                    className="btn-qty"
-                  >
-                    –
-                  </button>
-                  <span className="qty-display">{item.cantidad}</span>
-                  <button
-                    onClick={() =>
-                      updateQuantity(item.producto.id!, item.cantidad + 1)
-                    }
-                    className="btn-qty"
-                  >
-                    +
-                  </button>
-                  <button
-                    onClick={() => removeFromCart(item.producto.id!)}
-                    className="btn-remove"
-                  >
-                    🗑️
-                  </button>
+          {cartItems.map((item: CartItem) => {
+            if (item.kind === 'articulo') {
+              const p = item.producto
+              return (
+                <div key={`art-${p.id}`} className="cart-item-row">
+                  <img
+                    src={p.imagen?.src || '/assets/no-image.png'}
+                    alt={p.denominacion}
+                    className="cart-item-img-large"
+                  />
+                  <div className="cart-item-details">
+                    <h3>{p.denominacion}</h3>
+                    <p>
+                      Precio unitario:{' '}
+                      <strong>${p.precio_venta.toLocaleString()}</strong>
+                    </p>
+                    <div className="cart-item-quantity">
+                      <button
+                        onClick={() => updateQuantity(p.id!,'articulo', item.cantidad - 1)}
+                        className="btn-qty"
+                      >
+                        –
+                      </button>
+                      <span className="qty-display">{item.cantidad}</span>
+                      <button
+                        onClick={() => updateQuantity(p.id!, 'articulo' ,item.cantidad + 1)}
+                        className="btn-qty"
+                      >
+                        +
+                      </button>
+                      <button
+                        onClick={() => removeFromCart(p.id!,'articulo')}
+                        className="btn-remove"
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                    <p className="cart-item-subtotal">
+                      Subtotal:{' '}
+                      <strong>
+                        ${(p.precio_venta * item.cantidad).toLocaleString()}
+                      </strong>
+                    </p>
+                  </div>
                 </div>
-                <p className="cart-item-subtotal">
-                  Subtotal:{' '}
-                  <strong>${item.subtotal.toLocaleString()}</strong>
-                </p>
-              </div>
-            </div>
-          ))}
+              )
+            } else {
+              const promo = item.promocion
+              return (
+                <div key={`promo-${promo.id}`} className="cart-item-row">
+                  <img
+                    src={promo.imagen?.src || '/assets/no-image.png'}
+                    alt={promo.denominacion}
+                    className="cart-item-img-large"
+                  />
+                  <div className="cart-item-details">
+                    <h3>{promo.denominacion}</h3>
+                    <p>
+                      Precio promo:{' '}
+                      <strong>${promo.precio_promocional.toLocaleString()}</strong>
+                    </p>
+                    <div className="cart-item-quantity">
+                      <button
+                        onClick={() =>
+                          updateQuantity(promo.id!,'promocion' ,item.cantidad - 1, )
+                        }
+                        className="btn-qty"
+                      >
+                        –
+                      </button>
+                      <span className="qty-display">{item.cantidad}</span>
+                      <button
+                        onClick={() =>
+                          updateQuantity(promo.id!,'promocion' ,item.cantidad + 1 )
+                        }
+                        className="btn-qty"
+                      >
+                        +
+                      </button>
+                      <button
+                        onClick={() => removeFromCart(promo.id!, 'promocion')}
+                        className="btn-remove"
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                    <p className="cart-item-subtotal">
+                      Subtotal:{' '}
+                      <strong>
+                        ${(promo.precio_promocional * item.cantidad).toLocaleString()}
+                      </strong>
+                    </p>
+                  </div>
+                </div>
+              )
+            }
+          })}
         </div>
 
         <div className="cart-summary">
