@@ -2,6 +2,7 @@ import { createContext, useContext, useState} from 'react'
 import type { ReactNode } from 'react'
 import type ArticuloManufacturado from '../entidades/ArticuloManufacturado'
 import type ArticuloInsumo from '../entidades/ArticuloInsumo'
+import type Promocion from '../entidades/Promocion'
 
 
 export interface CartItem {

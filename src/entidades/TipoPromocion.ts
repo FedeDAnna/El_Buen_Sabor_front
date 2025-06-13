@@ -5,5 +5,4 @@ export default class TipoPromocion{
     descripcion: string ="";
     promociones: Promocion[]=[];
 
-
 }

@@ -7,6 +7,7 @@ function Sidebar() {
         <li><a href="/admin/ordenes">Pedidos</a></li>
         <li><a href="/admin/categorias/1">Insumos</a></li>
         <li><a href="/admin/categorias/2">Productos</a></li>
+        <li><a href="/admin/tipoPromociones">Tipo Promociones</a></li>
         <li><a href="/HomePage">Home</a></li>
         
       </ul>

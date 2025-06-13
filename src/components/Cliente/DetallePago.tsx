@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { fetchDomiciliosUsuario, getSucursalById, getUsuarioById, savePedido } from '../../services/FuncionesApi';
+import { fetchDomiciliosUsuario, getSucursalById, getUsuarioById, savePedido, savePedidoMP } from '../../services/FuncionesApi';
 import { DateTime } from 'luxon'
 import '../../estilos/DetallePago.css';
 import { useCart } from '../CartContext';
@@ -47,11 +47,11 @@ export default function DetallePago() {
   const formaPago = tipoEnvio === TipoEnvio.DELIVERY ? FormaPago.MERCADO_PAGO : FormaPago.EFECTIVO;
   
 
-  const handleFinalizar = async () => {
+  function generarPedido() : Pedido | undefined {
 
     if (!selectedDomId && tipoEnvio === TipoEnvio.DELIVERY) {
       alert('Elija una dirección de envío')
-      return
+      return undefined
     }
     // 3.1) Fecha actual
     const ahora = DateTime.local()
@@ -84,7 +84,7 @@ export default function DetallePago() {
     // 3.4) Construir la instancia de Pedido
     
     const pedido = new Pedido()
-
+    
     pedido.tipo_envio =tipoEnvio
     pedido.forma_pago = formaPago
     pedido.hora_estimada_finalizacion = horaEstimada
@@ -93,10 +93,17 @@ export default function DetallePago() {
     pedido.fecha_pedido = DateTime.local()
     pedido.domicilio = domicilios.filter((d)=> d.id === selectedDomId)[0]
     pedido.sucursal = sucursal
+    pedido.repartidor = undefined;
     pedido.usuario = usuario
     pedido.factura = undefined
     pedido.detalles = detalles
 
+    return pedido;
+  }  
+  
+  const handlefinalizarEfectivo = async() => {
+    const pedido : Pedido|undefined = generarPedido()
+    if(pedido != undefined){
     try {
       await savePedido(pedido)
       clearCart()
@@ -104,8 +111,27 @@ export default function DetallePago() {
     } catch (e) {
       console.error(e)
       alert('Error al procesar el pedido')
+    }} else {
+      alert("No se recibió ningun pedido")
     }
-  };
+  }
+  
+  const handlefinalizarMP = async() => {
+    const pedido : Pedido|undefined = generarPedido()
+    if(pedido != undefined){
+    try {
+      const res = await savePedidoMP(pedido)
+      console.log(res)
+      clearCart()
+      window.open(res.url, '_blank');
+      navigate('/pedido/confirmado')
+    } catch (e) {
+      console.error(e)
+      alert('Error al procesar el pedido')
+    }} else {
+      alert("No se recibió ningun pedido")
+    }
+  }
 
   return (
     <section className="dp-container">
@@ -175,9 +201,16 @@ export default function DetallePago() {
         <button className="btn-cancel" onClick={()=>navigate(-1)}>
           Cancelar
         </button>
-        <button className="btn-confirm" onClick={handleFinalizar}>
-          {tipoEnvio==='DELIVERY' ? 'Pagar con MercadoPago' : 'Finalizar Pedido'}
-        </button>
+        {tipoEnvio==='DELIVERY'  ?(
+        <button className="btn-confirm" onClick={handlefinalizarEfectivo}>
+          Finalizar Pedido
+        </button>)
+         :(
+         <button className="btn-confirm" onClick={handlefinalizarMP}>
+          Pagar con MercadoPago
+        </button>)
+        } 
+        
       </div>
     </section>
   );

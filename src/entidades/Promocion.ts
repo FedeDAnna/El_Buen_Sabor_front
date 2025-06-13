@@ -3,6 +3,7 @@ import type TipoPromocion from './TipoPromocion';
 import type Sucursal from './Sucursal';
 import type Articulo from './Articulo';
 import type Imagen from './Imagen';
+import ArticuloManufacturado from './ArticuloManufacturado';
 
 
 export default class Promocion {
@@ -10,14 +11,36 @@ export default class Promocion {
     denominacion: string = "";
     fecha_desde: Date = new Date();
     fecha_hasta: Date = new Date();
-    hora_desde: DateTime = new DateTime();
-    hora_hasta: DateTime = new DateTime();
+    hora_desde: DateTime = DateTime.now();
+    hora_hasta: DateTime = DateTime.now();
     descripcion_descuento: string = "";
     precio_promocional: number = 0;
     tipo_promocion?: TipoPromocion
-
+    
     sucursales: Sucursal[]=[];
     articulos: Articulo[]=[];
     imagen?: Imagen;
+
+    toJSON() {
+    return {
+      id: this.id,
+      denominacion: this.denominacion,
+      fecha_desde: this.fecha_desde.toISOString().slice(0,10),            // "YYYY-MM-DD"
+      fecha_hasta: this.fecha_hasta.toISOString().slice(0,10),
+      hora_desde: this.hora_desde.toFormat('HH:mm:ss'),                   // sólo hora
+      hora_hasta: this.hora_hasta.toFormat('HH:mm:ss'),
+      descripcion_descuento: this.descripcion_descuento,
+      precio_promocional: this.precio_promocional,
+      tipo_promocion: this.tipo_promocion ? { id: this.tipo_promocion.id } : undefined,
+      sucursales: this.sucursales.map(s => ({ id: s.id })),
+      articulos: this.articulos.map(a => ({
+        _type: a instanceof ArticuloManufacturado 
+                 ? 'manufacturado' 
+                 : 'insumo',
+        id: a.id
+      })),
+      imagen: this.imagen ? { src: this.imagen.src, alt: this.imagen.alt } : undefined,
+    }
+  }
 
 }

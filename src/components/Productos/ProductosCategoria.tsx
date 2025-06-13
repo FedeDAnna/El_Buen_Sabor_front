@@ -21,7 +21,7 @@ export default function ProductosCategoria() {
   const [prodModalOpen, setProdModalOpen] = useState(false);
   const [modalProducto, setModalProductoId] = useState<ArticuloManufacturado | undefined>(undefined);
   const [categoria, setCategoria] = useState<Categoria | undefined>();
-
+  
   // Cargar la categoría
   useEffect(() => {
     if (!categoriaId) return;
