@@ -80,7 +80,7 @@ export default function TipoPromocionesTabla() {
         </button>
       </div>
 
-                                                                                                                  <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                                                                 
       <table className="promociones-table">
         <thead>
           <tr>
