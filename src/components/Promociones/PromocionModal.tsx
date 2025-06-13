@@ -54,6 +54,7 @@ export default function PromocionModal({
         setArticulosOptions([...mfs, ...validInsumos])
       })
     if (initialData) {
+      
       setDenominacion(initialData.denominacion)
       setFechaDesde(initialData.fecha_desde.toISOString().slice(0,10))
       setFechaHasta(initialData.fecha_hasta.toISOString().slice(0,10))
@@ -97,6 +98,7 @@ export default function PromocionModal({
     e.preventDefault()
     if (!denominacion||!fechaDesde||!fechaHasta) return
     const promo = new Promocion()
+    if(initialData?.id) promo.id = initialData.id;
     promo.denominacion = denominacion
     promo.tipo_promocion = TipoPromocion
     promo.fecha_desde = new Date(fechaDesde)

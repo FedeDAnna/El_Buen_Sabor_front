@@ -133,6 +133,7 @@ export default function InsumoModal({
           </button>
         </header>
         <div className="pm-body">
+          <label>Denominacion</label>
           <input
             type="text"
             placeholder="Nombre Producto"
@@ -140,6 +141,7 @@ export default function InsumoModal({
             onChange={(e) => setDenominacion(e.target.value)}
             readOnly={!editable}
           />
+          <label>Es para Elaborar?</label>
           <select
             value={esParaElaborar ? "true" : "false"}
             disabled={!editable}

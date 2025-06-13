@@ -1,4 +1,4 @@
-import { createContext, useContext, useState} from 'react'
+import { createContext, useContext, useEffect, useMemo, useState} from 'react'
 import type { ReactNode } from 'react'
 import  ArticuloManufacturado from '../entidades/ArticuloManufacturado'
 import  ArticuloInsumo from '../entidades/ArticuloInsumo'
@@ -57,8 +57,29 @@ interface CartProviderProps {
 }
 
 export function CartProvider({ children }: CartProviderProps) {
-  const [cartItems, setCartItems] = useState<CartItem[]>([])
-  const total = cartItems.reduce((acc, i) => acc + i.subtotal, 0)
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    try {
+      const json = localStorage.getItem('cartItems')
+      return json ? JSON.parse(json) : []
+    } catch {
+      return []
+    }
+  })
+
+
+  const total = useMemo(
+    () => cartItems.reduce((sum, it) => sum + it.subtotal, 0),
+    [cartItems]
+  )
+
+  
+  useEffect(() => {
+    try {
+      localStorage.setItem('cartItems', JSON.stringify(cartItems))
+    } catch {
+      console.log("Error en el Local Storage");
+    }
+  }, [cartItems])
 
   function addToCart(
     item: ArticuloManufacturado | ArticuloInsumo | Promocion,
@@ -129,6 +150,7 @@ export function CartProvider({ children }: CartProviderProps) {
     })
   }
 
+  
 
   function removeFromCart(id: number, kind: 'articulo'|'promocion') {
     setCartItems(prev =>

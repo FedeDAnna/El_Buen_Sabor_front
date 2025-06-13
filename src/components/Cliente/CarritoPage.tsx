@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import '../../estilos/CarritoPage.css'
 import { useCart, type CartItem } from '../CartContext'
+import { Link } from 'react-router-dom'
+import CarruselCategorias from './CarruselCategorias'
 
 export default function CarritoPage() {
   const navigate = useNavigate()
@@ -11,15 +13,36 @@ export default function CarritoPage() {
   }
 
   if (cartItems.length === 0) {
-    return (
-      <main className="cart-main">
-        <h2>Tu carrito está vacío</h2>
-        <p>
-          Explora nuestros <a href="/categorias/0">productos</a> y agrégalos al carrito.
-        </p>
-      </main>
-    )
-  }
+  return (
+    <main className="cart-main cart-empty">
+      <div className="cart-empty-wrapper">
+        <div className="cart-empty-content">
+          <img
+            src="/imagenes/carritoVacio.png"
+            alt="Carrito vacío"
+            className="cart-empty-img"
+          />
+          <h2>Tu carrito está vacío</h2>
+          <p>
+            Explora nuestros{' '}
+            <Link to="/categorias/0" className="cart-empty-link">
+              productos
+            </Link>{' '}
+            y agrégalos al carrito.
+          </p>
+        </div>
+
+        <h3 className="cart-empty-subtitle">
+          O mira nuestros productos a continuación 🍔🍕😋
+        </h3>
+
+        <div className="cart-carousel-wrapper">
+          <CarruselCategorias />
+        </div>
+      </div>
+    </main>
+  )
+}
 
   return (
     <main className="cart-main">

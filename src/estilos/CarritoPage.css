@@ -1,135 +1,193 @@
-/* src/estilos/CarritoPage.css */
+/* HomePage.css */
 
-.cart-main {
-  padding: 1.5rem;
+/* Contenedor principal: ancho máximo y centrado */
+.hp-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
 }
 
-.cart-main h2 {
-  margin-bottom: 1rem;
-  font-size: 1.75rem;
-  color: #333;
-}
-
-.cart-content {
+/* Hero */
+.hp-hero {
   display: flex;
-  gap: 2rem;
-}
-
-/* Contenedor de ítems (lado izquierdo) */
-.cart-items-container {
-  flex: 2;
-  background-color: #fff;
-  padding: 1rem;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* Cada fila de ítem */
-.cart-item-row {
-  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid #e0e0e0;
-  padding-bottom: 1rem;
+  gap: 2rem;
+  margin-bottom: 3rem;
 }
-
-.cart-item-row:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
+.hp-hero-img {
+  flex: 1 1 320px;
+  max-width: 480px;
+  width: 100%;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
-
-.cart-item-img-large {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 6px;
-  margin-right: 1rem;
+.hp-hero-text {
+  flex: 1 1 320px;
 }
-
-.cart-item-details h3 {
+.hp-hero-text h1 {
   margin: 0;
+  font-size: 2.5rem;
+  color: #222;
+}
+.hp-hero-text p {
+  margin: 0.5rem 0 1.5rem;
+  color: #555;
   font-size: 1.1rem;
 }
-
-.cart-item-details p {
-  margin: 0.25rem 0;
-  font-size: 0.9rem;
-  color: #555;
-}
-
-.cart-item-quantity {
+.hp-hero-buttons {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.btn-qty {
-  background-color: #f0f0f0;
-  border: none;
-  padding: 0.25rem 0.5rem;
-  cursor: pointer;
-  font-size: 1rem;
-  border-radius: 4px;
-}
-
-.qty-display {
-  min-width: 24px;
-  text-align: center;
-  font-size: 0.95rem;
-  font-weight: bold;
-}
-
-.btn-remove {
-  background: transparent;
-  border: none;
-  color: #d00;
-  cursor: pointer;
-  margin-left: 0.5rem;
-}
-
-.cart-item-subtotal {
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-  font-weight: bold;
-}
-
-/* Contenedor del resumen (lado derecho) */
-.cart-summary {
-  flex: 1;
-  background-color: #f9f9f9;
-  padding: 1rem;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: column;
   gap: 1rem;
 }
-
-.summary-line {
-  display: flex;
-  justify-content: space-between;
-  font-size: 1rem;
-  color: #333;
-}
-
-.total-pay {
-  font-size: 1.15rem;
-  font-weight: bold;
-  margin-top: 0.5rem;
-  border-top: 1px solid #ddd;
-  padding-top: 0.5rem;
-}
-
-.btn-next {
-  margin-top: auto;
-  background-color: #FFD700;
+.hp-btn {
+  padding: 0.75rem 1.5rem;
   border: none;
-  color: #333;
-  font-weight: bold;
-  padding: 0.75rem;
-  border-radius: 4px;
+  border-radius: 0.375rem;
+  font-size: 1rem;
   cursor: pointer;
-  text-transform: uppercase;
+  text-decoration: none;
+  text-align: center;
+  display: inline-block;
+}
+.hp-btn-primary {
+  background-color: #c62828;
+  color: #fff;
+}
+.hp-btn-secondary {
+  background-color: #f9a825;
+  color: #222;
+}
+
+/* Carrusel de Categorías */
+.hp-carrusel-wrapper {
+  max-width: 800px;
+  margin: 0 auto 4rem;
+}
+
+/* Sección de Promociones por Tipo */
+.hp-promos-section {
+  margin-bottom: 4rem;
+}
+.hp-promos-title {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  color: #222;
+  text-align: left;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+/* Grid de tarjetas de promoción */
+.hp-promos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Tarjeta de promoción */
+.hp-promo-card {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.hp-promo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+.hp-promo-img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+}
+.hp-promo-noimg {
+  width: 100%;
+  height: 120px;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+}
+.hp-promo-body {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.hp-promo-body strong {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+.hp-promo-desc {
+  flex: 1;
+  font-size: 0.95rem;
+  color: #555;
+  margin: 0;
+}
+
+/* Responsivo menor ancho */
+@media (max-width: 768px) {
+  .hp-hero {
+    flex-direction: column;
+  }
+  .hp-hero-img,
+  .hp-hero-text {
+    max-width: 100%;
+  }
+}
+
+.cart-main.cart-empty {
+  display: flex;
+  justify-content: center;   /* centra horizontalmente */
+  align-items: center;       /* centra verticalmente */
+  min-height: calc(100vh - 60px); /* ajusta según tu header */
+  background-color: #fafafa;
+  padding: 2rem 1rem;
+}
+
+.cart-empty-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* opcional: espacie entre secciones */
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px; /* ancho máximo total */
+}
+
+.cart-empty-content {
+  text-align: center;
+}
+
+.cart-empty-img {
+  width: 200px;
+  margin-bottom: 1rem;
+  opacity: 0.8;
+}
+
+.cart-empty-link {
+  color: #0066cc;
+  text-decoration: underline;
+}
+
+.cart-empty-subtitle {
+  font-size: 1.25rem;
+  color: #333;
+  margin: 0;
+}
+
+/* Este es el div que contiene tu CarruselCategorias */
+.cart-carousel-wrapper {
+  width: 100%;
+  max-width: 800px; /* un poco más angosto */
+  /* centra el carrusel dentro de este ancho */
+  margin: 0 auto;
 }

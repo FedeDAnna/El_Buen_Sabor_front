@@ -7,6 +7,7 @@ import CarruselCategorias from './CarruselCategorias'
 import type TipoPromocion from '../../entidades/TipoPromocion'
 import type Promocion from '../../entidades/Promocion'
 import { getPromocionesPorTipoPromocion, getTiposPromociones } from '../../services/FuncionesApi'
+import BuenSaborIcono from '../../assets/BuenSaborIcono.png'   // <<– aquí
 
 // Icono de hamburguesa (puedes cambiarlo por un SVG más bonito si quieres)
 const HamburgerIcon = () => (
@@ -50,7 +51,7 @@ export default function HomePage() {
         {/* Hero section */}
         <section className="hp-hero">
           <img
-            src="/assets/hero-hamburguesa.jpg"
+            src={BuenSaborIcono}
             alt="El Buen Sabor - ¡La mejor comida!"
             className="hp-hero-img"
           />
@@ -68,9 +69,13 @@ export default function HomePage() {
           </div>
         </section>
 
+        <h2>Mira Nuestras Categorias y Apurate a Pedir 😁🍗</h2>
+
         <section className="hp-carrusel-wrapper">
           <CarruselCategorias />
         </section>
+
+        <h2>Las Mejores Promociones 💲🍟🥓🍗</h2>
 
         {promoGroups.map(({ tipo, promos }) => (
           <section key={tipo.id} className="hp-promos-section">
