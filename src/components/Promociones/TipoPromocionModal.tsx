@@ -1,6 +1,4 @@
 
-
-
 import { useState, useEffect } from 'react'
 import { postTipoPromocion } from '../../services/FuncionesApi'
 import '../../estilos/CategoriaModal.css'
@@ -16,8 +14,8 @@ interface Props {
 export default function TipoPromocionModal({
   onClose,
   onSave,
-  initialData,   // puede venir undefined si estamos “creando nueva categoría”
-  editable = false  // por defecto false (modo editable)
+  initialData,  
+  editable = false  
 }: Props) {
 
   const [descripcion, setDescripcion] = useState('')
@@ -29,7 +27,7 @@ export default function TipoPromocionModal({
   }, [initialData])
 
   const handleSubmit = async () => {
-    // Si venimos editando, le asignamos el id para que el backend lo actualice
+    
     const tipoPromocion = new TipoPromocion();
     
     if (initialData?.id) {

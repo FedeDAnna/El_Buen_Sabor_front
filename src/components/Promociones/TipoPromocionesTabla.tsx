@@ -44,7 +44,7 @@ export default function TipoPromocionesTabla() {
     }
   }
 
-  // 6) Al hacer clic en “Borrar”, llamo al servicio y actualizo la lista local
+  
   const handleDelete = (id?: number) => {
     return async () => {
       if (!id) return
@@ -53,7 +53,7 @@ export default function TipoPromocionesTabla() {
 
       try {
         await deleteTipoPromocionById(id)
-        // Quito de la lista local para no tener que recargar todo
+       
         setListaTiposPromociones(prev => prev.filter(c => c.id !== id))
         await reload()
       } catch (e: any) {
@@ -63,7 +63,6 @@ export default function TipoPromocionesTabla() {
     }
   }
 
-  // 7) Abrir el modal para ver o editar. Si viene una categoría, la paso como “editable” si edit=true
   const openModal = (edit: boolean, isOpen: boolean, cat?: TipoPromocion) => {
     console.log("categoria:" , cat);
     setEditable(edit)
@@ -124,14 +123,13 @@ export default function TipoPromocionesTabla() {
         </tbody>
       </table>
 
-      {/* 9) Modal para crear/editar categoría */}
       {modalAbierto && (
         <TipoPromocionModal
           onClose={() => setModalAbierto(false)}
           onSave={handleSave}
           
-          initialData={TipoPromocionEnModal} // Puedes pasar la categoría si es edición o undefined si es nueva
-          editable={editable}           // Si editable==false, el modal será solo de consulta
+          initialData={TipoPromocionEnModal} 
+          editable={editable}         
         />
       )}
     </section>
