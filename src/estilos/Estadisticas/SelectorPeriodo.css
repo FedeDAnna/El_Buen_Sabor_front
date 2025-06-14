@@ -1,0 +1,36 @@
+.selector-periodo-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.selector-periodo-container label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.selector-periodo {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border: 1px solid #b52e31;
+  border-radius: 10px;
+  background-color: #ffffff;
+  color: #110f0f;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.selector-periodo:hover {
+  background-color: #fceaea;
+  border-color: #a11d22;
+}
+
+.selector-periodo:focus {
+  outline: none;
+  border-color: #7f151a;
+  box-shadow: 0 0 5px rgba(181, 46, 49, 0.4);
+}

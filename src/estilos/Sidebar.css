@@ -42,3 +42,11 @@
 .sidebar .logout:hover {
   text-decoration: underline;
 }
+.sidebar ul li a svg {
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.logout svg {
+  margin-right: 8px;
+  vertical-align: middle;
+}

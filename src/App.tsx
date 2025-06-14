@@ -16,6 +16,7 @@ import PedidoConfirmado from './components/Cliente/PedidoConfirmado';
 import TipoPromocionesTabla from './components/Promociones/TipoPromocionesTabla';
 import PromocionTabla from './components/Promociones/PromocionTabla';
 import PromocionEnDetalle from './components/Promociones/PromocionEnDetalle';
+import Dashboard from './components/Estadisticas/Dashboard';
 
 export default function App() {
   return (
@@ -43,8 +44,16 @@ export default function App() {
             <Route path="/pedido/confirmado" element={<PedidoConfirmado />} />
 
             <Route path="/pedido/pago" element={<DetallePago />} />
-          
-            
+
+
+            <Route
+              path="/admin/estadisticas"
+              element={
+                <AdminPantalla>
+                  <Dashboard />
+                </AdminPantalla>
+              }
+            />
 
             <Route
               path="/admin/insumos/:categoriaId"

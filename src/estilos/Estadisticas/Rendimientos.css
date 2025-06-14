@@ -1,0 +1,50 @@
+.rendimiento-container {
+  margin-top: 2rem;
+}
+
+.rendimiento-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rendimiento-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.rendimiento-card {
+  flex: 1 1 150px;
+  background-color: #f4f4f4;
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rendimiento-icon {
+  background-color: #e0e0e0;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rendimiento-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.rendimiento-label {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.rendimiento-value {
+  font-size: 18px;
+}
