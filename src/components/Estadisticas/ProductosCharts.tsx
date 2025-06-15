@@ -1,44 +1,72 @@
 import { useEffect, useState } from "react";
 import { Chart } from "react-google-charts";
-import { usePeriodo } from "./PeriodoContext"; // ajustá el path si hace falta
+import { usePeriodo } from "./PeriodoContext"; 
+import { fetchProductosMasVendidos } from "../../services/EstadisticasApi"; 
 
 export default function ProductosChart() {
   const { periodo } = usePeriodo();
 
-  const [data, setData] = useState<any[][]>([
-    ["Producto", "Cantidad Vendida"],
-  ]);
+  const [datosOriginales, setDatosOriginales] = useState<any[][]>([]);
+  const [paginaActual, setPaginaActual] = useState(0);
+  const productosPorPagina = 15;
+  const [data, setData] = useState<any[][]>([]);
 
   useEffect(() => {
-    // Simulación: reemplazá esto con tu fetch real
-    fetch(`/api/productos-mas-vendidos?periodo=${periodo}`)
-      .then((res) => res.json())
-      .then((json) => {
-        // Supongamos que el backend devuelve un array tipo:
-        // [{ producto: "Hamburguesa", cantidad: 120 }, ...]
-        const chartData = [
-          ["Producto", "Cantidad Vendida"],
-          ...json.map((item: any) => [item.producto, item.cantidad]),
-        ];
-        setData(chartData);
+    fetchProductosMasVendidos(periodo)
+      .then((res: any[][]) => {
+        setDatosOriginales(res.slice(1)); // sin encabezado
+        setPaginaActual(0); // Reiniciar página al cambiar período
       })
-      .catch((err) => console.error("Error cargando productos más vendidos:", err));
+      .catch((err) =>
+        console.error("Error cargando productos más vendidos:", err)
+      );
   }, [periodo]);
 
+  useEffect(() => {
+    const encabezado = ["Producto", "Cantidad Vendida"];
+    const cuerpo = datosOriginales.slice(
+      paginaActual * productosPorPagina,
+      (paginaActual + 1) * productosPorPagina
+    );
+    setData([encabezado, ...cuerpo]);
+  }, [paginaActual, datosOriginales]);
+
+  const totalPaginas = Math.ceil(datosOriginales.length / productosPorPagina);
+
   const options = {
-    title: "Productos más vendidos",
+    title: "50 Productos más vendidos",
     legend: { position: "none" },
     colors: ["#f44336"],
     hAxis: { slantedText: true },
   };
 
   return (
-    <Chart
-      chartType="ColumnChart"
-      width="100%"
-      height="300px"
-      data={data}
-      options={options}
-    />
+    <div>
+      <Chart
+        chartType="ColumnChart"
+        width="100%"
+        height="400px"
+        data={data}
+        options={options}
+      />
+
+      {totalPaginas > 1 && (
+        <div style={{ display: "flex", justifyContent: "center", gap: "1rem", marginTop: "1rem" }}>
+          <button
+            onClick={() => setPaginaActual((prev) => Math.max(prev - 1, 0))}
+            disabled={paginaActual === 0}
+          >
+            Anterior
+          </button>
+          <span>Página {paginaActual + 1} de {totalPaginas}</span>
+          <button
+            onClick={() => setPaginaActual((prev) => Math.min(prev + 1, totalPaginas - 1))}
+            disabled={paginaActual >= totalPaginas - 1}
+          >
+            Siguiente
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
