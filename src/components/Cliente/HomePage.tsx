@@ -6,8 +6,9 @@ import '../../estilos/HomePage.css'
 import CarruselCategorias from './CarruselCategorias'
 import type TipoPromocion from '../../entidades/TipoPromocion'
 import type Promocion from '../../entidades/Promocion'
-import { getPromocionesPorTipoPromocion, getTiposPromociones } from '../../services/FuncionesApi'
+import { getPromocionesPorTipoPromocion, getTiposPromociones, getArticuloManufacturadoById } from '../../services/FuncionesApi'
 import BuenSaborIcono from '../../assets/BuenSaborIcono.png'   // <<– aquí
+import PromoCard from '../Promociones/PromoCard'
 
 // Icono de hamburguesa (puedes cambiarlo por un SVG más bonito si quieres)
 const HamburgerIcon = () => (
@@ -82,27 +83,7 @@ export default function HomePage() {
             <h2 className="hp-promos-title">{tipo.descripcion}</h2>
             <div className="hp-promos-grid">
               {promos.map(p => (
-                <Link
-                  key={p.id}
-                  to={`/promociones/${p.id}`}
-                  className="hp-promo-card"
-                >
-                  {p.imagen?.src ? (
-                    <img
-                      src={p.imagen.src}
-                      alt={p.denominacion}
-                      className="hp-promo-img"
-                    />
-                  ) : (
-                    <div className="hp-promo-noimg">Sin imagen</div>
-                  )}
-                  <div className="hp-promo-body">
-                    <strong>{p.denominacion}</strong>
-                    <p className="hp-promo-desc">
-                      {p.descripcion_descuento}
-                    </p>
-                  </div>
-                </Link>
+                <PromoCard key={p.id} promo={p} />
               ))}
             </div>
           </section>

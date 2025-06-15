@@ -8,6 +8,7 @@ import '../../estilos/ProductoModal.css'
 import Imagen from '../../entidades/Imagen'
 import Categoria from '../../entidades/Categoria'
 import UnidadDeMedida from '../../entidades/UnidadDeMedida'
+import StockInsumoSucursales from '../../entidades/StockInsumoSucursales'
 
 interface Props {
   editable: boolean
@@ -34,6 +35,9 @@ export default function InsumoModal({
 
   const [unidades, setUnidades] = useState<UnidadDeMedida[]>([])
   const [selectedUnidadId, setSelectedUnidadId] = useState<number | ''>('')
+  const [stock, setStock] = useState<StockInsumoSucursales>(
+    () => new StockInsumoSucursales()
+  )
 
   useEffect(()=>{
     fetchUnidadesDeMedida()
@@ -61,6 +65,14 @@ export default function InsumoModal({
       setSelectedUnidadId(ProductoInsumo.unidad_de_medida.id)
     }
 
+    // precargamos el primer stock, si viene
+    if (
+      ProductoInsumo.stock_insumo_sucursales &&
+      ProductoInsumo.stock_insumo_sucursales.length > 0
+    ) {
+      setStock(ProductoInsumo.stock_insumo_sucursales[0])
+    }
+  
     // Si vienen detalles, copiarlos en el estado
   }, [ProductoInsumo])
 
@@ -94,6 +106,7 @@ export default function InsumoModal({
     art.denominacion = denominacion
     art.es_para_elaborar = esParaElaborar
     art.precio_venta = precio
+    art.categoria = categoria
 
     if (selectedUnidadId !== '') {
       const unidad = unidades.find((u) => u.id === selectedUnidadId)
@@ -108,8 +121,8 @@ export default function InsumoModal({
       art.imagen = img
     }
 
-    // Asociar categoría (mantiene igual)
-    art.categoria = categoria
+    art.stock_insumo_sucursales = [stock]
+
 
     try {
       const created = await saveArticuloInsumo(art)
@@ -184,7 +197,70 @@ export default function InsumoModal({
             accept="image/*"
             onChange={handleFileChange}
           />) : ''}
+
+          <fieldset className="pm-stock-fieldset">
+          <legend>Stock / Precio Compra</legend>
+
+          <label>Precio de Compra</label>
+          <input
+            type="number"
+            value={stock.precio_compra}
+            onChange={(e) =>
+              setStock({
+                ...stock,
+                precio_compra: Number(e.target.value),
+              })
+            }
+            readOnly={!editable}
+          />
+
+          <label>Stock Actual</label>
+          <input
+            type="number"
+            value={stock.stock_actual}
+            onChange={(e) =>
+              setStock({
+                ...stock,
+                stock_actual: Number(e.target.value),
+              })
+            }
+            readOnly={!editable}
+            min="1"
+          />
+
+          <label>Stock Máximo</label>
+          <input
+            type="number"
+            value={stock.stock_maximo}
+            onChange={(e) =>
+              setStock({
+                ...stock,
+                stock_maximo: Number(e.target.value),
+              })
+            }
+            readOnly={!editable}
+            min="1"
+          />
+
+          <label>Stock Mínimo</label>
+          <input
+            type="number"
+            value={stock.stock_minimo}
+            onChange={(e) =>
+              setStock({
+                ...stock,
+                stock_minimo: Number(e.target.value),
+              })
+              
+            }
+            min="1"
+            readOnly={!editable}
+          />
+        </fieldset>
         </div>
+
+        
+
         <footer className="pm-footer">
           
           <button className="btn-cancel" onClick={onClose}>

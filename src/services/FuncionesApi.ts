@@ -179,7 +179,7 @@ export async function getCategoriasByTipo(idTipo: number): Promise<Categoria[]> 
 export async function getArticuloManufacturadoById(
   id: number
 ): Promise<ArticuloManufacturado> {
-  const res = await fetch(`${API_URL}/articulos_manufacturados/${id}`, {
+  const res = await fetch(`${API_URL}/articulos_manufacturados/byId/${id}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -462,6 +462,23 @@ export async function deleteCategoriaById(idCategoria :Number): Promise<boolean>
 }
 
 
+// PUT o PATCH
+
+export async function updateStockInsumo(
+  insumoId: number,
+  nuevoStock: number
+): Promise<void> {
+  const res = await fetch(`${API_URL}/articulos_insumos/${insumoId}/stock`, {
+    method: 'PATCH',
+    credentials: 'include',
+    headers: {
+      'Authorization': `Basic ${basic}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ stockActual: nuevoStock , sucursalId: 1 })
+  });
+  if (!res.ok) throw new Error(`Error ${res.status} actualizando stock`);
+}
 
 
 

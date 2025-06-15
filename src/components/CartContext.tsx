@@ -15,7 +15,7 @@ export type CartItem =
     }
   | {
       kind: 'promocion'
-      promocion: Promocion
+      promocion: Promocion  
       cantidad: number
       subtotal: number
     }
