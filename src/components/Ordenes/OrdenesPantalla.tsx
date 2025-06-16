@@ -96,7 +96,7 @@ export default function OrdenesPantalla() {
         </div>
       </div>
 
-      <h2>📋 Órdenes</h2>
+      <h2>📋 Pedidos</h2>
       <div className="barra-superior">
         <div className="filtros">
           {estadosDisponibles.map(est => (

@@ -360,3 +360,17 @@ export async function updateEstadoPedido(
   }
 
 }
+
+export async function getProductosPorPedido(pedidoId: number): Promise<any[]> {
+  const res = await fetch(`${API_URL}/pedidos/manufacturados/${pedidoId}`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Authorization': `Basic ${basic}`,
+      'Content-Type': 'application/json'
+    }
+  });
+
+  if (!res.ok) throw new Error(`Error ${res.status} al traer los productos`);
+  return res.json();
+}

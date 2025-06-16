@@ -1,7 +1,8 @@
 // src/components/ModalPago.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Pedido from "../../entidades/Pedido";
 import "../../estilos/ModalOrden.css";
+import { getProductosPorPedido } from "../../services/FuncionesApi";
 
 type Props = {
   pedido: Pedido;
@@ -28,7 +29,24 @@ export default function ModalPago({ pedido, onClose, onPaid }: Props) {
     onClose();
   };
 
-  const detalles = pedido.detalles ?? [];
+  const [detalles, setDetalles] = useState<any[]>([]);
+
+  useEffect(() => {
+  const fetchDetalles = async () => {
+    if (pedido.id == null) return; // 👈 valida que tenga ID
+
+    try {
+      const data = await getProductosPorPedido(pedido.id);
+      setDetalles(data);
+    } catch (error) {
+      console.error("Error al cargar los detalles del pedido:", error);
+    }
+  };
+
+  fetchDetalles();
+}, [pedido.id]);
+
+
 
   return (
      <div className="modal-overlay" onClick={onClose}>
@@ -68,27 +86,21 @@ export default function ModalPago({ pedido, onClose, onPaid }: Props) {
             <table>
               <thead>
                 <tr>
-                  <th>Artículo</th><th>Cantidad</th>
-                  <th>Precio Unit.</th><th>Subtotal</th>
+                  <th>Artículo</th>
+                  <th>Cantidad</th>
+                  <th>Precio Unit.</th>
+                  <th>Subtotal</th>
                 </tr>
               </thead>
               <tbody>
-                {detalles.length > 0 ? (
-                  detalles.map((det, idx) => (
-                    <tr key={idx}>
-                      <td>{det.articulo?.denominacion ?? "—"}</td>
-                      <td>{det.cantidad}</td>
-                      <td>${(det.articulo?.precio_venta ?? 0).toFixed(2)}</td>
-                      <td>${(det.subtotal ?? 0).toFixed(2)}</td>
+                {pedido.detalles.map((prod, i) => (
+                    <tr key={i}>
+                      <td>{prod.articulo?.denominacion}</td>
+                      <td>{prod.cantidad}</td>
+                      <td>${prod.articulo?.precio_venta}</td>
+                      <td>${prod.subtotal}</td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={4} style={{ textAlign: "center" }}>
-                      No hay productos para cobrar
-                    </td>
-                  </tr>
-                )}
+                  ))}
               </tbody>
             </table>
           </section>

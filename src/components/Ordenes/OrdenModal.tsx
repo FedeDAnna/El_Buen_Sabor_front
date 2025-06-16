@@ -180,14 +180,17 @@ export default function ModalOrden({ pedido, onClose, onEstadoChange,onCobrar }:
                 <thead>
                   <tr>
                     <th>Artículo</th>
+                    <th>Preparación</th>
                     <th>Cantidad</th>
                     <th>Subtotal</th>
                   </tr>
                 </thead>
                 <tbody>
                   {pedido.detalles.map((prod, i) => (
+                    
                     <tr key={i}>
                       <td>{prod.articulo?.denominacion}</td>
+                      {/* <td>{prod.articulo.}</td> */}
                       <td>{prod.cantidad}</td>
                       <td>${prod.subtotal}</td>
                     </tr>
