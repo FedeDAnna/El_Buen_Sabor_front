@@ -13,6 +13,7 @@ import '../../estilos/ProductoModal.css'
 import Imagen from '../../entidades/Imagen'
 import Categoria from '../../entidades/Categoria'
 import UnidadDeMedida from '../../entidades/UnidadDeMedida'
+import Swal from 'sweetalert2'
 
 interface Props {
   editable: boolean
@@ -174,9 +175,38 @@ const [unidades, setUnidades] = useState<UnidadDeMedida[]>([])
     try {
       const created = await saveArticuloManufacturado(art)
       onSave(created)
+      const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 4000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              }
+            });
+            Toast.fire({
+              icon: "success",
+              title: "Producto creado/editado con exito"
+            });
     } catch (e) {
       console.error(e)
-      alert('Error al guardar el producto')
+      const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 4000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              }
+            });
+            Toast.fire({
+              icon: "error",
+              title: "Error al crear/editar producto"
+            });
     }
   }
   

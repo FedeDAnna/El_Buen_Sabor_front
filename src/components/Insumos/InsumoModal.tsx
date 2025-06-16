@@ -9,6 +9,7 @@ import Imagen from '../../entidades/Imagen'
 import Categoria from '../../entidades/Categoria'
 import UnidadDeMedida from '../../entidades/UnidadDeMedida'
 import StockInsumoSucursales from '../../entidades/StockInsumoSucursales'
+import Swal from 'sweetalert2'
 
 interface Props {
   editable: boolean
@@ -127,9 +128,38 @@ export default function InsumoModal({
     try {
       const created = await saveArticuloInsumo(art)
       onSave(created)
+      const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                      toast.onmouseenter = Swal.stopTimer;
+                      toast.onmouseleave = Swal.resumeTimer;
+                    }
+                  });
+                  Toast.fire({
+                    icon: "success",
+                    title: "Insumo creado/editado con exito"
+                  });
     } catch (e) {
       console.error(e)
-      alert('Error al guardar el producto')
+      const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                      toast.onmouseenter = Swal.stopTimer;
+                      toast.onmouseleave = Swal.resumeTimer;
+                    }
+                  });
+                  Toast.fire({
+                    icon: "error",
+                    title: "Error al crear/editar el insumo"
+                  });
     }
   }
   

@@ -17,6 +17,7 @@ import Sucursal from '../../entidades/Sucursal';
 import ArticuloManufacturado from '../../entidades/ArticuloManufacturado';
 import type Articulo from '../../entidades/Articulo';
 import type ArticuloInsumo from '../../entidades/ArticuloInsumo';
+import MapaGoogle from './MapaGoogle';
 
 function isInsumo(a: Articulo): a is ArticuloInsumo {
   return 'stock_insumo_sucursales' in a;
@@ -24,6 +25,19 @@ function isInsumo(a: Articulo): a is ArticuloInsumo {
 
 function isManufacturado(a: Articulo): a is ArticuloManufacturado {
   return 'detalles' in a;
+}
+
+async function obtenerCoordenadas(direccion: string): Promise<{ lat: number, lng: number } | null> {
+  const response = await fetch(
+    `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(direccion)}&key=AIzaSyACTocPOlHyRgbE8MTAxfXAR_0jlYMJnXQ`
+  );
+  const data = await response.json();
+  if (data.status === 'OK') {
+    const location = data.results[0].geometry.location;
+    return { lat: location.lat, lng: location.lng };
+  }
+  console.error('Geocoding error:', data.status);
+  return null;
 }
 
 
@@ -38,6 +52,9 @@ export default function DetallePago() {
   const [selectedDomId, setSelectedDomId] = useState<number|undefined>(undefined);
   const [usuario, setUsuario] = useState<Usuario>()
   const [sucursal, setSucursal] = useState<Sucursal>()
+  const [coordenadas, setCoordenadas] = useState<{ lat: number, lng: number } | null>(null);
+
+  const formaPago = tipoEnvio === TipoEnvio.DELIVERY ? FormaPago.MERCADO_PAGO : FormaPago.EFECTIVO;
 
   // Estado para validación de stock
   const [stockOk, setStockOk] = useState<boolean>(true);
@@ -45,22 +62,45 @@ export default function DetallePago() {
   const [stockError, setStockError] = useState<string>('');
 
   useEffect(() => {
-    fetchDomiciliosUsuario()
-      .then(list => {
-        setDomicilios(list);
-        if (list.length) setSelectedDomId(list[0].id);
-      })
-      .catch(e => setDirError(e.message))
-      .finally(() => setDirLoading(false));
-    getUsuarioById(1)
-      .then(user => setUsuario(user))
-      .catch(e => console.error(e))
-    getSucursalById(1)
-      .then(suc => setSucursal(suc))
-      .catch(e => console.error(e))  
+    async function cargarDatos() {
+      try {
+        const user = await getUsuarioById(1);
+        setUsuario(user);
+        setDomicilios(user.domicilios);
+        if (user.domicilios.length > 0) setSelectedDomId(user.domicilios[0].id);
+      } catch (e) {
+        setDirError('Error cargando domicilios');
+      } finally {
+        setDirLoading(false);
+      }
+      try {
+        const suc = await getSucursalById(1);
+        setSucursal(suc);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    cargarDatos();
   }, []);
 
-  const formaPago = tipoEnvio === TipoEnvio.DELIVERY ? FormaPago.MERCADO_PAGO : FormaPago.EFECTIVO;
+  useEffect(() => {
+    async function actualizarCoordenadas() {
+      let domicilio: Domicilio | undefined;
+      if (tipoEnvio === TipoEnvio.DELIVERY) {
+        domicilio = domicilios.find(d => d.id === selectedDomId);
+      } else {
+        domicilio = sucursal?.domicilio;
+      }
+      if (!domicilio) return;
+
+      const direccion = `${domicilio.calle} ${domicilio.numero}, ${domicilio.localidad!.nombre}, ${domicilio.localidad!.provincia!.nombre}, ${domicilio.localidad!.provincia!.pais!.nombre}`;
+      const coords = await obtenerCoordenadas(direccion);
+      if (coords) setCoordenadas(coords);
+    }
+    actualizarCoordenadas();
+  }, [selectedDomId, tipoEnvio, domicilios, sucursal]);
+
+  
   
   function calcularHoraEstimada(cartItems: CartItem[]): DateTime {
     const ahora = DateTime.local();
@@ -256,10 +296,9 @@ export default function DetallePago() {
     pedido.repartidor = undefined;
     pedido.factura = undefined;
     pedido.detalles = detalles;
-
     return pedido;
   } 
-  
+
   
 const handleFinalizar = async () => {
   const pedido = generarPedido();
@@ -333,8 +372,6 @@ const handleFinalizar = async () => {
     return updateStockInsumo(insumoId,nuevoStock);
   })
 );
-
-
     // 4) Limpiar carrito y redirigir
     clearCart();
     navigate('/pedido/confirmado');
@@ -351,6 +388,7 @@ const handleFinalizar = async () => {
       {!stockOk && !stockLoading && (
         <p className="dp-stock-error">{stockError}</p>
       )}
+
 
       <div className="dp-section">
         <label>Indique</label>
@@ -371,27 +409,32 @@ const handleFinalizar = async () => {
 
       <div className="dp-section">
         <label>
-          {tipoEnvio==='DELIVERY' ? 'Dirección de envío' : 'Dirección del restaurante'}
+          {tipoEnvio === TipoEnvio.DELIVERY ? 'Dirección de envío' : 'Dirección del restaurante'}
         </label>
-        {tipoEnvio==='DELIVERY' ? (
+        
+        {tipoEnvio === TipoEnvio.DELIVERY ? (
           dirLoading ? <p>Cargando direcciones…</p> :
           dirError  ? <p className="error">{dirError}</p> :
-          <select
+          <select  className='dp-select'
             value={selectedDomId}
             onChange={e => setSelectedDomId(Number(e.target.value))}
           >
-            {domicilios.map(d=>(
+            {domicilios.map(d => (
               <option key={d.id} value={d.id}>
                 {d.calle} {d.numero}, CP {d.cp}
               </option>
             ))}
           </select>
-        ) : (
-          <div className="dp-map placeholder">
-            {/* Mapa fijo del local */}
-            <img src="/assets/map-local.png" alt="Mapa del local"/>
-          </div>
-        )}
+        ) : null}
+
+        {/* ✅ Mostrar el mapa sin importar si es DELIVERY o TAKE_AWAY */}
+        <div className="dp-map">
+          {coordenadas ? (
+            <MapaGoogle lat={coordenadas.lat} lng={coordenadas.lng} />
+          ) : (
+            <p>Cargando mapa…</p>
+          )}
+        </div>
       </div>
 
       <div className="dp-section resumen">
