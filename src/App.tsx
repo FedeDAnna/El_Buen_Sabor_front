@@ -17,6 +17,7 @@ import TipoPromocionesTabla from './components/Promociones/TipoPromocionesTabla'
 import PromocionTabla from './components/Promociones/PromocionTabla';
 import PromocionEnDetalle from './components/Promociones/PromocionEnDetalle';
 import Dashboard from './components/Estadisticas/Dashboard';
+import HistorialPedidos from './components/Cliente/HistorialPedidos';
 
 export default function App() {
   return (
@@ -44,6 +45,8 @@ export default function App() {
             <Route path="/pedido/confirmado" element={<PedidoConfirmado />} />
 
             <Route path="/pedido/pago" element={<DetallePago />} />
+
+            <Route path="/historial-pedidos" element={<HistorialPedidos />} />
 
 
             <Route

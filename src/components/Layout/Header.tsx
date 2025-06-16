@@ -157,9 +157,11 @@ export default function Header() {
               <li>
                 <User size={20} /> Datos personales
               </li>
+              <Link to="/historial-pedidos" className="menu-link">
               <li>
                 <ClipboardList size={20} /> Historial de pedidos
               </li>
+              </Link>
               <li>
                 <LogOut size={20} /> Cerrar sesión
               </li>
