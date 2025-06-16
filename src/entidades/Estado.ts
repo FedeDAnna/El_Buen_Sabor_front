@@ -1,19 +1,10 @@
 export enum Estado {
-<<<<<<< HEAD
-  PENDIENTE   = 'Pendiente',
-  CONFIRMADO = 'Confirmado',
-  EN_PREPARACION = 'Preparacion',
-  DEMORADO = 'Demorado',
-  LISTO = 'Listo',
-  RECHAZADO   = 'rechazado',
-  CANCELADO   = 'cancelado',
-  EN_CAMINO = "camino",
-  ENTREGADO   = 'entregado',
-=======
-  PREPARACION = 'PREPARACION',
   PENDIENTE   = 'PENDIENTE',
-  CANCELADO   = 'CANCELADO',
+  CONFIRMADO = 'CONFIRMADO',
+  EN_PREPARACION = 'EN_PREPARACION',
+  DEMORADO = 'DEMORADO',
+  LISTO = 'LISTO',
   RECHAZADO   = 'RECHAZADO',
-  ENTREGADO   = 'ENTREGADO',
->>>>>>> fede
+  EN_CAMINO = "EN_CAMINO",
+  ENTREGADO   = 'ENTREGADO'
 }

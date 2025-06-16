@@ -1,83 +1,173 @@
-import React, { useState } from "react";
+// src/components/ModalOrden.tsx
+import React, { useMemo, useState } from "react";
 import Pedido from "../../entidades/Pedido";
-import "../../estilos/ModalOrden.css"; // Asegurate de tener estilos similares a los de la imagen
+import { updateEstadoPedido } from "../../services/FuncionesApi";
+import { Estado } from "../../entidades/Estado";
+import "../../estilos/ModalOrden.css";
 
 type Props = {
   pedido: Pedido;
   onClose: () => void;
+  onEstadoChange: () => void;
 };
 
-const ModalOrden = ({ pedido, onClose }: Props) => {
-  const [pestañaActiva, setPestañaActiva] = useState("detalles");
+export default function ModalOrden({ pedido, onClose, onEstadoChange }: Props) {
+  const [pestañaActiva, setPestañaActiva] = useState<
+    "detalles" | "productos" | "factura"
+  >("detalles");
+  const [loading, setLoading] = useState(false);
+
+  // Determina siguiente estado y etiqueta de botón
+  const { nextEstado, label } = useMemo(() => {
+    switch (pedido.estado_pedido) {
+      case Estado.PENDIENTE:
+        return { nextEstado: Estado.CONFIRMADO, label: "Confirmar" };
+      case Estado.CONFIRMADO:
+        return { nextEstado: Estado.EN_PREPARACION, label: "Preparar" };
+      case Estado.EN_PREPARACION:
+        return { nextEstado: Estado.LISTO, label: "Listo" };
+      case Estado.LISTO:
+        return pedido.tipo_envio === "DELIVERY"
+          ? { nextEstado: Estado.EN_CAMINO, label: "Poner en camino" }
+          : { nextEstado: Estado.ENTREGADO, label: "Marcar entregado" };
+      case Estado.EN_CAMINO:
+        return { nextEstado: Estado.ENTREGADO, label: "Entregado" };
+      default:
+        return { nextEstado: null, label: "" };
+    }
+  }, [pedido.estado_pedido, pedido.tipo_envio]);
+
+  const handleNext = async () => {
+    if (!pedido.id || nextEstado == null) return;
+    setLoading(true);
+    await updateEstadoPedido(pedido.id, nextEstado);
+    onEstadoChange();
+    onClose();
+  };
+
+  const handleCancel = async () => {
+    if (pedido.estado_pedido === Estado.RECHAZADO) return;
+    const ok = window.confirm(
+      "¿Seguro que deseas cancelar este pedido? Esto lo marcará como rechazado."
+    );
+    if (!ok || !pedido.id) return;
+    setLoading(true);
+    await updateEstadoPedido(pedido.id, Estado.RECHAZADO);
+    onEstadoChange();
+    onClose();
+  };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-contenido">
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-contenido" onClick={e => e.stopPropagation()}>
+        {/* Header */}
         <div className="modal-header">
           <h2>🧾 ORDEN #{pedido.id}</h2>
           <button className="cerrar" onClick={onClose}>X</button>
         </div>
 
-        {/* Navegación */}
+        {/* Tabs */}
         <div className="tabs">
-          <button onClick={() => setPestañaActiva("detalles")} className={pestañaActiva === "detalles" ? "activo" : ""}>Detalles</button>
-          <button onClick={() => setPestañaActiva("productos")} className={pestañaActiva === "productos" ? "activo" : ""}>Productos</button>
-          <button onClick={() => setPestañaActiva("factura")} className={pestañaActiva === "factura" ? "activo" : ""}>Factura</button>
+          <button
+            className={pestañaActiva === "detalles" ? "activo" : ""}
+            onClick={() => setPestañaActiva("detalles")}
+          >
+            Detalles
+          </button>
+          <button
+            className={pestañaActiva === "productos" ? "activo" : ""}
+            onClick={() => setPestañaActiva("productos")}
+          >
+            Productos
+          </button>
+          <button
+            className={pestañaActiva === "factura" ? "activo" : ""}
+            onClick={() => setPestañaActiva("factura")}
+          >
+            Factura
+          </button>
         </div>
 
-        {/* Contenido por pestaña */}
+        {/* Tab Content */}
         <div className="tab-contenido">
           {pestañaActiva === "detalles" && (
             <>
+              {/* Cliente */}
               <section className="seccion">
                 <h3>👤 Cliente</h3>
-                <div className="fila">
-                  <span><strong>Nombre:</strong> {pedido.usuario?.nombre}</span>
-                  <span><strong>Email:</strong> {pedido.usuario?.email}</span>
-                  <span><strong>Teléfono:</strong> {pedido.usuario?.telefono}</span>
-                </div>
-              </section>
-
-              <section className="seccion">
-                <h3>🚚 Envío</h3>
-                <div className="fila">
-                  <span><strong>Dirección:</strong> {pedido.domicilio?.calle} {pedido.domicilio?.numero}, {pedido.domicilio?.localidad?.nombre}, {pedido.domicilio?.localidad?.provincia?.nombre}, {pedido.domicilio?.localidad?.provincia?.pais?.nombre}</span>
-                  <span><strong>Nombre:</strong> {pedido.usuario?.nombre}</span>
-                  <span><strong>Teléfono:</strong> {pedido.usuario?.telefono}</span>
-                  <span><strong>Fecha:</strong> {new Date(pedido.fecha_pedido).toLocaleDateString()}</span>
-                </div>
-              </section>
-
-              <section className="seccion">
-                <h3>📌 Estado</h3>
                 <table>
-                  <thead>
-                    <tr>
-                      <th>Estado</th>
-                      <th>Actualizado el</th>
-                      <th>Actualizado por</th>
-                    </tr>
-                  </thead>
                   <tbody>
-                    {/* {pedido.historial_estado?.map((estado, index) => (
-                      <tr key={index}>
-                        <td>{estado.nombre}</td>
-                        <td>{new Date(estado.fecha).toLocaleString()}</td>
-                        <td>{estado.actualizado_por}</td>
-                      </tr>
-                    ))} */}
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Email</th>
+                      <th>Teléfono</th>
+                    </tr>
+                    <tr>
+                      <td>
+                        {pedido.usuario?.nombre} {pedido.usuario?.apellido}
+                      </td>
+                      <td>{pedido.usuario?.email}</td>
+                      <td>{pedido.usuario?.telefono}</td>
+                    </tr>
                   </tbody>
                 </table>
               </section>
 
+              {/* Envío */}
+              <section className="seccion">
+                <h3>🚚 Envío {pedido.tipo_envio}</h3>
+                {pedido.tipo_envio === "DELIVERY" ? (
+                  <table className="modalTable">
+                    <thead>
+                      <tr>
+                        <th>Dirección</th>
+                        <th>Repartidor</th>
+                        <th>Teléfono</th>
+                        <th>Fecha</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          {`${pedido.domicilio?.calle} ${pedido.domicilio?.numero}, ${pedido.domicilio?.localidad?.nombre}, ${pedido.domicilio?.localidad?.provincia?.nombre}, ${pedido.domicilio?.localidad?.provincia?.pais?.nombre}`}
+                        </td>
+                        <td>
+                          {pedido.repartidor?.nombre}{" "}
+                          {pedido.repartidor?.apellido}
+                        </td>
+                        <td>{pedido.repartidor?.telefono}</td>
+                        <td>{pedido.fecha_pedido.toFormat("dd/LL/yyyy")}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                ) : (
+                  <p>Retiro por el local</p>
+                )}
+              </section>
+
+              
+
+              {/* Pago */}
               <section className="seccion">
                 <h3>💳 Pago</h3>
-                <div className="fila">
-                  <span><strong>Transacción:</strong> {pedido.id}</span>
-                  <span><strong>Método de pago:</strong> {pedido.forma_pago}</span>
-                  <span><strong>Monto:</strong> ${pedido.total}</span>
-                  <span><strong>Fecha:</strong> {new Date(pedido.fecha_pedido).toLocaleDateString()}</span>
-                </div>
+                <table>
+                  <tbody>
+                    <tr>
+                      <th>Transacción</th>
+                      <th>Método de pago</th>
+                      <th>Fecha</th>
+                      <th>Monto</th>
+                    </tr>
+                    <tr>
+                      <td>{pedido.id}</td>
+                      <td>{pedido.forma_pago}</td>
+                      <td>
+                        {new Date(pedido.fecha_pedido.toJSDate()).toLocaleDateString()}
+                      </td>
+                      <td>${pedido.total}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </section>
             </>
           )}
@@ -85,26 +175,64 @@ const ModalOrden = ({ pedido, onClose }: Props) => {
           {pestañaActiva === "productos" && (
             <section className="seccion">
               <h3>🛒 Productos</h3>
-              <ul>
-                {pedido.detalles.map((prod, i) => (
-                  <li key={i}>
-                    {prod.articulo?.denominacion} - Cantidad: {prod.cantidad} - ${prod.subtotal}
-                  </li>
-                ))}
-              </ul>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Artículo</th>
+                    <th>Cantidad</th>
+                    <th>Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pedido.detalles.map((prod, i) => (
+                    <tr key={i}>
+                      <td>{prod.articulo?.denominacion}</td>
+                      <td>{prod.cantidad}</td>
+                      <td>${prod.subtotal}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </section>
           )}
 
           {pestañaActiva === "factura" && (
             <section className="seccion">
               <h3>📄 Factura</h3>
-              <p>Contenido de la factura (pendiente de implementación)</p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Detalle</th>
+                    <th>Valor</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Factura pendiente</td>
+                    <td>–</td>
+                  </tr>
+                </tbody>
+              </table>
             </section>
           )}
+        </div>
+
+        {/* Footer con acciones */}
+        <div className="modal-footer">
+          <div>
+            {nextEstado && (
+              <button disabled={loading} onClick={handleNext}>
+                {label}
+              </button>
+            )}
+            {pedido.estado_pedido !== Estado.RECHAZADO && (
+              <button disabled={loading} className="danger" onClick={handleCancel}>
+                Cancelar
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
-};
-
-export default ModalOrden;
+}

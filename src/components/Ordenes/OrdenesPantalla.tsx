@@ -1,49 +1,54 @@
+// src/components/OrdenesPantalla.tsx
 import React, { useEffect, useState } from "react";
 import Pedido from "../../entidades/Pedido";
-import { getPedidos } from "../../services/FuncionesApi";
+import { getPedidos, updateEstadoPedido } from "../../services/FuncionesApi";
+import { Estado } from "../../entidades/Estado";
 import "../../estilos/OrdenesPantalla.css";
 import Paginacion from "../Ordenes/Paginado";
 import TablaPedidos from "./OrdenesTabla";
-import ModalOrden from "./OrdenModal"; // Asegurate de tener este componente
+import ModalOrden from "./OrdenModal";
+import ModalPago from "./ModalPago";
 
-const estadosDisponibles = [
-  { label: "Pendiente", value: "PENDIENTE" },
-  { label: "Confirmado", value: "CONFIRMADO" },
-  { label: "En Preparación", value: "EN_PREPARACION" },
-  { label: "Demorado", value: "DEMORADO" },
-  { label: "Listo", value: "LISTO" },
-  { label: "Rechazado", value: "RECHAZADO" },
-  { label: "Pagado", value: "PAGADO" },
-  { label: "En Camino", value: "EN_CAMINO" },
-  { label: "Entregado", value: "ENTREGADO" },
+// 1) Incluimos "Todos" con value vacío
+const estadosDisponibles: { label: string; value: Estado | "" }[] = [
+  { label: "Todos", value: "" },
+  { label: "Pendiente", value: Estado.PENDIENTE },
+  { label: "Confirmado", value: Estado.CONFIRMADO },
+  { label: "En Preparación", value: Estado.EN_PREPARACION },
+  { label: "Demorado", value: Estado.DEMORADO },
+  { label: "Listo", value: Estado.LISTO },
+  { label: "En Camino", value: Estado.EN_CAMINO },
+  { label: "Entregado", value: Estado.ENTREGADO },
+  { label: "Rechazado", value: Estado.RECHAZADO },
 ];
 
 const ELEMENTOS_POR_PAGINA = 8;
 
-function OrdenesPantalla() {
+export default function OrdenesPantalla() {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
-  const [estadoSeleccionado, setEstadoSeleccionado] = useState("PENDIENTE");
+  // 2) Estado puede ser un Estado o cadena vacía para "Todos"
+  const [estadoSeleccionado, setEstadoSeleccionado] = useState<Estado | "">("");
   const [busqueda, setBusqueda] = useState("");
   const [paginaActual, setPaginaActual] = useState(1);
 
-  const [modalAbierto, setModalAbierto] = useState(false);
+  const [modalDetallesOpen, setModalDetallesOpen] = useState(false);
   const [pedidoSeleccionado, setPedidoSeleccionado] = useState<Pedido | null>(null);
 
-  useEffect(() => {
-    cargarPedidos();
-  }, []);
+  const [modalPagoOpen, setModalPagoOpen] = useState(false);
+  const [pedidoPago, setPedidoPago] = useState<Pedido | null>(null);
 
+  useEffect(() => { cargarPedidos(); }, []);
   const cargarPedidos = async () => {
     const data = await getPedidos();
     setPedidos(data);
   };
 
-  const pedidosFiltrados = pedidos.filter(
-    (pedido) =>
-      pedido.estado_pedido === estadoSeleccionado &&
-      `${pedido.usuario?.nombre} ${pedido.usuario?.apellido}`
-        .toLowerCase()
-        .includes(busqueda.toLowerCase())
+  // 3) Si estadoSeleccionado es "", no filtramos por estado
+  const pedidosFiltrados = pedidos.filter(p =>
+    (estadoSeleccionado === "" || p.estado_pedido === estadoSeleccionado) &&
+    `${p.usuario?.nombre ?? ""} ${p.usuario?.apellido ?? ""}`
+      .toLowerCase()
+      .includes(busqueda.toLowerCase())
   );
 
   const totalPaginas = Math.ceil(pedidosFiltrados.length / ELEMENTOS_POR_PAGINA);
@@ -52,18 +57,30 @@ function OrdenesPantalla() {
     paginaActual * ELEMENTOS_POR_PAGINA
   );
 
-  useEffect(() => {
-    setPaginaActual(1);
-  }, [estadoSeleccionado, busqueda]);
+  useEffect(() => { setPaginaActual(1); }, [estadoSeleccionado, busqueda]);
 
-  const abrirModal = (pedido: Pedido) => {
-    setPedidoSeleccionado(pedido);
-    setModalAbierto(true);
+  const abrirModalDetalles = (p: Pedido) => {
+    setPedidoSeleccionado(p);
+    setModalDetallesOpen(true);
+  };
+  const cerrarModalDetalles = () => {
+    setModalDetallesOpen(false);
+    setPedidoSeleccionado(null);
   };
 
-  const cerrarModal = () => {
-    setModalAbierto(false);
-    setPedidoSeleccionado(null);
+  const abrirModalPago = (p: Pedido) => {
+    setPedidoPago(p);
+    setModalPagoOpen(true);
+  };
+  const cerrarModalPago = () => {
+    setModalPagoOpen(false);
+    setPedidoPago(null);
+  };
+  const handlePagoConfirmado = async () => {
+    if (!pedidoPago?.id) return;
+    await updateEstadoPedido(pedidoPago.id, Estado.ENTREGADO);
+    cerrarModalPago();
+    cargarPedidos();
   };
 
   return (
@@ -74,22 +91,21 @@ function OrdenesPantalla() {
             type="text"
             placeholder="Buscar cliente..."
             value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
+            onChange={e => setBusqueda(e.target.value)}
           />
         </div>
       </div>
 
       <h2>📋 Órdenes</h2>
-
       <div className="barra-superior">
         <div className="filtros">
-          {estadosDisponibles.map((estado) => (
+          {estadosDisponibles.map(est => (
             <button
-              key={estado.value}
-              onClick={() => setEstadoSeleccionado(estado.value)}
-              className={estadoSeleccionado === estado.value ? "activo" : ""}
+              key={String(est.value)}
+              onClick={() => setEstadoSeleccionado(est.value)}
+              className={estadoSeleccionado === est.value ? "activo" : ""}
             >
-              {estado.label}
+              {est.label}
             </button>
           ))}
         </div>
@@ -97,11 +113,14 @@ function OrdenesPantalla() {
 
       <div className="tabla-wrapper">
         {pedidosPaginados.length > 0 ? (
-          <TablaPedidos pedidos={pedidosPaginados} onSeleccionar={abrirModal} />
+          <TablaPedidos
+            pedidos={pedidosPaginados}
+            onSeleccionar={abrirModalDetalles}
+            onEstadoChange={cargarPedidos}
+            onCobrar={abrirModalPago}
+          />
         ) : (
-          <p style={{ textAlign: "center", padding: "20px" }}>
-            No se encontraron órdenes.
-          </p>
+          <p className="vacio">No se encontraron órdenes.</p>
         )}
       </div>
 
@@ -111,11 +130,21 @@ function OrdenesPantalla() {
         onPaginaCambio={setPaginaActual}
       />
 
-      {modalAbierto && pedidoSeleccionado && (
-        <ModalOrden pedido={pedidoSeleccionado} onClose={cerrarModal} />
+      {modalDetallesOpen && pedidoSeleccionado && (
+        <ModalOrden
+          pedido={pedidoSeleccionado}
+          onClose={cerrarModalDetalles}
+          onEstadoChange={cargarPedidos}
+        />
+      )}
+
+      {modalPagoOpen && pedidoPago && (
+        <ModalPago
+          pedido={pedidoPago}
+          onClose={cerrarModalPago}
+          onPaid={handlePagoConfirmado}
+        />
       )}
     </div>
   );
 }
-
-export default OrdenesPantalla;

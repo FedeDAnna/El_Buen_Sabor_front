@@ -8,10 +8,8 @@ import type Imagen from './Imagen';
 export default class Promocion {
     id?: number;
     denominacion: string = "";
-    fecha_desde: Date = new Date();
-    fecha_hasta: Date = new Date();
-    hora_desde: DateTime = new DateTime();
-    hora_hasta: DateTime = new DateTime();
+    hora_desde: DateTime = DateTime.now();
+    hora_hasta: DateTime = DateTime.now();
     descripcion_descuento: string = "";
     precio_promocional: number = 0;
     tipo_promocion?: TipoPromocion

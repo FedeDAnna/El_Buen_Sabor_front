@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import ArticuloManufacturado from "./ArticuloManufacturado";
 import type Domicilio from "./Domicilio";
 import type { Estado } from "./Estado";
@@ -6,6 +7,7 @@ import type PedidoDetalle from "./PedidoDetalle";
 import type Sucursal from "./Sucursal";
 import type { TipoEnvio } from "./TipoEnvio";
 import type Usuario from "./Usuario";
+import type Factura from "./Factura";
 
 
 export default class Pedido{
@@ -14,22 +16,14 @@ export default class Pedido{
     total: number =0;
     estado_pedido?: Estado;
     tipo_envio?: TipoEnvio;
-<<<<<<< HEAD
-    forma_pago?: FormaPago; 
-    fecha_pedido : Date =  new Date();
-    domicilio?: Domicilio;
-    sucursal?: Sucursal;
-    usuario?: Usuario;
     repartidor?:Usuario;
     detalles: PedidoDetalle[]=[];
-=======
     forma_pago?: FormaPago;
     fecha_pedido : DateTime =  DateTime.now();
     domicilio?: Domicilio;
     sucursal?: Sucursal;
     usuario?: Usuario;
     factura?: Factura;
-    detalles: PedidoDetalle[]=[];
 
     /**  
    * Este método será llamado automáticamente por JSON.stringify(obj)
@@ -60,5 +54,4 @@ export default class Pedido{
       })),
     }
   }
->>>>>>> fede
 }

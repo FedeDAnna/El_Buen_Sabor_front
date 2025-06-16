@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import type ArticuloInsumo from "../entidades/ArticuloInsumo";
 import type ArticuloManufacturado from "../entidades/ArticuloManufacturado";
 import type Categoria from "../entidades/Categoria";
@@ -7,6 +8,7 @@ import type Sucursal from "../entidades/Sucursal";
 import type TipoCategoria from "../entidades/TipoCategoria";
 import type UnidadDeMedida from "../entidades/UnidadDeMedida";
 import type Usuario from "../entidades/Usuario";
+import type { Estado } from "../entidades/Estado";
 
 const API_URL = "http://localhost:8080";
 const basic   = btoa(`admin:admin123`);
@@ -330,11 +332,31 @@ export async function getPedidos(): Promise<Pedido[]>{
   }
   );
   if (!res.ok) throw new Error("Error al obtener pedidos");
-  const data = await res.json();
-  console.log("data apis",data)
-
-  return data.map((inst: Pedido) => ({
-    ...inst,
-    id: inst.id
+ const raw: any[] = await res.json()
+  return raw.map(p => ({
+    ...p,
+    fecha_pedido: DateTime.fromISO(p.fecha_pedido),
+    hora_estimada_finalizacion: DateTime.fromISO(p.hora_estimada_finalizacion)
   }));
+}
+
+export async function updateEstadoPedido(
+  id: number,
+  nuevoEstado: Estado
+): Promise<void> {
+  const res = await fetch(`${API_URL}/pedidos/pedido/${id}`, {
+    method: "PATCH",                // o PUT si tu API lo espera
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      estadoPedido: nuevoEstado,   // campo según tu modelo
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Error ${res.status} actualizando pedido`);
+  }
+
 }
