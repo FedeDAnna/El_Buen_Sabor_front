@@ -298,7 +298,7 @@ table th, table td {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  max-width: 200px; /* ajusta ancho si quieres */
+  /* max-width: 200px; */
 }
 
 /* Cada bloque dentro del form */
@@ -329,5 +329,33 @@ table th, table td {
 .pago-vuelto {
   text-align: center;
 }
+.pago-form {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* espacio entre los elementos */
+  /* flex-wrap: wrap;*/
+  flex-direction: row;
+}
+.cont-pago{
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-direction: column;
+}
+.vuelto {
+  /* margin-left: auto;  */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 20px;
+  margin-left: 20px;
+  padding-top: 0px;
+}
+.recibido{
+  font-size: 18px;
+  display: flex;
+  gap: 3px;
+}
+
 
 

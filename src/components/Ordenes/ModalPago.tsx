@@ -98,27 +98,29 @@ export default function ModalPago({ pedido, onClose, onPaid }: Props) {
              <h3>💵 Pago</h3>
              <div className="pago-form">
                
-               <div>
-                 <label>Recibido:</label>
-                 <input
-                   type="number"
-                   min="0"
-                   step="0.01"
-                   value={received}
-                   onChange={e => setReceived(e.target.value)}
-                   style={{ width: "100px", padding: "0.25rem" }}
-                 />
+               <div className="cont-pago">
+                 <div className="recibido">
+                   <label>Recibido:</label>
+                   <input
+                     type="number"
+                     min="0"
+                     step="0.01"
+                     value={received}
+                     onChange={e => setReceived(e.target.value)}
+                     style={{ width: "100px", padding: "0.25rem" }}
+                   />
+                 </div>
+                 <div className="pago-calcular">
+                   <button
+                      className="btn-calcular"
+                     onClick={handleCalculate}
+                     disabled={received === "" || loading}
+                   >
+                     Calcular vuelto
+                   </button>
+                 </div>
                </div>
-               <div className="pago-calcular">
-                 <button 
-                    className="btn-calcular"
-                   onClick={handleCalculate}
-                   disabled={received === "" || loading}
-                 >
-                   Calcular vuelto
-                 </button>
-               </div>
-               <div>
+               <div className="vuelto">
                  <label>Vuelto:</label>
                  <div>
                    <strong style={{ color: calculatedChange < 0 ? "#e74c3c" : "#2ecc71" }}>
@@ -141,7 +143,7 @@ export default function ModalPago({ pedido, onClose, onPaid }: Props) {
         {/* Footer con acción */}
         <div className="modal-footer">
           <button onClick={handlePay} disabled={loading || paid < total}>
-            Pagado 
+            Cobrar 
           </button>
           <button className="danger" onClick={onClose} disabled={loading}>
             Cancelar

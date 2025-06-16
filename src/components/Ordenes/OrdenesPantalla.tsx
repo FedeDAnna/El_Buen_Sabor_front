@@ -135,6 +135,7 @@ export default function OrdenesPantalla() {
           pedido={pedidoSeleccionado}
           onClose={cerrarModalDetalles}
           onEstadoChange={cargarPedidos}
+          onCobrar={abrirModalPago}
         />
       )}
 

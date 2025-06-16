@@ -9,9 +9,10 @@ type Props = {
   pedido: Pedido;
   onClose: () => void;
   onEstadoChange: () => void;
+  onCobrar: (pedido: Pedido) => void; 
 };
 
-export default function ModalOrden({ pedido, onClose, onEstadoChange }: Props) {
+export default function ModalOrden({ pedido, onClose, onEstadoChange,onCobrar }: Props) {
   const [pestañaActiva, setPestañaActiva] = useState<
     "detalles" | "productos" | "factura"
   >("detalles");
@@ -28,8 +29,8 @@ export default function ModalOrden({ pedido, onClose, onEstadoChange }: Props) {
         return { nextEstado: Estado.LISTO, label: "Listo" };
       case Estado.LISTO:
         return pedido.tipo_envio === "DELIVERY"
-          ? { nextEstado: Estado.EN_CAMINO, label: "Poner en camino" }
-          : { nextEstado: Estado.ENTREGADO, label: "Marcar entregado" };
+          ? { nextEstado: Estado.EN_CAMINO, label: "En camino" }
+          : { nextEstado: null, label: "" };
       case Estado.EN_CAMINO:
         return { nextEstado: Estado.ENTREGADO, label: "Entregado" };
       default:
@@ -45,17 +46,17 @@ export default function ModalOrden({ pedido, onClose, onEstadoChange }: Props) {
     onClose();
   };
 
-  const handleCancel = async () => {
-    if (pedido.estado_pedido === Estado.RECHAZADO) return;
-    const ok = window.confirm(
-      "¿Seguro que deseas cancelar este pedido? Esto lo marcará como rechazado."
-    );
-    if (!ok || !pedido.id) return;
-    setLoading(true);
-    await updateEstadoPedido(pedido.id, Estado.RECHAZADO);
-    onEstadoChange();
-    onClose();
-  };
+  // const handleCancel = async () => {
+  //   if (pedido.estado_pedido === Estado.RECHAZADO) return;
+  //   const ok = window.confirm(
+  //     "¿Seguro que deseas cancelar este pedido? Esto lo marcará como rechazado."
+  //   );
+  //   if (!ok || !pedido.id) return;
+  //   setLoading(true);
+  //   await updateEstadoPedido(pedido.id, Estado.RECHAZADO);
+  //   onEstadoChange();
+  //   onClose();
+  // };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -225,8 +226,21 @@ export default function ModalOrden({ pedido, onClose, onEstadoChange }: Props) {
                 {label}
               </button>
             )}
+            {/* Si está LISTO y es TAKE_AWAY: Cobrar */}
+          {(pedido.estado_pedido === Estado.LISTO && pedido.tipo_envio === "TAKE_AWAY") && (
+            <button
+              onClick={e => {
+                onClose();
+                e.stopPropagation();
+                onCobrar(pedido);
+              }}
+              className="primary"
+            >
+              Cobrar
+            </button>
+          )}
             {pedido.estado_pedido !== Estado.RECHAZADO && (
-              <button disabled={loading} className="danger" onClick={handleCancel}>
+              <button disabled={loading} className="danger" onClick={onClose}>
                 Cancelar
               </button>
             )}

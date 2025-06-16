@@ -29,7 +29,11 @@ export default function OrdenFila({
       case Estado.DEMORADO:
         return { nextEstado: Estado.LISTO, label: "Listo" };
       case Estado.LISTO:
-        return { nextEstado: null, label: "" };
+        if (pedido.tipo_envio === "DELIVERY") {
+          return { nextEstado: Estado.EN_CAMINO, label: "En camino" };
+        } else {
+          return { nextEstado: null, label: "" }; // para TAKE_AWAY se cobra
+        }
       case Estado.EN_CAMINO:
         return { nextEstado: Estado.ENTREGADO, label: "Entregado" };
       default:
@@ -81,35 +85,40 @@ export default function OrdenFila({
       </td>
       <td>
         <div className="pedido-actions">
-          {/* Avanzar estado */}
-          {nextEstado && (
+          {/* Avanzar estado si no es LISTO */}
+          {(pedido.estado_pedido !== Estado.LISTO && nextEstado) && (
             <button onClick={handleNext}>{label}</button>
           )}
-          {/* Cobrar si está LISTO */}
-          {pedido.estado_pedido === Estado.LISTO && (() => {
-            if (pedido.tipo_envio === "TAKE_AWAY") {
-              return (
-                <button
-                  onClick={e => { e.stopPropagation(); onCobrar(pedido); }}
-                  className="primary"
-                >
-                  Cobrar
-                </button>
-              );
-            }
-            return (
-              <button onClick={handleNext} >
-                En Camino
-              </button>
-            );
-          })()}
+
+          {/* Si está LISTO y es TAKE_AWAY: Cobrar */}
+          {(pedido.estado_pedido === Estado.LISTO && pedido.tipo_envio === "TAKE_AWAY") && (
+            <button
+              onClick={e => {
+                e.stopPropagation();
+                onCobrar(pedido);
+              }}
+              className="primary"
+            >
+              Cobrar
+            </button>
+          )}
+
+          {/* Si está LISTO y es DELIVERY: En camino */}
+          {(pedido.estado_pedido === Estado.LISTO && pedido.tipo_envio === "DELIVERY") && (
+            <button onClick={handleNext} className="primary">
+              En camino
+            </button>
+          )}
+
           {/* Cancelar en todos menos RECHAZADO */}
-          {pedido.estado_pedido !== Estado.RECHAZADO && (
+          {pedido.estado_pedido !== Estado.RECHAZADO &&
+            pedido.estado_pedido !== Estado.ENTREGADO&& (
             <button onClick={handleCancel} className="danger">
               Cancelar pedido
             </button>
           )}
         </div>
+
       </td>
     </tr>
   );
