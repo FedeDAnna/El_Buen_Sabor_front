@@ -1,0 +1,89 @@
+/* src/estilos/DomiciliosPage.css */
+.dp-main {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.dp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.dp-header h2 {
+  margin: 0;
+}
+
+.btn-add {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.dp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.dp-item {
+  background: #f9f9f9;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dp-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dp-item-info strong {
+  font-size: 1.1rem;
+}
+
+.dp-item-actions button {
+  margin-left: 0.5rem;
+  background: #eee;
+  border: none;
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.dp-item-actions button:hover {
+  background: #ddd;
+}
+
+.empty {
+  text-align: center;
+  color: #666;
+  margin-top: 1rem;
+}
+
+.error {
+  color: red;
+  text-align: center;
+}
+
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px; /* Ajusta según el diseño */
+  text-align: center;
+}
+
+.dom-empty-img {
+  max-width: 60%;
+  height: auto;
+}

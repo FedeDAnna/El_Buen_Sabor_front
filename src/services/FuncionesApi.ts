@@ -10,6 +10,7 @@ import type TipoCategoria from "../entidades/TipoCategoria";
 import type TipoPromocion from "../entidades/TipoPromocion";
 import type UnidadDeMedida from "../entidades/UnidadDeMedida";
 import type Usuario from "../entidades/Usuario";
+import type Localidad from "../entidades/Localidad";
 
 const API_URL = "http://localhost:8080";
 const basic   = btoa(`admin:admin123`);
@@ -106,7 +107,7 @@ export async function getArticulosInsumoPorCategoria(idCategoria: number): Promi
 
 export async function getArticulosManufacturados(): Promise<ArticuloManufacturado[]>{
     
-    const res = await fetch(`${API_URL}/articulos_manufacturados`,
+    const res = await fetch(`${API_URL}/articulos_manufacturados/getAll`,
     {
     method: 'GET',
     credentials: 'include',  
@@ -287,6 +288,31 @@ export async function fetchTiposCategoria(): Promise<TipoCategoria[]> {
   return res.json()
 }
 
+export async function getDomiciliosPorUsuario(idUsuario: number): Promise<Domicilio[]>{
+    const res = await fetch(`${API_URL}/domicilios/ByUsuario/${idUsuario}`,
+      {
+      method: 'GET',
+      credentials: 'include',  
+      headers: {
+        'Authorization': `Basic ${basic}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+  const data = await res.json()
+  return data
+}
+
+export async function getLocalidades(): Promise<Localidad[]> {
+  const res = await fetch(`${API_URL}/localidades`, {
+    credentials: 'include',
+    headers: { 'Authorization': `Basic ${basic}` }
+  });
+  if (!res.ok) throw new Error(`Error ${res.status} cargando localidades`);
+  return res.json();
+}
+
+
 // POST
 
 export async function postTipoPromocion(tipoPromocion: TipoPromocion): Promise<TipoPromocion> {
@@ -378,6 +404,21 @@ export async function saveArticuloInsumo(articulo: ArticuloInsumo): Promise<Arti
   return res.json();
 }
 
+export async function saveDomicilio(domicilio: Domicilio): Promise<Domicilio> {
+const res = await fetch(`${API_URL}/domicilios`,{
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Authorization': `Basic ${basic}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(domicilio),
+    }
+  );
+  if (!res.ok) throw new Error(`Error ${res.status} guardando el domicilio`);
+  return res.json();
+}
+
 export async function guardarCategoriaConHijos(
   categoria: Categoria
 ): Promise<Categoria> {
@@ -416,6 +457,21 @@ export async function postPromocion(promo: Promocion): Promise<Promocion> {
     hora_desde: DateTime.fromISO(raw.hora_desde),
     hora_hasta: DateTime.fromISO(raw.hora_hasta),
   }
+}
+
+export async function saveUsuario(user: Usuario): Promise<Usuario> {
+const res = await fetch(`${API_URL}/usuarios`,{
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Authorization': `Basic ${basic}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
+    }
+  );
+  if (!res.ok) throw new Error(`Error ${res.status} guardando el domicilio`);
+  return res.json();
 }
 
 
@@ -461,6 +517,15 @@ export async function deleteCategoriaById(idCategoria :Number): Promise<boolean>
   return res.json()
 }
 
+export async function deleteDomicilioById(idDomicilio :Number): Promise<boolean> {
+  const res = await fetch(`${API_URL}/domicilios/${idDomicilio}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: { 'Authorization': `Basic ${basic}` }
+  })
+  if (!res.ok)throw new Error(`Error ${res.status} al borrar el domicilio`)
+  return res.json()
+}
 
 // PUT o PATCH
 

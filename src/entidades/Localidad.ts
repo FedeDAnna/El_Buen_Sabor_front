@@ -1,7 +1,7 @@
 import type Provincia from "./Provincia";
 
 export default class Localidad {
-    i?: number;
+    id?: number;
     nombre: string = "";
     provincia?: Provincia;
 }

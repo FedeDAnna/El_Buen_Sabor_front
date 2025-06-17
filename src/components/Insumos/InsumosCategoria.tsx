@@ -10,6 +10,7 @@ import {
 import type Categoria from '../../entidades/Categoria';
 import InsumoModal from './InsumoModal';
 import type ArticuloInsumo from '../../entidades/ArticuloInsumo';
+import Swal from 'sweetalert2';
 
 
 export default function InsumosCategoria() {
@@ -55,7 +56,18 @@ export default function InsumosCategoria() {
   // Función para eliminar
   function deleteProducto(id: number) {
     return async () => {
-      if (!window.confirm('¿Estás seguro de eliminar este producto?')) return;
+      const result = await Swal.fire({
+        title: "¿Estás seguro?",
+        text: "Esta acción eliminará el Insumo.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+      });
+    
+      if (!result.isConfirmed) return;
       deleteProductosById(id)
         .then(() => setArticulos((prev) => prev.filter((a) => a.id !== id)))
         .catch((e) => {

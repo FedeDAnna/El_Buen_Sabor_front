@@ -6,9 +6,10 @@ import '../../estilos/SidebarCliente.css'
 interface SidebarProps {
   isOpen: boolean
   onClose: () => void
+  onPromocionesClick: () => void
 }
 
-export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+export default function SidebarCliente({ isOpen, onClose, onPromocionesClick }: SidebarProps) {
   const location = useLocation()
 
   return (
@@ -26,7 +27,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <ul>
             <li>
               <Link
-                to="/mi-cuenta"
+                to="/perfil/1"
                 className={location.pathname.startsWith('/mi-cuenta') ? 'active' : ''}
                 onClick={onClose}
               >
@@ -49,17 +50,16 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             </li>
             <hr />
             <li>
-              <Link
-                to="/promociones"
-                className={location.pathname.startsWith('/promociones') ? 'active' : ''}
-                onClick={onClose}
+              <button
+                className="sb-link-btn"
+                onClick={onPromocionesClick}
               >
                 <span className="sb-icon">🏷️</span> Promociones
-              </Link>
+              </button>
             </li>
             <li>
               <Link
-                to="/categorias/0"
+                to="/categorias/1"
                 className={location.pathname.startsWith('/categorias') ? 'active' : ''}
                 onClick={onClose}
               >

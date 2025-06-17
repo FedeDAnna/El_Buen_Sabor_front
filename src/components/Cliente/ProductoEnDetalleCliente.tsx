@@ -128,7 +128,7 @@ export default function ProductoEnDetalleCliente() {
                       <strong>Tiempo estimado:</strong> {articulo.tiempo_estimado_en_minutos} min
                     </div>
                   </>
-                ) : (
+                ) : ( 
                   <>
                     <div className="adp-descripcion">
                       <h3>Descripción:</h3>

@@ -1,0 +1,77 @@
+import { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { getUsuarioById, saveUsuario } from '../../services/FuncionesApi'
+import type Usuario from '../../entidades/Usuario'
+import '../../estilos/EditarDatosPersonales.css'
+
+export default function EditarDatosPersonales() {
+  const { usuarioId } = useParams<{ usuarioId: string }>()
+  const navigate = useNavigate()
+  const [user, setUser] = useState<Usuario | null>(null)
+  const [form, setForm] = useState({ nombre: '', apellido: '', telefono: '' })
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!usuarioId) return
+    getUsuarioById(Number(usuarioId))
+      .then(u => {
+        setUser(u)
+        setForm({
+          nombre: u.nombre,
+          apellido: u.apellido,
+          telefono: u.telefono || ''
+        })
+      })
+      .finally(() => setLoading(false))
+  }, [usuarioId])
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value })
+  }
+
+  const handleSubmit = async () => {
+    if (!user) return
+    const updated: Usuario = { ...user, ...form }
+    await saveUsuario(updated)
+    navigate(-1)
+  }
+
+  if (loading || !user) return <p className="edp-loading">Cargando…</p>
+
+  return (
+    <div className="edp-container">
+      <h2>Editar Datos Personales</h2>
+      <div className="edp-form">
+        <label>Nombre</label>
+        <input
+          name="nombre"
+          value={form.nombre}
+          onChange={handleChange}
+        />
+        <label>Apellido</label>
+        <input
+          name="apellido"
+          value={form.apellido}
+          onChange={handleChange}
+        />
+        <label>Teléfono</label>
+        <input
+          name="telefono"
+          value={form.telefono}
+          onChange={handleChange}
+        />
+        <label>Correo Electrónico</label>
+        <input value={user.email} disabled />
+        <label>Fecha de Nacimiento</label>
+        <input
+          value={new Date(user.fecha_nacimiento).toLocaleDateString()}
+          disabled
+        />
+        <div className="edp-actions">
+          <button onClick={() => navigate(-1)}>Cancelar</button>
+          <button onClick={handleSubmit}>Guardar</button>
+        </div>
+      </div>
+    </div>
+  )
+}

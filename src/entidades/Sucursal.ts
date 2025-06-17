@@ -9,8 +9,8 @@ import type Usuario from "./Usuario";
 export default class Sucursal{
     id?: number;
     nombre: string = "";
-    horarioApertura: Date = new Date();
-    horarioCierre: Date = new Date();
+    horario_apertura: Date = new Date();
+    horario_cierre: Date = new Date();
 
     domicilio?: Domicilio;
     empresa?: Empresa;

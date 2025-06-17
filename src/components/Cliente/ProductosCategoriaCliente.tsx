@@ -102,6 +102,7 @@ export default function ProductosCategoriaCliente() {
   return (
     <main className="cpp-main">
       <section className="cpp-carrusel-wrapper">
+        <h2>Nuestras Categorias</h2>
         <CarruselCategorias />
       </section>
 

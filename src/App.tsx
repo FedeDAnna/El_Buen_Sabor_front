@@ -16,6 +16,9 @@ import PedidoConfirmado from './components/Cliente/PedidoConfirmado';
 import TipoPromocionesTabla from './components/Promociones/TipoPromocionesTabla';
 import PromocionTabla from './components/Promociones/PromocionTabla';
 import PromocionEnDetalle from './components/Promociones/PromocionEnDetalle';
+import DomiciliosPage from './components/Perfil/DomiciliosPage';
+import DatosPersonales from './components/Cliente/DatosPersonales';
+import EditarDatosPersonales from './components/Cliente/EditarDatosPersonales';
 
 export default function App() {
   return (
@@ -34,7 +37,9 @@ export default function App() {
             <Route path="/articulo/:id" element={<ProductoEnDetalleCliente/>} />
             <Route path="/carrito" element={<CarritoPage />} />
             
-            
+            <Route path="/perfil/:usuarioId" element={<DatosPersonales />} />
+            <Route path="/perfil/:usuarioId/editar" element={<EditarDatosPersonales />} />
+
             <Route
               path="/promociones/:id"
               element={<PromocionEnDetalle />}
@@ -43,7 +48,8 @@ export default function App() {
             <Route path="/pedido/confirmado" element={<PedidoConfirmado />} />
 
             <Route path="/pedido/pago" element={<DetallePago />} />
-          
+
+            <Route path="/domicilios/:usuarioId" element={<DomiciliosPage />} />        
             
 
             <Route

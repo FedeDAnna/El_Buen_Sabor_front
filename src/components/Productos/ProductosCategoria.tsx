@@ -10,6 +10,7 @@ import {
 import type ArticuloManufacturado from '../../entidades/ArticuloManufacturado';
 import type Categoria from '../../entidades/Categoria';
 import ProductoManufacturadoModal from './ProductoManufacturadoModal';
+import Swal from 'sweetalert2';
 
 export default function ProductosCategoria() {
   const { categoriaId } = useParams<{ categoriaId: string }>();
@@ -53,7 +54,18 @@ export default function ProductosCategoria() {
   // Función para eliminar
   function deleteProducto(id: number) {
     return async () => {
-      if (!window.confirm('¿Estás seguro de eliminar este producto?')) return;
+      const result = await Swal.fire({
+        title: "¿Estás seguro?",
+        text: "Esta acción eliminará el Producto.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+      });
+    
+      if (!result.isConfirmed) return;
       deleteProductosById(id)
         .then(() => setArticulos((prev) => prev.filter((a) => a.id !== id)))
         .catch((e) => {

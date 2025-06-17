@@ -102,6 +102,7 @@ const [unidades, setUnidades] = useState<UnidadDeMedida[]>([])
   }
 
   const removeDetalle = (index: number) => {
+    
     setDetalles((ds) => ds.filter((_, i) => i !== index))
   }
 
@@ -324,7 +325,7 @@ const [unidades, setUnidades] = useState<UnidadDeMedida[]>([])
                       <option value="" disabled>
                         Seleccione un insumo
                       </option>
-                      {insumos.map((ins) => (
+                      {insumos.filter(ins => ins.es_para_elaborar).map((ins) => (
                         <option key={ins.id} value={ins.id}>
                           {ins.denominacion}
                         </option>
