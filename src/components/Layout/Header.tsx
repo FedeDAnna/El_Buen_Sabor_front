@@ -1,22 +1,53 @@
-// src/components/Layout/Header.tsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FaShoppingCart, FaUserCircle } from 'react-icons/fa';
-import '../../estilos/Header.css';
-import { User, ClipboardList, LogOut } from 'lucide-react';
-import { useCart, type CartItem } from '../CartContext';
 import { Link } from 'react-router-dom';
+import { User, ClipboardList, LogOut } from 'lucide-react';
+import { useCart } from '../CartContext';
+import '../../estilos/Header.css';
+import { useAuth0 } from '@auth0/auth0-react';
 
+// Botón Login
+function LoginButton() {
+  const { loginWithRedirect } = useAuth0();
+  return <button onClick={() => loginWithRedirect()}>Iniciar sesión</button>;
+}
 
+// Botón Logout con redirección al HomePage
+function LogoutButton() {
+  const { logout } = useAuth0();
+  return (
+    <button
+      onClick={() =>
+        logout({
+          logoutParams: {
+            returnTo: `${window.location.origin}/HomePage`,
+          },
+        })
+      }
+    >
+      <LogOut size={20} /> Cerrar sesión
+    </button>
+  );
+}
+
+// Botón Perfil
+function ProfileButton() {
+  const { user } = useAuth0();
+  return (
+    <div className="profile-info">
+      <User size={20} /> {user?.name || user?.email}
+    </div>
+  );
+}
 
 export default function Header() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
-
+  const { isAuthenticated } = useAuth0();
   const { cartItems, total, removeFromCart, updateQuantity } = useCart();
 
   return (
     <header className="header">
-      
       <div className="titulo">EL BUEN SABOR</div>
 
       {/* Carrito */}
@@ -37,28 +68,30 @@ export default function Header() {
         {cartOpen && (
           <div className="header-cart-menu">
             <h4>Carrito</h4>
-
             {cartItems.length === 0 ? (
               <p className="empty-cart">No hay items.</p>
             ) : (
               <ul className="cart-items-list">
                 {cartItems.map(item => {
-                  // extraemos datos según el tipo
-                  const key = item.kind === 'articulo'
-                    ? `a-${item.producto.id}`
-                    : `p-${item.promocion.id}`;
+                  const key =
+                    item.kind === 'articulo'
+                      ? `a-${item.producto.id}`
+                      : `p-${item.promocion.id}`;
 
-                  const src = item.kind === 'articulo'
-                    ? item.producto.imagen?.src
-                    : item.promocion.imagen?.src;
+                  const src =
+                    item.kind === 'articulo'
+                      ? item.producto.imagen?.src
+                      : item.promocion.imagen?.src;
 
-                  const name = item.kind === 'articulo'
-                    ? item.producto.denominacion
-                    : item.promocion.denominacion;
+                  const name =
+                    item.kind === 'articulo'
+                      ? item.producto.denominacion
+                      : item.promocion.denominacion;
 
-                  const price = item.kind === 'articulo'
-                    ? item.producto.precio_venta
-                    : item.promocion.precio_promocional;
+                  const price =
+                    item.kind === 'articulo'
+                      ? item.producto.precio_venta
+                      : item.promocion.precio_promocional;
 
                   return (
                     <li key={key} className="cart-item">
@@ -75,40 +108,33 @@ export default function Header() {
                         <div className="cart-item-controls">
                           <button
                             onClick={() => {
-                              let id: number
-                              if (item.kind === 'articulo') {
-                                id = item.producto.id!
-                              } else {
-                                id = item.promocion.id!
-                              }
-                              updateQuantity(id, item.kind,item.cantidad - 1 )
+                              const id =
+                                item.kind === 'articulo'
+                                  ? item.producto.id!
+                                  : item.promocion.id!;
+                              updateQuantity(id, item.kind, item.cantidad - 1);
                             }}
                           >
                             -
                           </button>
                           <button
                             onClick={() => {
-                              let id: number
-                              if (item.kind === 'articulo') {
-                                id = item.producto.id!
-                              } else {
-                                id = item.promocion.id!
-                              }
-                              updateQuantity(id, item.kind,item.cantidad + 1 )
+                              const id =
+                                item.kind === 'articulo'
+                                  ? item.producto.id!
+                                  : item.promocion.id!;
+                              updateQuantity(id, item.kind, item.cantidad + 1);
                             }}
                           >
                             +
                           </button>
-
                           <button
                             onClick={() => {
-                              let id: number
-                              if (item.kind === 'articulo') {
-                                id = item.producto.id!
-                              } else {
-                                id = item.promocion.id!
-                              }
-                              removeFromCart(id, item.kind)
+                              const id =
+                                item.kind === 'articulo'
+                                  ? item.producto.id!
+                                  : item.promocion.id!;
+                              removeFromCart(id, item.kind);
                             }}
                           >
                             🗑️
@@ -124,9 +150,7 @@ export default function Header() {
             <div className="cart-menu-footer">
               <div className="cart-total">
                 <span>Total:</span>{' '}
-                <span className="cart-total-amount">
-                  ${total}
-                </span>
+                <span className="cart-total-amount">${total}</span>
               </div>
               <Link
                 to="/carrito"
@@ -154,17 +178,17 @@ export default function Header() {
           <div className="header-profile-menu">
             <h4>Mi Cuenta</h4>
             <ul>
-              <li>
-                <User size={20} /> Datos personales
-              </li>
-              <Link to="/historial-pedidos" className="menu-link">
-              <li>
-                <ClipboardList size={20} /> Historial de pedidos
-              </li>
-              </Link>
-              <li>
-                <LogOut size={20} /> Cerrar sesión
-              </li>
+              {isAuthenticated ? (
+                <>
+                  <li><ProfileButton /></li>
+                  <Link to="/historial-pedidos" className="menu-link">
+                    <li><ClipboardList size={20} /> Historial de pedidos</li>
+                  </Link>
+                  <li><LogoutButton /></li>
+                </>
+              ) : (
+                <li><LoginButton /></li>
+              )}
             </ul>
           </div>
         )}
