@@ -183,9 +183,11 @@ export default function Header() {
                   <House size={20} /> Mis Domicilios
                 </Link>
               </li>
+              <Link to="/historial-pedidos" className="menu-link">
               <li>
                 <ClipboardList size={20} /> Historial de pedidos
               </li>
+              </Link>
               <li>
                 <LogOut size={20} /> Cerrar sesión
               </li>

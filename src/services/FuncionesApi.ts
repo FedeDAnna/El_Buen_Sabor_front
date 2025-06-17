@@ -11,6 +11,7 @@ import type TipoPromocion from "../entidades/TipoPromocion";
 import type UnidadDeMedida from "../entidades/UnidadDeMedida";
 import type Usuario from "../entidades/Usuario";
 import type Localidad from "../entidades/Localidad";
+import type { PedidoHistorialDTO } from "../DTOs/DTO/PedidoHistorialDTO";
 
 const API_URL = "http://localhost:8080";
 const basic   = btoa(`admin:admin123`);
@@ -318,6 +319,15 @@ export async function getSucursales(): Promise<Sucursal[]> {
     headers: { 'Authorization': `Basic ${basic}` }
   });
   if (!res.ok) throw new Error(`Error ${res.status} cargando sucursales`);
+  return res.json();
+}
+
+export async function fetchHistorialPedidosClientes(pagina: number): Promise<PedidoHistorialDTO[]> {
+  const res = await fetch(`${API_URL}/pedidos/byClientes/1?page=${pagina}&size=16`, {
+    credentials: 'include',
+    headers: { 'Authorization': `Basic ${basic}` }
+  });
+  if (!res.ok) throw new Error(`Error ${res.status} cargando historial`);
   return res.json();
 }
 

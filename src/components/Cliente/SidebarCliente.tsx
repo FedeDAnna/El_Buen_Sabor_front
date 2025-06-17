@@ -36,8 +36,8 @@ export default function SidebarCliente({ isOpen, onClose, onPromocionesClick }: 
             </li>
             <li>
               <Link
-                to="/historial"
-                className={location.pathname.startsWith('/historial') ? 'active' : ''}
+                to="/historial-pedidos"
+                className={location.pathname.startsWith('/historial-pedidos') ? 'active' : ''}
                 onClick={onClose}
               >
                 <span className="sb-icon">📜</span> Historial de Pedidos

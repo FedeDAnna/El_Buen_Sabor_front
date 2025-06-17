@@ -21,6 +21,8 @@ import DatosPersonales from './components/Cliente/DatosPersonales';
 import EditarDatosPersonales from './components/Cliente/EditarDatosPersonales';
 import SucursalesTabla from './components/Sucursales/SucursalesTabla';
 import NuestrasSucursales from './components/Sucursales/NuestrasSucursales';
+import Dashboard from './components/Estadisticas/Dashboard';
+import HistorialPedidos from './components/Cliente/HistorialPedidos';
 
 export default function App() {
   return (
@@ -54,8 +56,18 @@ export default function App() {
             <Route path="/domicilios/:usuarioId" element={<DomiciliosPage />} />
 
             <Route path="/nuestrasSucursales" element={<NuestrasSucursales />} />
-            
-            
+  
+            <Route path="/historial-pedidos" element={<HistorialPedidos />} />
+
+
+            <Route
+              path="/admin/estadisticas"
+              element={
+                <AdminPantalla>
+                  <Dashboard />
+                </AdminPantalla>
+              }
+            />
 
             <Route
               path="/admin/insumos/:categoriaId"
