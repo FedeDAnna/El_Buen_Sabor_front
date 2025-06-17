@@ -18,6 +18,8 @@ import PromocionTabla from './components/Promociones/PromocionTabla';
 import PromocionEnDetalle from './components/Promociones/PromocionEnDetalle';
 import Dashboard from './components/Estadisticas/Dashboard';
 import TablaUsuarios from './components/TablaUsuarios';
+import PreguntasFrecuentes from './components/PreguntasFrecuentes';
+import TerminosCondiciones from './components/TerminosCondiciones';
 
 export default function App() {
   return (
@@ -35,6 +37,9 @@ export default function App() {
 
             <Route path="/articulo/:id" element={<ProductoEnDetalleCliente/>} />
             <Route path="/carrito" element={<CarritoPage />} />
+
+            <Route path='/faq' element={<PreguntasFrecuentes />} />
+            <Route path="/terminos" element={<TerminosCondiciones />} />
             
             
             <Route
