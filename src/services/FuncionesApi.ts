@@ -461,7 +461,103 @@ export async function deleteCategoriaById(idCategoria :Number): Promise<boolean>
   return res.json()
 }
 
+export async function obtenerUsuariosPorTipo(tipo: 'empleados' | 'clientes'): Promise<Usuario[]> {
+  const url = `${API_URL}/usuarios/${tipo}`;
 
+  const res = await fetch(url, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Authorization': `Basic ${basic}`,
+      'Content-Type': 'application/json'
+    }
+  });
 
+  if (!res.ok) {
+    throw new Error(`Error ${res.status} al obtener ${tipo}`);
+  }
 
+  return await res.json();
+}
 
+export async function obtenerRolesEmpleados(): Promise<string[]> {
+  const url = `${API_URL}/usuarios/roles`;
+
+  const res = await fetch(url, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Authorization': `Basic ${basic}`,
+      'Content-Type': 'application/json'
+    }
+  });
+
+  if (!res.ok) {
+    throw new Error(`Error ${res.status} al obtener roles`);
+  }
+
+  return await res.json();
+}
+
+export async function crearUsuario(nuevoUsuario: Usuario): Promise<Usuario> {
+  const url = `${API_URL}/usuarios`;
+
+  // Eliminar el ID si es 0 o si existe
+  const usuarioSinId = { ...nuevoUsuario };
+  if ('id' in usuarioSinId && (usuarioSinId.id === 0 || usuarioSinId.id === undefined || usuarioSinId.id === null)) {
+    delete usuarioSinId.id;
+  }
+console.log('Usuario a crear:', usuarioSinId)
+  const response = await fetch(url, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Authorization': `Basic ${basic}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(usuarioSinId)
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error al crear usuario: ${response.statusText}`);
+  }
+
+  return await response.json();
+}
+
+export async function actualizarUsuario(id: number, datosActualizados: Usuario): Promise<Usuario> {
+  const url = `${API_URL}/usuarios?id=${id}`;
+
+  const res = await fetch(url, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Authorization': `Basic ${basic}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(datosActualizados)
+  });
+
+  if (!res.ok) {
+    throw new Error(`Error ${res.status} al actualizar usuario`);
+  }
+
+  return await res.json();
+}
+
+export async function eliminarUsuario(idUsuario: number): Promise<void> {
+  const url = `${API_URL}/usuarios/${idUsuario}`;
+
+  const res = await fetch(url, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: {
+      'Authorization': `Basic ${basic}`,
+      'Content-Type': 'application/json'
+    }
+  });
+
+  if (!res.ok) {
+    throw new Error(`Error ${res.status} al eliminar usuario`);
+  }
+}

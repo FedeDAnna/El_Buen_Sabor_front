@@ -17,6 +17,7 @@ import TipoPromocionesTabla from './components/Promociones/TipoPromocionesTabla'
 import PromocionTabla from './components/Promociones/PromocionTabla';
 import PromocionEnDetalle from './components/Promociones/PromocionEnDetalle';
 import Dashboard from './components/Estadisticas/Dashboard';
+import TablaUsuarios from './components/TablaUsuarios';
 
 export default function App() {
   return (
@@ -94,6 +95,23 @@ export default function App() {
               </AdminPantalla>
             }/>
 
+            <Route
+              path="/admin/empleados"
+              element={
+                <AdminPantalla>
+                  <TablaUsuarios tipo='empleados' />
+                </AdminPantalla>
+              }
+            />
+
+            <Route
+              path="/admin/clientes"
+              element={
+                <AdminPantalla>
+                  <TablaUsuarios tipo='clientes' />
+                </AdminPantalla>
+              }
+            />
 
             <Route path="*" element={<p>Página no encontrada</p>} />
           </Routes>
