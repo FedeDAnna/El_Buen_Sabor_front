@@ -60,7 +60,7 @@ export default function HomePage() {
             <h1>El Buen Sabor</h1>
             <p>La mejor comida de tu vida está a un clic</p>
             <div className="hp-hero-buttons">
-              <Link to="/pedir" className="hp-btn hp-btn-primary">
+              <Link to="/login" className="hp-btn hp-btn-primary">
                 Pedí Ahora
               </Link>
               <Link to="/descargar-app" className="hp-btn hp-btn-secondary">

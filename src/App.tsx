@@ -16,6 +16,8 @@ import PedidoConfirmado from './components/Cliente/PedidoConfirmado';
 import TipoPromocionesTabla from './components/Promociones/TipoPromocionesTabla';
 import PromocionTabla from './components/Promociones/PromocionTabla';
 import PromocionEnDetalle from './components/Promociones/PromocionEnDetalle';
+import Login from './components/Cliente/Login';
+import Register from './components/Cliente/Register';
 
 export default function App() {
   return (
@@ -78,6 +80,8 @@ export default function App() {
                 <TipoPromocionesTabla/>
               </AdminPantalla>
             }/>
+            <Route path="/login" element={<Login />} />
+            <Route path="/registro" element={<Register />} />
 
             <Route path="/admin/promocion/:tipoPromocionId" element={
               <AdminPantalla>
