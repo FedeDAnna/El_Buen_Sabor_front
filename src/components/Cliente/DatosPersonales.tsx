@@ -26,13 +26,12 @@ export default function DatosPersonales() {
   return (
     
     <div className="dp-container">
-        <button onClick={() => navigate(-1)} className="dp-back-btn">
-        ← Volver
-        </button>
+      
+        
       <div className="dp-card">
         <img
             src={user.imagen!.src}
-            alt={"Foto de Perfil"}
+            alt="/imagenes/Usuario.png"
             className="adp-img"
         />
         <h2 className="dp-name">{user.nombre} {user.apellido}</h2>
@@ -53,6 +52,11 @@ export default function DatosPersonales() {
           <span className="dp-label">Fecha de Nacimiento</span>
           <span className="dp-value">{new Date(user.fecha_nacimiento).toLocaleDateString()}</span>
         </div>
+      </div>
+      <div>
+        <button onClick={() => navigate('/HomePage')} className="dp-back-btn">
+        ← Home
+        </button>
       </div>
     </div>
   )

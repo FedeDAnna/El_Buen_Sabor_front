@@ -19,6 +19,8 @@ import PromocionEnDetalle from './components/Promociones/PromocionEnDetalle';
 import DomiciliosPage from './components/Perfil/DomiciliosPage';
 import DatosPersonales from './components/Cliente/DatosPersonales';
 import EditarDatosPersonales from './components/Cliente/EditarDatosPersonales';
+import SucursalesTabla from './components/Sucursales/SucursalesTabla';
+import NuestrasSucursales from './components/Sucursales/NuestrasSucursales';
 
 export default function App() {
   return (
@@ -49,7 +51,10 @@ export default function App() {
 
             <Route path="/pedido/pago" element={<DetallePago />} />
 
-            <Route path="/domicilios/:usuarioId" element={<DomiciliosPage />} />        
+            <Route path="/domicilios/:usuarioId" element={<DomiciliosPage />} />
+
+            <Route path="/nuestrasSucursales" element={<NuestrasSucursales />} />
+            
             
 
             <Route
@@ -82,6 +87,12 @@ export default function App() {
             <Route path="/admin/tipoPromociones" element={
               <AdminPantalla>
                 <TipoPromocionesTabla/>
+              </AdminPantalla>
+            }/>
+
+            <Route path="/admin/sucursales" element={
+              <AdminPantalla>
+                <SucursalesTabla/>
               </AdminPantalla>
             }/>
 

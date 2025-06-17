@@ -51,7 +51,7 @@ export default function CarritoPage() {
   return (
     <main className="cart-main">
       <h2>Mi Pedido</h2>
-      <button onClick={() => navigate(-1)} className="dp-back-btn">
+      <button onClick={() => navigate('/HomePage')} className="dp-back-btn">
         ← Volver
         </button>
 
@@ -161,10 +161,6 @@ export default function CarritoPage() {
             <span>Subtotal:</span>
             <span>${total.toLocaleString()}</span>
           </div>
-          {/* <div className="summary-line">
-            <span>Envío:</span>
-            <span>$0</span>
-          </div> */}
           <div className="summary-line total-pay">
             <span>Total:</span>
             <span>${total.toLocaleString()}</span>

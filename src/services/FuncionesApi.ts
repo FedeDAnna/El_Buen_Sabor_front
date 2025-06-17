@@ -312,6 +312,14 @@ export async function getLocalidades(): Promise<Localidad[]> {
   return res.json();
 }
 
+export async function getSucursales(): Promise<Sucursal[]> {
+  const res = await fetch(`${API_URL}/sucursales`, {
+    credentials: 'include',
+    headers: { 'Authorization': `Basic ${basic}` }
+  });
+  if (!res.ok) throw new Error(`Error ${res.status} cargando sucursales`);
+  return res.json();
+}
 
 // POST
 
@@ -474,6 +482,20 @@ const res = await fetch(`${API_URL}/usuarios`,{
   return res.json();
 }
 
+export async function saveSucursal(suc: Sucursal): Promise<Sucursal> {
+const res = await fetch(`${API_URL}/sucursales`,{
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Authorization': `Basic ${basic}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(suc),
+    }
+  );
+  if (!res.ok) throw new Error(`Error ${res.status} guardando el domicilio`);
+  return res.json();
+}
 
 //DELETE
 
@@ -526,6 +548,17 @@ export async function deleteDomicilioById(idDomicilio :Number): Promise<boolean>
   if (!res.ok)throw new Error(`Error ${res.status} al borrar el domicilio`)
   return res.json()
 }
+
+export async function deleteSucursalById(idSucuarsal :Number): Promise<boolean> {
+  const res = await fetch(`${API_URL}/sucursales/${idSucuarsal}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: { 'Authorization': `Basic ${basic}` }
+  })
+  if (!res.ok)throw new Error(`Error ${res.status} al borrar la sucursal`)
+  return res.json()
+}
+
 
 // PUT o PATCH
 

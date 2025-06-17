@@ -68,8 +68,8 @@ export default function SidebarCliente({ isOpen, onClose, onPromocionesClick }: 
             </li>
             <hr />
             <li>
-              <Link to="/locales" onClick={onClose}>
-                <span className="sb-icon">📍</span> Locales
+              <Link to="/nuestrasSucursales" onClick={onClose}>
+                <span className="sb-icon">📍</span> Nuestras Sucursales
               </Link>
             </li>
             <li>

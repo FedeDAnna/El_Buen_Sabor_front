@@ -19,11 +19,11 @@ import type Articulo from '../../entidades/Articulo';
 import type ArticuloInsumo from '../../entidades/ArticuloInsumo';
 import MapaGoogle from './MapaGoogle';
 import { Link } from 'react-router-dom';
-import { CheckCircle, Store, StoreIcon } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 import { SiMercadopago } from 'react-icons/si';
-import { GiDeliveryDrone, GiStorkDelivery } from 'react-icons/gi';
-import { MdDeliveryDining } from 'react-icons/md';
+import { GiDeliveryDrone } from 'react-icons/gi';
 import { BiStoreAlt } from 'react-icons/bi';
+import { MdDeliveryDining } from 'react-icons/md';
 
 function isInsumo(a: Articulo): a is ArticuloInsumo {
   return 'stock_insumo_sucursales' in a;
@@ -449,14 +449,14 @@ export default function DetallePago() {
         </div>
       )}
 
-
+      
       <div className="dp-section">
         <label>Indique</label>
         <div className="dp-buttons">
             <button
                 className={tipoEnvio === TipoEnvio.DELIVERY ? 'active' : ''}
                 onClick={() => setTipoEnvio(TipoEnvio.DELIVERY)}
-            ><GiDeliveryDrone style={{ marginRight: '8px', fontSize: '24px' ,verticalAlign: 'middle'}}/>
+            ><MdDeliveryDining style={{ marginRight: '8px', fontSize: '24px' ,verticalAlign: 'middle'}}/>
               Delivery
             </button>
           <button
@@ -467,6 +467,7 @@ export default function DetallePago() {
             </button>
         </div>
       </div>
+      
 
       <div className="dp-section">
         <label>
@@ -490,11 +491,13 @@ export default function DetallePago() {
           </select>
         ) : null}
 
-        <Link to={`/domicilios/${usuario?.id}`} className="pc-btn">
-          Ir a Mis direcciones
-        </Link>
+        {tipoEnvio === TipoEnvio.DELIVERY ? (
+          <Link to={`/domicilios/${usuario?.id}`} className="pc-btn">
+            Ir a Mis direcciones
+          </Link>
+        ) : <p>{sucursal?.domicilio?.calle} {sucursal?.domicilio?.numero} {sucursal?.domicilio?.localidad?.nombre}</p>}
 
-        {/* ✅ Mostrar el mapa sin importar si es DELIVERY o TAKE_AWAY */}
+        
         <div className="dp-map">
           {coordenadas ? (
             <MapaGoogle lat={coordenadas.lat} lng={coordenadas.lng} />

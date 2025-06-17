@@ -3,12 +3,14 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { getUsuarioById, saveUsuario } from '../../services/FuncionesApi'
 import type Usuario from '../../entidades/Usuario'
 import '../../estilos/EditarDatosPersonales.css'
+import type Imagen from '../../entidades/Imagen'
 
 export default function EditarDatosPersonales() {
   const { usuarioId } = useParams<{ usuarioId: string }>()
   const navigate = useNavigate()
   const [user, setUser] = useState<Usuario | null>(null)
   const [form, setForm] = useState({ nombre: '', apellido: '', telefono: '' })
+  const [imageData, setImageData] = useState<string>('')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -21,6 +23,7 @@ export default function EditarDatosPersonales() {
           apellido: u.apellido,
           telefono: u.telefono || ''
         })
+        setImageData(u.imagen?.src || '')   // precargo la imagen existente
       })
       .finally(() => setLoading(false))
   }, [usuarioId])
@@ -29,9 +32,26 @@ export default function EditarDatosPersonales() {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        setImageData(reader.result)
+      }
+    }
+    reader.readAsDataURL(file)
+  }
+
   const handleSubmit = async () => {
     if (!user) return
     const updated: Usuario = { ...user, ...form }
+    updated.imagen = {
+      id: user.imagen?.id,
+      src: imageData,
+      alt: `${form.nombre} ${form.apellido}`
+    } as Imagen
     await saveUsuario(updated)
     navigate(-1)
   }
@@ -42,6 +62,18 @@ export default function EditarDatosPersonales() {
     <div className="edp-container">
       <h2>Editar Datos Personales</h2>
       <div className="edp-form">
+        <label>Foto de Perfil</label>
+        <div className="edp-avatar-preview">
+          {imageData
+            ? <img src={imageData} alt="Avatar" />
+            : <div className="edp-avatar-placeholder">Sin foto</div>
+          }
+        </div>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+        />
         <label>Nombre</label>
         <input
           name="nombre"
