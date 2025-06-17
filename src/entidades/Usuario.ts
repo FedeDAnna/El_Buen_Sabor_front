@@ -11,7 +11,7 @@ export default class Usuario {
     apellido: string ="";
     telefono: string = "";
     email: string = "";
-    fechaNacimiento: Date = new Date();
+    fecha_nacimiento: Date = new Date();
     
     rol?: Rol;
     domicilios : Domicilio[]=[];
