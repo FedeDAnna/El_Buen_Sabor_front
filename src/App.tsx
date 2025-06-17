@@ -23,6 +23,9 @@ import SucursalesTabla from './components/Sucursales/SucursalesTabla';
 import NuestrasSucursales from './components/Sucursales/NuestrasSucursales';
 import Dashboard from './components/Estadisticas/Dashboard';
 import HistorialPedidos from './components/Cliente/HistorialPedidos';
+import TablaUsuarios from './components/TablaUsuarios';
+import PreguntasFrecuentes from './components/PreguntasFrecuentes';
+import TerminosCondiciones from './components/TerminosCondiciones';
 
 export default function App() {
   return (
@@ -40,6 +43,9 @@ export default function App() {
 
             <Route path="/articulo/:id" element={<ProductoEnDetalleCliente/>} />
             <Route path="/carrito" element={<CarritoPage />} />
+
+            <Route path='/faq' element={<PreguntasFrecuentes />} />
+            <Route path="/terminos" element={<TerminosCondiciones />} />
             
             <Route path="/perfil/:usuarioId" element={<DatosPersonales />} />
             <Route path="/perfil/:usuarioId/editar" element={<EditarDatosPersonales />} />
@@ -114,6 +120,23 @@ export default function App() {
               </AdminPantalla>
             }/>
 
+            <Route
+              path="/admin/empleados"
+              element={
+                <AdminPantalla>
+                  <TablaUsuarios tipo='empleados' />
+                </AdminPantalla>
+              }
+            />
+
+            <Route
+              path="/admin/clientes"
+              element={
+                <AdminPantalla>
+                  <TablaUsuarios tipo='clientes' />
+                </AdminPantalla>
+              }
+            />
 
             <Route path="*" element={<p>Página no encontrada</p>} />
           </Routes>
