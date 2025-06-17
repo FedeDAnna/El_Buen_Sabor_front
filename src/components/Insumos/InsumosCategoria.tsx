@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import '../../estilos/Productos.css';          
-import '../../estilos/ProductosTabla.css';     
+import '../../estilos/InsumosCategoria.css';     
 import {
   fetchCategoriaById,
   deleteProductosById,
@@ -10,6 +9,7 @@ import {
 import type Categoria from '../../entidades/Categoria';
 import InsumoModal from './InsumoModal';
 import type ArticuloInsumo from '../../entidades/ArticuloInsumo';
+import Swal from 'sweetalert2';
 
 
 export default function InsumosCategoria() {
@@ -23,23 +23,40 @@ export default function InsumosCategoria() {
   const [modalInsumo, setModalInsumo] = useState<ArticuloInsumo | undefined>(undefined); //check
   const [categoria, setCategoria] = useState<Categoria | undefined>(); //check
 
+
+
   // Cargar la categoría
   useEffect(() => {
     if (!categoriaId) return;
+
+    setCargando(true);
     fetchCategoriaById(Number(categoriaId))
       .then(setCategoria)
       .catch((e) => console.error(e));
-  }, [categoriaId]);
 
-  // Cargar artículos
-  useEffect(() => {
-    if (!categoriaId) return;
-    setCargando(true);
+    
     getArticulosInsumoPorCategoria(Number(categoriaId))
       .then(setArticulos)
       .catch(() => setError('No se pudieron cargar los insumos'))
       .finally(() => setCargando(false));
+
   }, [categoriaId]);
+
+  useEffect(() => {
+    if (cargando) return;
+    const hayCritico = articulos.some(a => {
+      const s = a.stock_insumo_sucursales?.[0];
+      if (!s) return false;
+      return s.stock_actual <= s.stock_minimo || s.stock_actual >= s.stock_maximo;
+    });
+    if (hayCritico) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Atención',
+        text: 'Hay al menos 1 insumo cuyo stock está fuera de los límites configurados.',
+      });
+    }
+  }, [cargando]);
 
   if (cargando) return <p>Cargando productos…</p>;
   if (error) return <p>{error}</p>;
@@ -55,7 +72,18 @@ export default function InsumosCategoria() {
   // Función para eliminar
   function deleteProducto(id: number) {
     return async () => {
-      if (!window.confirm('¿Estás seguro de eliminar este producto?')) return;
+      const result = await Swal.fire({
+        title: "¿Estás seguro?",
+        text: "Esta acción eliminará el Insumo.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+      });
+    
+      if (!result.isConfirmed) return;
       deleteProductosById(id)
         .then(() => setArticulos((prev) => prev.filter((a) => a.id !== id)))
         .catch((e) => {
@@ -83,31 +111,27 @@ export default function InsumosCategoria() {
           </tr>
         </thead>
         <tbody>
-          {articulos.map((a) => (
-            <tr key={a.id}>
-              <td>{a.id}</td>
-              <td>{a.denominacion}</td>
-              <td>{a.es_para_elaborar ? 'SI' : 'NO'}</td>
-              <td>${a.precio_venta}</td>
-              <td>{a.unidad_de_medida?.denominacion}</td>
-              <td>
-                <button 
-                  title="Ver"
-                  onClick={() => openModal(false, true, a!)}
-                >👁️</button>
-
-                <button
-                  title="Editar"
-                  onClick={() => openModal(true, true, a!)}
-                >✏️</button>
-
-                <button
-                  title="Borrar"
-                  onClick={deleteProducto(a.id!)}
-                >🗑️</button>
-              </td>
-            </tr>
-          ))}
+          {articulos.map((a) => {
+            const stockEntry = a.stock_insumo_sucursales?.[0];
+            const actual = stockEntry?.stock_actual ?? 0;
+            const low = stockEntry ? actual <= (stockEntry.stock_minimo ?? 0) : false;
+            const high = stockEntry ? actual >= (stockEntry.stock_maximo ?? Infinity) : false;
+            const rowClass = low ? 'low-stock' : high ? 'high-stock' : '';
+            return (
+              <tr key={a.id} className={rowClass}>
+                <td>{a.id}</td>
+                <td>{a.denominacion}</td>
+                <td>{a.es_para_elaborar ? 'SI' : 'NO'}</td>
+                <td>${a.precio_venta}</td>
+                <td>{a.unidad_de_medida?.denominacion}</td>
+                <td>
+                  <button title="Ver" onClick={() => openModal(false, true, a)}>👁️</button>
+                  <button title="Editar" onClick={() => openModal(true, true, a)}>✏️</button>
+                  <button title="Borrar" onClick={deleteProducto(a.id!)}>🗑️</button>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
 

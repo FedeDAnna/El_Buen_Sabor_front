@@ -7,6 +7,7 @@ import CarruselCategorias from './CarruselCategorias'
 export default function CarritoPage() {
   const navigate = useNavigate()
   const { cartItems, total, updateQuantity, removeFromCart, clearCart } = useCart()
+  
 
   const handleSiguiente = () => {
     navigate('/pedido/pago')
@@ -25,10 +26,13 @@ export default function CarritoPage() {
           <h2>Tu carrito está vacío</h2>
           <p>
             Explora nuestros{' '}
-            <Link to="/categorias/0" className="cart-empty-link">
+            <Link to="/categorias/1" className="cart-empty-link">
               productos
             </Link>{' '}
-            y agrégalos al carrito.
+            y agrégalos al carrito. O vuelve a nuestro{' '}
+            <Link to="/HomePage" className="cart-empty-link">
+              Home
+            </Link>{' '}
           </p>
         </div>
 
@@ -47,6 +51,9 @@ export default function CarritoPage() {
   return (
     <main className="cart-main">
       <h2>Mi Pedido</h2>
+      <button onClick={() => navigate('/HomePage')} className="dp-back-btn">
+        ← Volver
+        </button>
 
       <div className="cart-content">
         <div className="cart-items-container">
@@ -153,10 +160,6 @@ export default function CarritoPage() {
           <div className="summary-line">
             <span>Subtotal:</span>
             <span>${total.toLocaleString()}</span>
-          </div>
-          <div className="summary-line">
-            <span>Envío:</span>
-            <span>$0</span> {/* O un cálculo de envío si corresponde */}
           </div>
           <div className="summary-line total-pay">
             <span>Total:</span>

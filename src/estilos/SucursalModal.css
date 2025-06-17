@@ -1,0 +1,114 @@
+/* Overlay semi-transparente */
+.sm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Modal: flex-column, altura máxima, overflow hidden */
+.sm-modal {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 8px;
+  width: 500px;
+  max-width: 90%;
+  max-height: 90vh;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+
+/* Cabecera fija */
+.sm-header {
+  background: #f5f5f5;
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Título y botón cerrar */
+.sm-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+.sm-header button {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* Cuerpo: ocupa espacio restante y hace scroll si excede */
+.sm-body {
+  padding: 1rem;
+  overflow-y: auto;
+  /* restar header y footer (aprox 3rem cada uno) */
+  max-height: calc(90vh - 6rem);
+}
+
+/* Labels e inputs dentro del body */
+.sm-body label {
+  display: block;
+  margin-top: 0.75rem;
+  font-weight: 600;
+}
+.sm-body input,
+.sm-body select {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Fieldset para sección domicilio */
+.sm-fieldset {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.sm-fieldset legend {
+  padding: 0 0.5rem;
+  font-weight: 600;
+}
+
+/* Pie fijo */
+.sm-footer {
+  background: #f5f5f5;
+  padding: 0.75rem 1rem;
+  text-align: right;
+  flex-shrink: 0;
+}
+.sm-footer button {
+  margin-left: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+.sm-footer button:first-child {
+  background: #ccc;
+  color: #333;
+}
+.sm-footer button:last-child {
+  background: #28a745;
+  color: #fff;
+}
+
+/* Scrollbar básico (Webkit) */
+.sm-body::-webkit-scrollbar {
+  width: 8px;
+}
+.sm-body::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.2);
+  border-radius: 4px;
+}

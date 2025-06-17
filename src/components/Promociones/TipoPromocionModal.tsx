@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { postTipoPromocion } from '../../services/FuncionesApi'
 import '../../estilos/CategoriaModal.css'
 import TipoPromocion from '../../entidades/TipoPromocion'
+import Swal from 'sweetalert2'
 
 interface Props {
   initialData?: TipoPromocion
@@ -38,9 +39,38 @@ export default function TipoPromocionModal({
     try {
     const created = await postTipoPromocion(tipoPromocion)
     onSave(created)
+    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                          toast.onmouseenter = Swal.stopTimer;
+                          toast.onmouseleave = Swal.resumeTimer;
+                        }
+                      });
+                      Toast.fire({
+                        icon: "success",
+                        title: "Tipo de Promocion creada/editada con exito"
+                      });
     } catch (e) {
     console.error(e)
-    alert('Error al guardar el producto')
+    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                          toast.onmouseenter = Swal.stopTimer;
+                          toast.onmouseleave = Swal.resumeTimer;
+                        }
+                      });
+                      Toast.fire({
+                        icon: "error",
+                        title: "Error al crear/editar el tipo de Promoción"
+                      });
     }
   }
 

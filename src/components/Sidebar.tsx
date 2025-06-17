@@ -11,6 +11,7 @@ function Sidebar() {
         <li><a href="/admin/categorias/1"><FaCubes /> Insumos</a></li>
         <li><a href="/admin/categorias/2"><FaBoxOpen /> Productos</a></li>
         <li><a href="/admin/tipoPromociones"><FaGift /> Tipo Promociones</a></li>
+        <li><a href="/admin/sucursales">Sucursales</a></li>
         <li><a href="/admin/empleados"><FaUserTie /> Empleados</a></li>
         <li><a href="/admin/clientes"><FaUserFriends  /> Clientes</a></li>
         <li><a href="/HomePage"><FaHome /> Home</a></li>

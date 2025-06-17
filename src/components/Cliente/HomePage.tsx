@@ -1,13 +1,15 @@
 // src/components/HomePage/HomePage.tsx
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import SidebarCliente from './SidebarCliente'
 import '../../estilos/HomePage.css'
 import CarruselCategorias from './CarruselCategorias'
 import type TipoPromocion from '../../entidades/TipoPromocion'
 import type Promocion from '../../entidades/Promocion'
-import { getPromocionesPorTipoPromocion, getTiposPromociones } from '../../services/FuncionesApi'
+import { getPromocionesPorTipoPromocion, getTiposPromociones, getArticuloManufacturadoById } from '../../services/FuncionesApi'
 import BuenSaborIcono from '../../assets/BuenSaborIcono.png'   // <<– aquí
+import PromoCard from '../Promociones/PromoCard'
+import { DateTime } from 'luxon'
 
 // Icono de hamburguesa (puedes cambiarlo por un SVG más bonito si quieres)
 const HamburgerIcon = () => (
@@ -17,9 +19,8 @@ const HamburgerIcon = () => (
 export default function HomePage() {
   // Estado de sidebar abierto/cerrado
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false)
-  const [promoGroups, setPromoGroups] = useState<
-    { tipo: TipoPromocion; promos: Promocion[] }[]
-  >([])
+  const promoSectionRef = useRef<HTMLElement | null>(null)
+  const [promoGroups, setPromoGroups] = useState<{ tipo: TipoPromocion; promos: Promocion[] }[]>([])
 
   useEffect(() => {
     getTiposPromociones()
@@ -35,6 +36,22 @@ export default function HomePage() {
       .catch(console.error)
   }, [])
 
+  function promoActiva(p: Promocion) {
+    const ahora = DateTime.local()
+    // fechas
+    const desdeF = DateTime.fromJSDate(p.fecha_desde)
+    const hastaF = DateTime.fromJSDate(p.fecha_hasta)
+    if (ahora < desdeF.startOf('day') || ahora > hastaF.endOf('day')) {
+      return false
+    }
+    // horarios
+    if (ahora < p.hora_desde || ahora > p.hora_hasta) {
+      return false
+    }
+    return true
+  }
+
+
   return (
     <>
       {/* Botón hamburguesa siempre visible en el layout (por ejemplo en la esquina superior izquierda) */}
@@ -45,7 +62,10 @@ export default function HomePage() {
         <HamburgerIcon />
       </button>
 
-      <SidebarCliente isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <SidebarCliente isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)}  onPromocionesClick={() => {
+          promoSectionRef.current?.scrollIntoView({ behavior: 'smooth' })
+          setSidebarOpen(false)
+        }}/>
 
       <main className="hp-main">
         {/* Hero section */}
@@ -72,41 +92,32 @@ export default function HomePage() {
         <h2>Mira Nuestras Categorias y Apurate a Pedir 😁🍗</h2>
 
         <section className="hp-carrusel-wrapper">
-          <CarruselCategorias />
+          <CarruselCategorias/>
         </section>
 
-        <h2>Las Mejores Promociones 💲🍟🥓🍗</h2>
+        <h2 >Las Mejores Promociones 💲🍟🥓🍗</h2>
+        <section ref={promoSectionRef}>
+        {promoGroups.map(({ tipo, promos }) => {
+          const activas = promos.filter(promoActiva)
 
-        {promoGroups.map(({ tipo, promos }) => (
-          <section key={tipo.id} className="hp-promos-section">
-            <h2 className="hp-promos-title">{tipo.descripcion}</h2>
-            <div className="hp-promos-grid">
-              {promos.map(p => (
-                <Link
-                  key={p.id}
-                  to={`/promociones/${p.id}`}
-                  className="hp-promo-card"
-                >
-                  {p.imagen?.src ? (
-                    <img
-                      src={p.imagen.src}
-                      alt={p.denominacion}
-                      className="hp-promo-img"
-                    />
-                  ) : (
-                    <div className="hp-promo-noimg">Sin imagen</div>
-                  )}
-                  <div className="hp-promo-body">
-                    <strong>{p.denominacion}</strong>
-                    <p className="hp-promo-desc">
-                      {p.descripcion_descuento}
-                    </p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-        ))}
+          return (
+            <section key={tipo.id} className="hp-promos-section">
+              <h2 className="hp-promos-title">{tipo.descripcion}</h2>
+              {activas.length > 0 ? (
+                <div className="hp-promos-grid">
+                  {activas.map(p => (
+                    <PromoCard key={p.id} promo={p} />
+                  ))}
+                </div>
+              ) : (
+                <p className="hp-promos-empty">
+                  Sin promociones disponibles en el horario/fecha actual.
+                </p>
+              )}
+            </section>
+          )
+        })}
+        </section>
       </main>
     </>
   )

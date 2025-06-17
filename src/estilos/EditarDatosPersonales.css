@@ -1,0 +1,46 @@
+.edp-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.edp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.edp-form label {
+  font-weight: 500;
+  color: #555;
+}
+.edp-form input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.edp-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.edp-actions button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.edp-actions button:first-child {
+  background: #eee;
+  color: #333;
+}
+.edp-actions button:last-child {
+  background: #f0b600;
+  color: #fff;
+}
+.edp-loading {
+  text-align: center;
+  margin: 2rem;
+}

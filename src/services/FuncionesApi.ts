@@ -11,6 +11,7 @@ import type TipoPromocion from "../entidades/TipoPromocion";
 import type UnidadDeMedida from "../entidades/UnidadDeMedida";
 import type Usuario from "../entidades/Usuario";
 import type { PedidoHistorialDTO } from "../DTOs/DTO/PedidoHistorialDTO";
+import type Localidad from "../entidades/Localidad";
 
 const API_URL = "http://localhost:8080";
 const basic   = btoa(`admin:admin123`);
@@ -107,7 +108,7 @@ export async function getArticulosInsumoPorCategoria(idCategoria: number): Promi
 
 export async function getArticulosManufacturados(): Promise<ArticuloManufacturado[]>{
     
-    const res = await fetch(`${API_URL}/articulos_manufacturados`,
+    const res = await fetch(`${API_URL}/articulos_manufacturados/getAll`,
     {
     method: 'GET',
     credentials: 'include',  
@@ -180,7 +181,7 @@ export async function getCategoriasByTipo(idTipo: number): Promise<Categoria[]> 
 export async function getArticuloManufacturadoById(
   id: number
 ): Promise<ArticuloManufacturado> {
-  const res = await fetch(`${API_URL}/articulos_manufacturados/${id}`, {
+  const res = await fetch(`${API_URL}/articulos_manufacturados/byId/${id}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -297,6 +298,39 @@ export async function fetchHistorialPedidosClientes(pagina: number): Promise<Ped
   return res.json();
 }
 
+export async function getDomiciliosPorUsuario(idUsuario: number): Promise<Domicilio[]>{
+    const res = await fetch(`${API_URL}/domicilios/ByUsuario/${idUsuario}`,
+      {
+      method: 'GET',
+      credentials: 'include',  
+      headers: {
+        'Authorization': `Basic ${basic}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+  const data = await res.json()
+  return data
+}
+
+export async function getLocalidades(): Promise<Localidad[]> {
+  const res = await fetch(`${API_URL}/localidades`, {
+    credentials: 'include',
+    headers: { 'Authorization': `Basic ${basic}` }
+  });
+  if (!res.ok) throw new Error(`Error ${res.status} cargando localidades`);
+  return res.json();
+}
+
+export async function getSucursales(): Promise<Sucursal[]> {
+  const res = await fetch(`${API_URL}/sucursales`, {
+    credentials: 'include',
+    headers: { 'Authorization': `Basic ${basic}` }
+  });
+  if (!res.ok) throw new Error(`Error ${res.status} cargando sucursales`);
+  return res.json();
+}
+
 // POST
 
 export async function postTipoPromocion(tipoPromocion: TipoPromocion): Promise<TipoPromocion> {
@@ -388,6 +422,21 @@ export async function saveArticuloInsumo(articulo: ArticuloInsumo): Promise<Arti
   return res.json();
 }
 
+export async function saveDomicilio(domicilio: Domicilio): Promise<Domicilio> {
+const res = await fetch(`${API_URL}/domicilios`,{
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Authorization': `Basic ${basic}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(domicilio),
+    }
+  );
+  if (!res.ok) throw new Error(`Error ${res.status} guardando el domicilio`);
+  return res.json();
+}
+
 export async function guardarCategoriaConHijos(
   categoria: Categoria
 ): Promise<Categoria> {
@@ -428,6 +477,35 @@ export async function postPromocion(promo: Promocion): Promise<Promocion> {
   }
 }
 
+export async function saveUsuario(user: Usuario): Promise<Usuario> {
+const res = await fetch(`${API_URL}/usuarios`,{
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Authorization': `Basic ${basic}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
+    }
+  );
+  if (!res.ok) throw new Error(`Error ${res.status} guardando el domicilio`);
+  return res.json();
+}
+
+export async function saveSucursal(suc: Sucursal): Promise<Sucursal> {
+const res = await fetch(`${API_URL}/sucursales`,{
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Authorization': `Basic ${basic}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(suc),
+    }
+  );
+  if (!res.ok) throw new Error(`Error ${res.status} guardando el domicilio`);
+  return res.json();
+}
 
 //DELETE
 
@@ -471,7 +549,44 @@ export async function deleteCategoriaById(idCategoria :Number): Promise<boolean>
   return res.json()
 }
 
-export async function obtenerUsuariosPorTipo(tipo: 'empleados' | 'clientes'): Promise<Usuario[]> {
+export async function deleteDomicilioById(idDomicilio :Number): Promise<boolean> {
+  const res = await fetch(`${API_URL}/domicilios/${idDomicilio}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: { 'Authorization': `Basic ${basic}` }
+  })
+  if (!res.ok)throw new Error(`Error ${res.status} al borrar el domicilio`)
+  return res.json()
+}
+
+export async function deleteSucursalById(idSucuarsal :Number): Promise<boolean> {
+  const res = await fetch(`${API_URL}/sucursales/${idSucuarsal}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: { 'Authorization': `Basic ${basic}` }
+  })
+  if (!res.ok)throw new Error(`Error ${res.status} al borrar la sucursal`)
+  return res.json()
+}
+
+
+// PUT o PATCH
+
+export async function updateStockInsumo(
+  insumoId: number,
+  nuevoStock: number
+): Promise<void> {
+  const res = await fetch(`${API_URL}/articulos_insumos/${insumoId}/stock`, {
+    method: 'PATCH',
+    credentials: 'include',
+    headers: {
+      'Authorization': `Basic ${basic}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ stockActual: nuevoStock , sucursalId: 1 })
+  });
+  if (!res.ok) throw new Error(`Error ${res.status} actualizando stock`);
+}export async function obtenerUsuariosPorTipo(tipo: 'empleados' | 'clientes'): Promise<Usuario[]> {
   const url = `${API_URL}/usuarios/${tipo}`;
 
   const res = await fetch(url, {
