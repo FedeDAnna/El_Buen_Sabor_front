@@ -9,6 +9,7 @@ import {
   eliminarUsuario,
 } from "../services/FuncionesApi";
 import "../estilos/TablaUsuarios.css";
+import Swal from "sweetalert2";
 
 interface TipoUsuario {
   tipo: "empleados" | "clientes";
@@ -93,46 +94,86 @@ export default function TablaUsuarios({ tipo }: TipoUsuario) {
   };
 
   const eliminarUsuarios = (id: number) => async () => {
-    if (!window.confirm("¿Estás seguro de eliminar este usuario?")) return;
-    try {
-      await eliminarUsuario(id);
-      setUsuarios((prev) => prev.filter((u) => u.id !== id));
-      alert("Usuario eliminado correctamente");
-    } catch (e: any) {
-      alert(`Error al eliminar el usuario: ${e.message || e}`);
-      console.error(e);
+  const resultado = await Swal.fire({
+    title: "¿Estás seguro?",
+    text: "Esta acción eliminará al usuario.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar",
+  });
+
+  if (!resultado.isConfirmed) return;
+
+  try {
+    await eliminarUsuario(id);
+    setUsuarios((prev) => prev.filter((u) => u.id !== id));
+
+    await Swal.fire({
+      icon: "success",
+      title: "Eliminado",
+      text: "Usuario eliminado correctamente",
+      timer: 2000,
+      showConfirmButton: false,
+    });
+  } catch (e: any) {
+    await Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: `Error al eliminar el usuario: ${e.message || e}`,
+    });
+    console.error(e);
+  }
+};
+
+const guardarCambios = async () => {
+  if (!usuarioSeleccionado) return;
+
+  try {
+    let usuarioGuardado: Usuario;
+
+    if (!usuarioSeleccionado.id || usuarioSeleccionado.id === 0) {
+      // Crear usuario
+      usuarioGuardado = await crearUsuario(usuarioSeleccionado);
+      setUsuarios((prev) => [...prev, usuarioGuardado]);
+
+      await Swal.fire({
+        icon: "success",
+        title: "Usuario creado",
+        text: "El usuario fue creado correctamente.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    } else {
+      // Actualizar usuario
+      usuarioGuardado = await actualizarUsuario(
+        usuarioSeleccionado.id,
+        usuarioSeleccionado
+      );
+      setUsuarios((prev) =>
+        prev.map((u) => (u.id === usuarioGuardado.id ? usuarioGuardado : u))
+      );
+
+      await Swal.fire({
+        icon: "success",
+        title: "Usuario actualizado",
+        text: "Los cambios fueron guardados correctamente.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
     }
-  };
 
-  const guardarCambios = async () => {
-    if (!usuarioSeleccionado) return;
+    cerrarModal();
+  } catch (error: any) {
+    await Swal.fire({
+      icon: "error",
+      title: "Error al guardar",
+      text: error.message || String(error),
+    });
+    console.error(error);
+  }
+};
 
-    try {
-      let usuarioGuardado: Usuario;
-
-      if (!usuarioSeleccionado.id || usuarioSeleccionado.id === 0) {
-        // Crear usuario
-        usuarioGuardado = await crearUsuario(usuarioSeleccionado);
-        setUsuarios((prev) => [...prev, usuarioGuardado]);
-        alert("Usuario creado correctamente");
-      } else {
-        // Actualizar usuario
-        usuarioGuardado = await actualizarUsuario(
-          usuarioSeleccionado.id,
-          usuarioSeleccionado
-        );
-        setUsuarios((prev) =>
-          prev.map((u) => (u.id === usuarioGuardado.id ? usuarioGuardado : u))
-        );
-        alert("Usuario actualizado correctamente");
-      }
-
-      cerrarModal();
-    } catch (error: any) {
-      alert(`Error al guardar usuario: ${error.message || error}`);
-      console.error(error);
-    }
-  };
 
   return (
     <div>
@@ -219,16 +260,6 @@ export default function TablaUsuarios({ tipo }: TipoUsuario) {
                   />
                 </label>
                 <label className="usuario-modal-label">
-                  Email:
-                  <input
-                    className="usuario-modal-input"
-                    name="email"
-                    value={usuarioSeleccionado?.email ?? ""}
-                    onChange={handleInputChange}
-                    readOnly={soloLectura}
-                  />
-                </label>
-                <label className="usuario-modal-label">
                   Teléfono:
                   <input
                     className="usuario-modal-input"
@@ -255,6 +286,29 @@ export default function TablaUsuarios({ tipo }: TipoUsuario) {
                     readOnly={soloLectura}
                   />
                 </label>
+                <label className="usuario-modal-label">
+                  Email:
+                  <input
+                    className="usuario-modal-input"
+                    name="email"
+                    value={usuarioSeleccionado?.email ?? ""}
+                    onChange={handleInputChange}
+                    readOnly={soloLectura}
+                  />
+                </label>
+                {tipo === "empleados" &&
+                  !soloLectura &&
+                  !usuarioSeleccionado?.id && (
+                    <label className="usuario-modal-label">
+                      Contraseña:
+                      <input
+                        className="usuario-modal-input"
+                        name="password"
+                        type="text"
+                        onChange={handleInputChange}
+                      />
+                    </label>
+                )}
                 {tipo === "empleados" && (
                   <label className="usuario-modal-label">
                     Rol:
@@ -284,14 +338,14 @@ export default function TablaUsuarios({ tipo }: TipoUsuario) {
               </div>
               <div className="usuario-modal-botones">
                 <button
-                  className="usuario-modal-boton cerrar"
+                  className="usuario-modal-boton cerrarModal"
                   onClick={cerrarModal}
                 >
                   Cerrar
                 </button>
                 {!soloLectura && (
                   <button
-                    className="usuario-modal-boton guardar"
+                    className="usuario-modal-boton guardarModal"
                     onClick={guardarCambios}
                   >
                     Guardar

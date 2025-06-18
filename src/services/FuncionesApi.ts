@@ -630,14 +630,15 @@ export async function obtenerRolesEmpleados(): Promise<string[]> {
 }
 
 export async function crearUsuario(nuevoUsuario: Usuario): Promise<Usuario> {
-  const url = `${API_URL}/usuarios`;
+  const url = `${API_URL}/usuarios/registrarEncriptado`;
 
-  // Eliminar el ID si es 0 o si existe
   const usuarioSinId = { ...nuevoUsuario };
   if ('id' in usuarioSinId && (usuarioSinId.id === 0 || usuarioSinId.id === undefined || usuarioSinId.id === null)) {
     delete usuarioSinId.id;
   }
-console.log('Usuario a crear:', usuarioSinId)
+
+  console.log('Usuario a crear:', usuarioSinId);
+
   const response = await fetch(url, {
     method: 'POST',
     credentials: 'include',
@@ -649,11 +650,18 @@ console.log('Usuario a crear:', usuarioSinId)
   });
 
   if (!response.ok) {
-    throw new Error(`Error al crear usuario: ${response.statusText}`);
+    const texto = await response.text();
+    throw new Error(`Error al crear usuario: ${texto || response.statusText}`);
   }
 
-  return await response.json();
+  const contentType = response.headers.get("content-type");
+  if (contentType && contentType.includes("application/json")) {
+    return await response.json();
+  } else {
+    throw new Error("Respuesta inesperada del servidor (no es JSON).");
+  }
 }
+
 
 export async function actualizarUsuario(id: number, datosActualizados: Usuario): Promise<Usuario> {
   const url = `${API_URL}/usuarios?id=${id}`;
