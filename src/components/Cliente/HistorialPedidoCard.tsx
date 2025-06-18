@@ -1,8 +1,14 @@
 // src/components/HistorialPedidoCard.tsx
-import { FaClock } from 'react-icons/fa';
+import { FaClock, FaFileInvoice } from 'react-icons/fa';
+import jsPDF from 'jspdf';
+import autoTable, { type RowInput } from 'jspdf-autotable';
 import type { PedidoHistorialDTO } from '../../DTOs/DTO/PedidoHistorialDTO';
 import { Estado } from '../../entidades/Estado';
 import '../../estilos/HistorialPedidosCliente.css';
+import { getPedidoPorId } from '../../services/FuncionesApi';
+import { DateTime } from 'luxon';
+import type Pedido from '../../entidades/Pedido';
+import { InvoiceButton } from '../InvoiceButton';
 
 interface Props {
   pedido: PedidoHistorialDTO;
@@ -20,6 +26,7 @@ const estadoColor: Record<Estado, string> = {
 };
 
 export default function HistorialPedidoCard({ pedido }: Props) {
+  
   return (
     <div className="card-pedido">
       <div className="card-header">
@@ -41,6 +48,9 @@ export default function HistorialPedidoCard({ pedido }: Props) {
           <li key={idx}>{p}</li>
         ))}
       </ul>
+      <div className="card-actions">
+        <InvoiceButton pedidoId={pedido.id} />
+      </div>
     </div>
   );
 }

@@ -10,9 +10,12 @@ import type TipoCategoria from "../entidades/TipoCategoria";
 import type TipoPromocion from "../entidades/TipoPromocion";
 import type UnidadDeMedida from "../entidades/UnidadDeMedida";
 import type Usuario from "../entidades/Usuario";
-import type { PedidoHistorialDTO } from "../DTOs/DTO/PedidoHistorialDTO";
-import type Localidad from "../entidades/Localidad";
 import type { Estado } from "../entidades/Estado";
+import type Localidad from "../entidades/Localidad";
+import type { PedidoHistorialDTO } from "../DTOs/DTO/PedidoHistorialDTO";
+import type RegistroDTO from "../entidades/RegistroDTO";
+
+
 
 const API_URL = "http://localhost:8080";
 const basic   = btoa(`admin:admin123`);
@@ -109,7 +112,7 @@ export async function getArticulosInsumoPorCategoria(idCategoria: number): Promi
 
 export async function getArticulosManufacturados(): Promise<ArticuloManufacturado[]>{
     
-    const res = await fetch(`${API_URL}/articulos_manufacturados/getAll`,
+    const res = await fetch(`${API_URL}/articulos_manufacturados`,
     {
     method: 'GET',
     credentials: 'include',  
@@ -329,6 +332,15 @@ export async function getSucursales(): Promise<Sucursal[]> {
     headers: { 'Authorization': `Basic ${basic}` }
   });
   if (!res.ok) throw new Error(`Error ${res.status} cargando sucursales`);
+  return res.json();
+}
+
+export async function fetchHistorialPedidosClientes(pagina: number): Promise<PedidoHistorialDTO[]> {
+  const res = await fetch(`${API_URL}/pedidos/byClientes/1?page=${pagina}&size=16`, {
+    credentials: 'include',
+    headers: { 'Authorization': `Basic ${basic}` }
+  });
+  if (!res.ok) throw new Error(`Error ${res.status} cargando historial`);
   return res.json();
 }
 
@@ -681,6 +693,112 @@ export async function eliminarUsuario(idUsuario: number): Promise<void> {
       'Authorization': `Basic ${basic}`,
       'Content-Type': 'application/json'
     }
+  });
+
+  if (!res.ok) {
+    throw new Error(`Error ${res.status} al eliminar usuario`);
+  }
+}
+
+
+export async function getPedidos(): Promise<Pedido[]>{
+    
+    const res = await fetch(`${API_URL}/pedidos`,
+    {
+    method: 'GET',
+    credentials: 'include',  
+    headers: {
+      'Authorization': `Basic ${basic}`,
+      'Content-Type': 'application/json'
+    }
+  }
+  );
+  if (!res.ok) throw new Error("Error al obtener pedidos");
+ const raw: any[] = await res.json()
+  return raw.map(p => ({
+    ...p,
+    fecha_pedido: DateTime.fromISO(p.fecha_pedido),
+    hora_estimada_finalizacion: DateTime.fromISO(p.hora_estimada_finalizacion)
+  }));
+}
+
+export async function updateEstadoPedido(
+  id: number,
+  nuevoEstado: Estado
+): Promise<void> {
+  const res = await fetch(`${API_URL}/pedidos/pedido/${id}`, {
+    method: "PATCH",                // o PUT si tu API lo espera
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      estadoPedido: nuevoEstado,   // campo según tu modelo
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Error ${res.status} actualizando pedido`);
+  }
+
+}
+
+export async function getProductosPorPedido(pedidoId: number): Promise<any[]> {
+  const res = await fetch(`${API_URL}/pedidos/manufacturados/${pedidoId}`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Authorization': `Basic ${basic}`,
+      'Content-Type': 'application/json'
+    }
+  });
+
+  if (!res.ok) throw new Error(`Error ${res.status} al traer los productos`);
+  return res.json();
+}
+
+export async function getPedidoPorId(id: number): Promise<Pedido> {
+  const res = await fetch(`${API_URL}/pedidos/${id}`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Authorization': `Basic ${basic}`,
+    },
+  });
+  if (!res.ok) throw new Error(`Error ${res.status} al obtener el pedido`);
+  const data = await res.json();
+  // Mapear las propiedades de fecha/hora a DateTime
+  return {
+    ...data,
+    fecha_pedido: DateTime.fromISO(data.fecha_pedido),
+    hora_estimada_finalizacion: DateTime.fromISO(data.hora_estimada_finalizacion),
+  };
+}
+export async function loginUsuario(email: string, password: string): Promise<Usuario> {
+  const res = await fetch(`${API_URL}/usuarios/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email, password }),
+  });
+
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || `Error ${res.status} al intentar iniciar sesión`);
+  }
+
+  return res.json();
+}
+
+//fiuncion para el regitrreo
+export async function registrarUsuario(dto: RegistroDTO): Promise<void> {
+  const res = await fetch(`${API_URL}/usuarios/registro`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(dto),
   });
 
   if (!res.ok) {

@@ -1,8 +1,12 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import Pedido from "../../entidades/Pedido";
 import { updateEstadoPedido } from "../../services/FuncionesApi";
 import { Estado } from "../../entidades/Estado";
 import '../../estilos/OrdenFila.css';
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.css';
+import { DateTime } from "luxon";
+
 
 type Props = {
   pedido: Pedido;
@@ -17,6 +21,46 @@ export default function OrdenFila({
   onEstadoChange,
   onCobrar
 }: Props) {
+
+  useEffect(() => {
+    if (pedido.estado_pedido === Estado.EN_PREPARACION) {
+      const now = DateTime.local();
+      const estimated = pedido.hora_estimada_finalizacion;
+
+      if (now > estimated) {
+        updateEstadoPedido(pedido.id!, Estado.DEMORADO)
+          .then(() => {
+            onEstadoChange();
+            Swal.fire({
+              title: '¡Pedido demorado!',
+              text: `El pedido #${pedido.id} ha superado la hora estimada de ${estimated.toFormat('HH:mm')}.`, 
+              icon: 'info',
+            });
+          });
+      }
+    }
+
+    const interval = setInterval(() => {
+      if (pedido.estado_pedido === Estado.EN_PREPARACION) {
+        const now = DateTime.local();
+        const estimated = pedido.hora_estimada_finalizacion;
+
+        if (now > estimated) {
+          updateEstadoPedido(pedido.id!, Estado.DEMORADO)
+            .then(() => {
+              onEstadoChange();
+              Swal.fire({
+                title: '¡Pedido demorado!',
+                text: `El pedido #${pedido.id} ha superado la hora estimada de ${estimated.toFormat('HH:mm')}.`, 
+                icon: 'info',
+              });
+            });
+        }
+      }
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [pedido, onEstadoChange]);
   // Determina siguiente estado y etiqueta
   const { nextEstado, label } = useMemo(() => {
     switch (pedido.estado_pedido) {
@@ -64,18 +108,37 @@ export default function OrdenFila({
   };
 
   const handleCancel = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!window.confirm("¿Seguro que querés cancelar?")) return;
-    if (!pedido.id) return;
+  e.stopPropagation();
+  if (!pedido.id) return;
+    
+  const result = await Swal.fire({
+    title: '¿Seguro que querés cancelar el pedido?',
+    text: "¡No vas a poder revertir esto!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: 'grey',
+    confirmButtonText: 'Sí, cancelar',
+    cancelButtonText: 'No, mantener',
+  });
+
+  if (result.isConfirmed) {
     await updateEstadoPedido(pedido.id, Estado.RECHAZADO);
     onEstadoChange();
-  };
-
+    await Swal.fire({
+      title: '¡Pedido cancelado!',
+      text: 'El pedido ha sido marcado como rechazado.',
+      icon: 'success',
+    });
+  }
+};
+  
   return (
     <tr onClick={() => onSeleccionar(pedido)} style={{ cursor: "pointer" }}>
       <td>#{pedido.id}</td>
       <td>{pedido.usuario?.nombre} {pedido.usuario?.apellido}</td>
       <td>{pedido.fecha_pedido.toFormat("dd/LL/yyyy")}</td>
+      <td>{pedido.tipo_envio}</td>
       <td>{pedido.hora_estimada_finalizacion.toFormat("HH:mm")}</td>
       {/* Estado con color según valor */}
       <td style={{ textAlign: "center", verticalAlign: "middle" }}>

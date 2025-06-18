@@ -6,6 +6,8 @@ import { User, ClipboardList, LogOut, House } from 'lucide-react';
 import { useCart, type CartItem } from '../CartContext';
 import { Link } from 'react-router-dom';
 
+import { useNavigate } from 'react-router-dom';
+
 
 
 export default function Header() {
@@ -13,6 +15,8 @@ export default function Header() {
   const [cartOpen, setCartOpen] = useState(false);
 
   const { cartItems, total, removeFromCart, updateQuantity } = useCart();
+
+  const navigate = useNavigate();
 
   const cartRef    = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -36,7 +40,13 @@ export default function Header() {
   return (
     <header className="header">
       
-      <div className="titulo">EL BUEN SABOR</div>
+      <div
+        className="titulo"
+        style={{ cursor: 'pointer' }}
+        onClick={() => navigate('/HomePage')}
+      >
+        EL BUEN SABOR
+      </div>
 
       {/* Carrito */}
       <div ref={cartRef}  className="header-cart-container">
@@ -173,10 +183,16 @@ export default function Header() {
           <div className="header-profile-menu">
             <h4>Mi Cuenta</h4>
             <ul>
-              <li>
-                <Link to={`/perfil/1`} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <li>             
+                  <button
+                  onClick={() => {
+                    setProfileOpen(false); // cerrar el menú
+                    navigate("/perfil");   // redirigir
+                  }}
+                  className="profile-menu-btn"
+                >
                   <User size={20} /> Datos personales
-                </Link>
+                </button>
               </li>
               <li>
                 <Link to={`/domicilios/1`} style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -184,14 +200,32 @@ export default function Header() {
                 </Link>
               </li>
               <Link to="/historial-pedidos" className="menu-link">
+
               <li>
-                <ClipboardList size={20} /> Historial de pedidos
+                <button
+                  onClick={() => {
+                    setProfileOpen(false); // cerrar el menú
+                    navigate("/perfil");   // redirigir
+                  }}
+                  className="profile-menu-btn"
+                >
+                  <User size={20} /> Historial de pedidos
+                </button>
               </li>
               </Link>
               <li>
-                <LogOut size={20} /> Cerrar sesión
+                <button
+                  onClick={() => {
+                    setProfileOpen(false); // cerrar el menú
+                    navigate("/perfil");   // redirigir
+                  }}
+                  className="profile-menu-btn logout-btn"
+                >
+                  <User size={20} /> Cerrar Sesion
+                </button>
               </li>
             </ul>
+
           </div>
         )}
       </div>

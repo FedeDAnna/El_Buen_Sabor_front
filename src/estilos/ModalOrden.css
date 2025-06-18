@@ -134,13 +134,13 @@
   flex: 1 1 40%;
 }
 
-table {
+.modal-contenido table {
   width: 100%;
   border-collapse: collapse;
   background: white;
 }
 
-table th, table td {
+.modal-contenido table th, .modal-contenido table td {
   padding: 8px;
   border: 1px solid #ddd;
   text-align: left;
@@ -355,6 +355,9 @@ table th, table td {
   font-size: 18px;
   display: flex;
   gap: 3px;
+}
+.tabla_payment{
+  font-size: 18px;
 }
 
 

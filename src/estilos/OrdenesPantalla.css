@@ -1,6 +1,7 @@
 .ordenes-container {
   padding: 20px;
   max-width: 1200px;
+  padding-top: 0px;
   margin: 0 auto; /* Centra todo el contenido horizontalmente */
 }
 .buscador {
@@ -13,7 +14,7 @@
   justify-content: flex-end;
   margin-bottom: 0px;
 }
-h2{
+.ordenes-container h2{
   margin-top: 0px;
 }
 .buscador input {
@@ -75,7 +76,7 @@ h2{
   font-weight: bold;
 }
 
-table {
+.tabla-ordenes {
   width: 100%;
   border-collapse: collapse;
   margin: 0 auto;
@@ -83,14 +84,14 @@ table {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-th,
-td {
+.tabla-ordenes th,
+.tabla-ordenes td {
   padding: 12px 16px;
   border-bottom: 1px solid #ccc;
   text-align: left;
 }
 
-th {
+.tabla-ordenes th {
   background-color: #f5f5f5;
   font-weight: bold;
 }

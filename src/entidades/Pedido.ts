@@ -7,7 +7,6 @@ import type PedidoDetalle from "./PedidoDetalle";
 import type Sucursal from "./Sucursal";
 import type { TipoEnvio } from "./TipoEnvio";
 import type Usuario from "./Usuario";
-import type Factura from "./Factura";
 
 
 export default class Pedido{
@@ -21,11 +20,10 @@ export default class Pedido{
     forma_pago?: FormaPago;
     descuento?: number ;
     fecha_pedido : DateTime =  DateTime.now();
-    repartidor?: Usuario;
     domicilio?: Domicilio;
     sucursal?: Sucursal;
     usuario?: Usuario;
-    factura?: Factura;
+
     
 
     /**  
@@ -47,7 +45,6 @@ export default class Pedido{
       domicilio: this.domicilio ? { id: this.domicilio.id } : undefined,
       sucursal: this.sucursal ? { id: this.sucursal.id } : undefined,
       usuario: this.usuario ? { id: this.usuario.id } : undefined,
-      factura: this.factura ? { id: this.factura.id } : undefined,
       detalles: this.detalles.map(d => ({
         cantidad: d.cantidad,
         subtotal: d.subtotal,
