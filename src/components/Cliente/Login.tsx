@@ -37,7 +37,11 @@ export default function Login() {
         <HamburgerIcon />
       </button>
 
-      <SidebarCliente isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <SidebarCliente
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        onPromocionesClick={() => {navigate("/promociones");}}
+      />
 
       <main className="hp-main login-main">
         <section className="login-hero">

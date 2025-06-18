@@ -9,7 +9,12 @@ import type Usuario from '../../entidades/Usuario'
 import Swal from 'sweetalert2'
 
 export default function DomiciliosPage() {
-  const { usuarioId } = useParams<{ usuarioId: string }>();
+  const usuarioJSON = localStorage.getItem('usuario');
+  // Convertir el string JSON en un objeto JavaScript
+  const usuarioLog = JSON.parse(usuarioJSON!);
+  // Acceder al id del usuario
+  const idUsuario = usuarioLog.id;
+  
   const navigate = useNavigate()
   const [usuario, setUsuario] = useState<Usuario>()
   const [domicilios, setDomicilios] = useState<Domicilio[]>([])
@@ -24,14 +29,14 @@ export default function DomiciliosPage() {
     setLoading(true)
 
     try {
-      const user = await getUsuarioById(Number(usuarioId))
+      const user = await getUsuarioById(Number(idUsuario))
       setUsuario(user)
     } catch (e: any){
       setError("Error al traer el usuario")
     }
 
     try {
-      const list = await getDomiciliosPorUsuario(Number(usuarioId))
+      const list = await getDomiciliosPorUsuario(Number(idUsuario))
       setDomicilios(list)
     } catch (e: any) {
       setError('Error cargando direcciones')
