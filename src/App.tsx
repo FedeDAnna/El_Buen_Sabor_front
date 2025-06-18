@@ -44,42 +44,40 @@ export default function App() {
               <Route path="/HomePage" element={<HomePage />} />
               <Route path="/categorias/:categoriaId" element={<ProductosCategoriaCliente />} />
               <Route path="/articulo/:id" element={<ProductoEnDetalleCliente />} />
-              <Route path="/Ordenes" element={<OrdenesPantalla/>} />
         
-          <Route
-            path="/admin/productos"
-            element={
-              <AdminPantalla>
-                <Productos />
-              </AdminPantalla>
-            }
-          />
+          
               <Route path="/carrito" element={
                 <RutaProtegida>
                   <CarritoPage />
                 </RutaProtegida>
               } />
               <Route path="/promociones/:id" element={<PromocionEnDetalle />} />
+              
               <Route path="/pedido/confirmado" element={<PedidoConfirmado />} />
+
               <Route path="/pedido/pago" element={<DetallePago />} />
+
               <Route path="/perfil/:usuarioId" element={<DatosPersonales />} />
+
             <Route path="/perfil/:usuarioId/editar" element={<EditarDatosPersonales />} />
 
+            <Route path="/perfil" element={
+              <RutaProtegida>  {/* Solo requiere estar logueado */}
+                <Perfil />
+              </RutaProtegida>
+            } />
 
-              <Route path="/perfil" element={
-                <RutaProtegida>  {/* Solo requiere estar logueado */}
-                  <Perfil />
-                </RutaProtegida>
-              } />
-              <Route path="/domicilios/:usuarioId" element={<DomiciliosPage />} />
+            <Route path="/domicilios/:usuarioId" element={<DomiciliosPage />} />
 
             <Route path="/nuestrasSucursales" element={<NuestrasSucursales />} />
   
             <Route path="/historial-pedidos" element={<HistorialPedidos />} />
 
             <Route path="/faq" element={<PreguntasFrecuentes />} />
-            <Route path="/terminos" element={<TerminosCondiciones />} />  
 
+            <Route path="/terminos" element={<TerminosCondiciones />} />  
+            
+            <Route path="/admin/Ordenes" element={<OrdenesPantalla/>} />
             <Route
               path="/admin/estadisticas"
               element={
@@ -88,6 +86,14 @@ export default function App() {
                 </AdminPantalla>
               }
             />
+            <Route
+            path="/admin/productos"
+            element={
+              <AdminPantalla>
+                <Productos />
+              </AdminPantalla>
+            }
+          />
               {/* 🔐 ADMIN */}
               <Route path="/admin/insumos/:categoriaId" element={
                 <RutaProtegida rol="ADMIN">
@@ -146,7 +152,6 @@ export default function App() {
                 </AdminPantalla>
               }
             />
-
             <Route
               path="/admin/clientes"
               element={
