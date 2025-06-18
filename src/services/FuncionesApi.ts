@@ -742,49 +742,6 @@ export async function registrarUsuario(dto: RegistroDTO): Promise<void> {
   }
 }
 
-
-export async function getPedidos(): Promise<Pedido[]>{
-    
-    const res = await fetch(`${API_URL}/pedidos`,
-    {
-    method: 'GET',
-    credentials: 'include',  
-    headers: {
-      'Authorization': `Basic ${basic}`,
-      'Content-Type': 'application/json'
-    }
-  }
-  );
-  if (!res.ok) throw new Error("Error al obtener pedidos");
- const raw: any[] = await res.json()
-  return raw.map(p => ({
-    ...p,
-    fecha_pedido: DateTime.fromISO(p.fecha_pedido),
-    hora_estimada_finalizacion: DateTime.fromISO(p.hora_estimada_finalizacion)
-  }));
-}
-
-export async function updateEstadoPedido(
-  id: number,
-  nuevoEstado: Estado
-): Promise<void> {
-  const res = await fetch(`${API_URL}/pedidos/pedido/${id}`, {
-    method: "PATCH",                // o PUT si tu API lo espera
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      estadoPedido: nuevoEstado,   // campo según tu modelo
-    }),
-  });
-
-  if (!res.ok) {
-    throw new Error(`Error ${res.status} actualizando pedido`);
-  }
-
-}
-
 export async function getProductosPorPedido(pedidoId: number): Promise<any[]> {
   const res = await fetch(`${API_URL}/pedidos/manufacturados/${pedidoId}`, {
     method: 'GET',
