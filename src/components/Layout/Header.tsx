@@ -6,6 +6,8 @@ import { User, ClipboardList, LogOut } from 'lucide-react';
 import { useCart, type CartItem } from '../CartContext';
 import { Link } from 'react-router-dom';
 
+import { useNavigate } from 'react-router-dom';
+
 
 
 export default function Header() {
@@ -13,6 +15,8 @@ export default function Header() {
   const [cartOpen, setCartOpen] = useState(false);
 
   const { cartItems, total, removeFromCart, updateQuantity } = useCart();
+
+  const navigate = useNavigate();
 
   return (
     <header className="header">
@@ -155,15 +159,41 @@ export default function Header() {
             <h4>Mi Cuenta</h4>
             <ul>
               <li>
-                <User size={20} /> Datos personales
+                <button
+                  onClick={() => {
+                    setProfileOpen(false); // cerrar el menú
+                    navigate("/perfil");   // redirigir
+                  }}
+                  className="profile-menu-btn"
+                >
+                  <User size={20} /> Datos personales
+                </button>
+              </li>
+
+              <li>
+                <button
+                  onClick={() => {
+                    setProfileOpen(false); // cerrar el menú
+                    navigate("/perfil");   // redirigir
+                  }}
+                  className="profile-menu-btn"
+                >
+                  <User size={20} /> Historial de pedidos
+                </button>
               </li>
               <li>
-                <ClipboardList size={20} /> Historial de pedidos
-              </li>
-              <li>
-                <LogOut size={20} /> Cerrar sesión
+                <button
+                  onClick={() => {
+                    setProfileOpen(false); // cerrar el menú
+                    navigate("/perfil");   // redirigir
+                  }}
+                  className="profile-menu-btn logout-btn"
+                >
+                  <User size={20} /> Cerrar Sesion
+                </button>
               </li>
             </ul>
+
           </div>
         )}
       </div>

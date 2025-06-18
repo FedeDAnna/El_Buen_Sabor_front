@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { loginUsuario } from '../../services/FuncionesApi';
 import SidebarCliente from './SidebarCliente';
 import BuenSaborIcono from '../../assets/BuenSaborIcono.png'; // imagen de hamburguesa grande
+import { useUser } from '../../contexts/UserContext';
 import '../../estilos/Login.css';
 
 const HamburgerIcon = () => (
@@ -13,18 +14,22 @@ export default function Login() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { setUser } = useUser(); // ahora podés usar setUser(usuario)
+
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const usuario = await loginUsuario(email, password);
-      localStorage.setItem('usuario', JSON.stringify(usuario));
-      navigate('/pedir');
-    } catch (error: any) {
-      alert(error.message);
+      localStorage.setItem("usuario", JSON.stringify(usuario)); // guarda en localStorage
+      setUser(usuario); // si usás context, también actualizás el estado global
+      navigate("/Homepage"); // redirige a pantalla protegida
+    } catch (error) {
+      alert("Email o contraseña incorrectos");
     }
   };
+
 
   return (
     <>
