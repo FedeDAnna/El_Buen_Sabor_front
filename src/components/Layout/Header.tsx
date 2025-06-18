@@ -40,7 +40,13 @@ export default function Header() {
   return (
     <header className="header">
       
-      <div className="titulo">EL BUEN SABOR</div>
+      <div
+        className="titulo"
+        style={{ cursor: 'pointer' }}
+        onClick={() => navigate('/HomePage')}
+      >
+        EL BUEN SABOR
+      </div>
 
       {/* Carrito */}
       <div ref={cartRef}  className="header-cart-container">
