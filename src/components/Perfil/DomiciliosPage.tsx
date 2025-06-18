@@ -89,7 +89,11 @@ export default function DomiciliosPage() {
     try {
       const newDom = await saveDomicilio(dom)
       usuario?.domicilios.push(newDom);
-      saveUsuario(usuario!)
+      if (usuario) {
+        usuario.domicilios = usuario.domicilios.filter(d => d.id !== newDom.id)
+        usuario.domicilios.push(newDom)
+        await saveUsuario(usuario)
+      }
       setModalOpen(false)
       const Toast = Swal.mixin({
               toast: true,
