@@ -3,6 +3,7 @@ import '../../estilos/CarritoPage.css'
 import { useCart, type CartItem } from '../CartContext'
 import { Link } from 'react-router-dom'
 import CarruselCategorias from './CarruselCategorias'
+import Swal from 'sweetalert2'
 
 export default function CarritoPage() {
   const navigate = useNavigate()
@@ -10,7 +11,14 @@ export default function CarritoPage() {
   
 
   const handleSiguiente = () => {
-    navigate('/pedido/pago')
+    const user = localStorage.getItem('usuario');
+    if (!user) {
+      Swal.fire('Error','Debés iniciar sesión para continuar con el pedido.','error');
+      navigate('/login');
+      return;
+    } else {
+      navigate('/pedido/pago')
+    }
   }
 
   if (cartItems.length === 0) {

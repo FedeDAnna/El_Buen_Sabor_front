@@ -7,14 +7,15 @@ import { useCart, type CartItem } from '../CartContext';
 import { Link } from 'react-router-dom';
 
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../../contexts/UserContext';
 
 
 
 export default function Header() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
-
-  const { cartItems, total, removeFromCart, updateQuantity } = useCart();
+  const { user, setUser } = useUser();
+  const { cartItems, total, removeFromCart, updateQuantity, clearCart } = useCart();
 
   const navigate = useNavigate();
 
@@ -37,7 +38,14 @@ export default function Header() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [cartOpen, profileOpen]);
+  
+    const cerrarSesion = () => {
+    localStorage.removeItem('usuario');
+    setUser(null);
+    navigate('/Homepage');
+    };
   return (
+    
     <header className="header">
       
       <div
@@ -184,7 +192,7 @@ export default function Header() {
             <h4>Mi Cuenta</h4>
             <ul>
               <li>             
-                  <button
+                <button
                   onClick={() => {
                     setProfileOpen(false); // cerrar el menú
                     navigate("/perfil");   // redirigir
@@ -217,7 +225,8 @@ export default function Header() {
                 <button
                   onClick={() => {
                     setProfileOpen(false); // cerrar el menú
-                    navigate("/perfil");   // redirigir
+                    clearCart();
+                    cerrarSesion();
                   }}
                   className="profile-menu-btn logout-btn"
                 >

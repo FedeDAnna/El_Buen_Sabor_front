@@ -335,8 +335,8 @@ export async function getSucursales(): Promise<Sucursal[]> {
   return res.json();
 }
 
-export async function fetchHistorialPedidosClientes(pagina: number): Promise<PedidoHistorialDTO[]> {
-  const res = await fetch(`${API_URL}/pedidos/byClientes/1?page=${pagina}&size=16`, {
+export async function fetchHistorialPedidosClientes(pagina: number, idUser: number): Promise<PedidoHistorialDTO[]> {
+  const res = await fetch(`${API_URL}/pedidos/byClientes/${idUser}?page=${pagina}&size=16`, {
     credentials: 'include',
     headers: { 'Authorization': `Basic ${basic}` }
   });

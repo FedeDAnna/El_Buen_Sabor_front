@@ -57,23 +57,23 @@ export default function App() {
         
           
               <Route path="/carrito" element={
-                <RutaProtegida>
+                
                   <CarritoPage />
-                </RutaProtegida>
+                
               } />
+
               <Route path="/promociones/:id" element={<PromocionEnDetalle />} />
               
               <Route path="/pedido/confirmado" element={<PedidoConfirmado />} />
 
               <Route path="/pedido/pago" element={<DetallePago />} />
 
-              <Route path="/perfil/:usuarioId" element={<DatosPersonales />} />
-
+              
             <Route path="/perfil/:usuarioId/editar" element={<EditarDatosPersonales />} />
 
             <Route path="/perfil" element={
               <RutaProtegida>  {/* Solo requiere estar logueado */}
-                <Perfil />
+                <DatosPersonales />
               </RutaProtegida>
             } />
 

@@ -8,9 +8,13 @@ import '../../estilos/HistorialPedidosCliente.css';
 export default function HistorialPedidos() {
   const [pedidos, setPedidos] = useState<PedidoHistorialDTO[]>([]);
   const [pagina, setPagina] = useState(0);
-
+  const usuarioJSON = localStorage.getItem('usuario');
+  // Convertir el string JSON en un objeto JavaScript
+  const usuario = JSON.parse(usuarioJSON!);
+  // Acceder al id del usuario
+  const idUsuario = usuario.id;
   useEffect(() => {
-    fetchHistorialPedidosClientes(pagina)
+    fetchHistorialPedidosClientes(pagina,idUsuario)
       .then(data => setPedidos(data));
   }, [pagina]);
 

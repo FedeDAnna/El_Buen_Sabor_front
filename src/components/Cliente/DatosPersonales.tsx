@@ -5,19 +5,24 @@ import type Usuario from '../../entidades/Usuario'
 import '../../estilos/DatosPersonales.css'
 
 export default function DatosPersonales() {
-  const { usuarioId } = useParams<{ usuarioId: string }>()
+  const usuarioJSON = localStorage.getItem('usuario');
+  // Convertir el string JSON en un objeto JavaScript
+  const usuario = JSON.parse(usuarioJSON!);
+  // Acceder al id del usuario
+  const idUsuario = usuario.id;
+
   const navigate = useNavigate()
   const [user, setUser] = useState<Usuario>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!usuarioId) return
-    getUsuarioById(Number(usuarioId))
+    if (!idUsuario) return
+    getUsuarioById(Number(idUsuario))
       .then(u => setUser(u))
       .catch(() => setError('No se pudo cargar usuario'))
       .finally(() => setLoading(false))
-  }, [usuarioId])
+  }, [idUsuario])
 
   if (loading) return <p className="dp-loading">Cargando datos…</p>
   if (error || !user) return <p className="dp-error">{error || 'Usuario no encontrado'}</p>
@@ -30,9 +35,9 @@ export default function DatosPersonales() {
         
       <div className="dp-card">
         <img
-            src={user.imagen!.src}
-            alt="/imagenes/Usuario.png"
-            className="adp-img"
+          src={user.imagen?.src || "/imagenes/Usuario.png"}
+          alt="Foto de perfil"
+          className="adp-img"
         />
         <h2 className="dp-name">{user.nombre} {user.apellido}</h2>
         <Link to={`/perfil/${user.id}/editar`} className="dp-edit-btn">
