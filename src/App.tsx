@@ -1,4 +1,4 @@
-// src/App.tsx
+import { useState } from "react";
 import { Navigate, BrowserRouter, Routes, Route } from 'react-router-dom';
 import AdminPantalla from '../src/components/AdminPantalla';
 import Productos from './components/Productos/Productos';
@@ -31,140 +31,187 @@ import Register from './components/Cliente/Register';
 import RutaProtegida from "./components/RutaProtegida";
 import { UserProvider } from "./contexts/UserContext";
 import Perfil from './components/Perfil';
-
+import Alerta from "./components/ControlAcceso/Alerta";
+import { AlertaContext } from "./components/ControlAcceso/AlertaContext";
+import { Rol } from "./entidades/Rol";
 
 export default function App() {
+  const [alerta, setAlerta] = useState<{
+    mensaje: string;
+    tipo?: "info" | "error" | "success";
+    duracion?: number;
+  } | null>(null);
   return (
     <BrowserRouter>
       <UserProvider>
+        <AlertaContext.Provider value={setAlerta}>
         <CartProvider>
           <Layout>
+          {alerta && (
+              <Alerta
+                mensaje={alerta.mensaje}
+                tipo={alerta.tipo}
+                duracion={alerta.duracion}
+                onClose={() => setAlerta(null)}
+              />
+            )}
             <Routes>
               <Route path="/" element={<Navigate to="/HomePage" replace />} />
               <Route path="/HomePage" element={<HomePage />} />
               <Route path="/categorias/:categoriaId" element={<ProductosCategoriaCliente />} />
               <Route path="/articulo/:id" element={<ProductoEnDetalleCliente />} />
-        
+              <Route path="/nuestrasSucursales" element={<NuestrasSucursales />} />
+              <Route path="/promociones/:id" element={<PromocionEnDetalle />} />
+              <Route path="/faq" element={<PreguntasFrecuentes />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/registro" element={<Register />} />
+
           
               <Route path="/carrito" element={
                 <RutaProtegida>
                   <CarritoPage />
                 </RutaProtegida>
+              } />              
+
+              <Route path="/pedido/pago" element={                
+                <RutaProtegida>
+                  <DetallePago />                
+                </RutaProtegida>
+                } />
+
+              <Route path="/pedido/confirmado" element={
+                <RutaProtegida>
+                  <PedidoConfirmado />
+                </RutaProtegida>
               } />
-              <Route path="/promociones/:id" element={<PromocionEnDetalle />} />
-              
-              <Route path="/pedido/confirmado" element={<PedidoConfirmado />} />
 
-              <Route path="/pedido/pago" element={<DetallePago />} />
+              <Route path="/perfil/:usuarioId" element={
+                <RutaProtegida>
+                  <DatosPersonales />
+                </RutaProtegida>
+              } />
 
-              <Route path="/perfil/:usuarioId" element={<DatosPersonales />} />
-
-            <Route path="/perfil/:usuarioId/editar" element={<EditarDatosPersonales />} />
+            <Route path="/perfil/:usuarioId/editar" element={
+              <RutaProtegida>
+                <EditarDatosPersonales />
+              </RutaProtegida>
+              } />
 
             <Route path="/perfil" element={
-              <RutaProtegida>  {/* Solo requiere estar logueado */}
+              <RutaProtegida>
                 <Perfil />
               </RutaProtegida>
             } />
 
-            <Route path="/domicilios/:usuarioId" element={<DomiciliosPage />} />
-
-            <Route path="/nuestrasSucursales" element={<NuestrasSucursales />} />
+            <Route path="/domicilios/:usuarioId" element={
+              <RutaProtegida>
+                <DomiciliosPage />
+              </RutaProtegida>
+            } />            
   
-            <Route path="/historial-pedidos" element={<HistorialPedidos />} />
-
-            <Route path="/faq" element={<PreguntasFrecuentes />} />
-
-            <Route path="/terminos" element={<TerminosCondiciones />} />  
+            <Route path="/historial-pedidos" element={
+              <RutaProtegida>
+                <HistorialPedidos />
+              </RutaProtegida>
+            } />            
             
-            <Route path="/admin/Ordenes" element={<OrdenesPantalla/>} />
-            <Route
-              path="/admin/estadisticas"
-              element={
+            <Route path="/admin/Ordenes" element={
+              // <RutaProtegida rol={[Rol.ADMIN, Rol.CAJERO, Rol.DELIVERY,Rol.COCINERO]}>
+               <OrdenesPantalla/>
+              // </RutaProtegida>
+            } />
+
+            <Route path="/admin/estadisticas" element={
+                <RutaProtegida rol={[Rol.ADMIN]}>                  
+                  <AdminPantalla>
+                    <Dashboard />
+                  </AdminPantalla>
+                </RutaProtegida>
+            } />
+
+            <Route path="/admin/productos" element={
+              <RutaProtegida rol={[Rol.ADMIN]}>
                 <AdminPantalla>
-                  <Dashboard />
+                  <Productos />
                 </AdminPantalla>
-              }
-            />
-            <Route
-            path="/admin/productos"
-            element={
-              <AdminPantalla>
-                <Productos />
-              </AdminPantalla>
+              </RutaProtegida>
             }
           />
-              {/* 🔐 ADMIN */}
-              <Route path="/admin/insumos/:categoriaId" element={
-                <RutaProtegida rol="ADMIN">
-                  <AdminPantalla>
-                    <InsumosCategoria />
-                  </AdminPantalla>
-                </RutaProtegida>
-              } />
 
-              <Route path="/admin/categorias/:idTipo" element={
-                <RutaProtegida rol="ADMIN">
-                  <AdminPantalla>
-                    <Productos />
-                  </AdminPantalla>
-                </RutaProtegida>
-              } />
+            <Route path="/admin/insumos/:categoriaId" element={
+              <RutaProtegida rol={[Rol.ADMIN]}>
+                <AdminPantalla>
+                  <InsumosCategoria />
+                </AdminPantalla>
+              </RutaProtegida>
+            } />
 
-              <Route path="/admin/productos/:categoriaId" element={
-                <RutaProtegida rol="ADMIN">
-                  <AdminPantalla>
-                    <ProductosCategoria />
-                  </AdminPantalla>
-                </RutaProtegida>
-              } />
+            <Route path="/admin/categorias/:idTipo" element={
+              <RutaProtegida rol={[Rol.ADMIN]}>
+                <AdminPantalla>
+                  <Productos />
+                </AdminPantalla>
+              </RutaProtegida>
+            } />
 
-              <Route path="/admin/tipoPromociones" element={
-                <RutaProtegida rol="ADMIN">
-                  <AdminPantalla>
-                    <TipoPromocionesTabla />
-                  </AdminPantalla>
-                </RutaProtegida>
-              } />
+            <Route path="/admin/productos/:categoriaId" element={
+              <RutaProtegida rol={[Rol.ADMIN]}>
+                <AdminPantalla>
+                  <ProductosCategoria />
+                </AdminPantalla>
+              </RutaProtegida>
+            } />
+
+            <Route path="/admin/tipoPromociones" element={
+              <RutaProtegida rol={[Rol.ADMIN]}>
+                <AdminPantalla>
+                  <TipoPromocionesTabla />
+                </AdminPantalla>
+              </RutaProtegida>
+            } />
 
             <Route path="/admin/sucursales" element={
-              <AdminPantalla>
-                <SucursalesTabla/>
-              </AdminPantalla>
+              <RutaProtegida rol={[Rol.ADMIN]}>
+                <AdminPantalla>
+                  <SucursalesTabla/>
+                </AdminPantalla>
+              </RutaProtegida>
             }/>
 
-              <Route path="/admin/promocion/:tipoPromocionId" element={
-                <RutaProtegida rol="ADMIN">
+            <Route path="/admin/promocion/:tipoPromocionId" element={
+              <RutaProtegida rol={[Rol.ADMIN]}>
+                <AdminPantalla>
+                  <PromocionTabla />
+                </AdminPantalla>
+              </RutaProtegida>
+            } />
+            
+            <Route
+              path="/admin/empleados" element={
+                <RutaProtegida rol={[Rol.ADMIN]}>
                   <AdminPantalla>
-                    <PromocionTabla />
+                    <TablaUsuarios tipo='empleados' />
                   </AdminPantalla>
                 </RutaProtegida>
-              } />
-
-              {/* Login / Registro */}
-              <Route path="/login" element={<Login />} />
-              <Route path="/registro" element={<Register />} />
-            <Route
-              path="/admin/empleados"
-              element={
-                <AdminPantalla>
-                  <TablaUsuarios tipo='empleados' />
-                </AdminPantalla>
               }
             />
-            <Route
-              path="/admin/clientes"
+
+            <Route path="/admin/clientes"
               element={
-                <AdminPantalla>
-                  <TablaUsuarios tipo='clientes' />
-                </AdminPantalla>
+                <RutaProtegida rol={[Rol.ADMIN]}>
+                  <AdminPantalla>
+                    <TablaUsuarios tipo='clientes' />
+                  </AdminPantalla>
+                </RutaProtegida>
               }
             />
 
               <Route path="*" element={<p>Página no encontrada</p>} />
+
             </Routes>
           </Layout>
         </CartProvider>
+        </AlertaContext.Provider>
       </UserProvider>
     </BrowserRouter>
   );

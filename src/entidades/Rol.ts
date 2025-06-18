@@ -1,7 +1,7 @@
 export enum Rol {
-  ADMIN     = 'admin',
-  COCINERO  = 'cocinero',
-  CAJERO    = 'cajero',
-  CLIENTE   = 'cliente',
-  DELIVERY  = 'delivery',
+  ADMIN = 'ADMIN',
+  COCINERO = 'COCINERO',
+  CAJERO = 'CAJERO',
+  CLIENTE = 'CLIENTE',
+  DELIVERY = 'DELIVERY',
 }

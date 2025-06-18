@@ -48,9 +48,11 @@ export default function HistorialPedidoCard({ pedido }: Props) {
           <li key={idx}>{p}</li>
         ))}
       </ul>
-      <div className="card-actions">
+      {pedido.estado === Estado.ENTREGADO && (
+        <div className="card-actions">
         <InvoiceButton pedidoId={pedido.id} />
       </div>
+      )}
     </div>
   );
 }
