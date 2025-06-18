@@ -16,16 +16,8 @@ import PedidoConfirmado from './components/Cliente/PedidoConfirmado';
 import TipoPromocionesTabla from './components/Promociones/TipoPromocionesTabla';
 import PromocionTabla from './components/Promociones/PromocionTabla';
 import PromocionEnDetalle from './components/Promociones/PromocionEnDetalle';
-<<<<<<<<< Temporary merge branch 1
-import Dashboard from './components/Estadisticas/Dashboard';
-<<<<<<<<< Temporary merge branch 1
-import HistorialPedidos from './components/Cliente/HistorialPedidos';
-=========
-import TablaUsuarios from './components/TablaUsuarios';
-import PreguntasFrecuentes from './components/PreguntasFrecuentes';
-import TerminosCondiciones from './components/TerminosCondiciones';
->>>>>>>>> Temporary merge branch 2
-=========
+
+
 import DomiciliosPage from './components/Perfil/DomiciliosPage';
 import DatosPersonales from './components/Cliente/DatosPersonales';
 import EditarDatosPersonales from './components/Cliente/EditarDatosPersonales';
@@ -96,13 +88,12 @@ export default function App() {
                 </AdminPantalla>
               }
             />
-=========
+
             <Route path="/domicilios/:usuarioId" element={<DomiciliosPage />} />
 
             <Route path="/nuestrasSucursales" element={<NuestrasSucursales />} />
             
             
->>>>>>>>> Temporary merge branch 2
 
             <Route
             path="/admin/productos"
