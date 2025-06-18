@@ -623,6 +623,7 @@ export async function updateStockInsumo(
   insumoId: number,
   nuevoStock: number
 ): Promise<void> {
+  console.log(insumoId , nuevoStock)
   const res = await fetch(`${API_URL}/articulos_insumos/${insumoId}/stock`, {
     method: 'PATCH',
     credentials: 'include',
@@ -633,7 +634,9 @@ export async function updateStockInsumo(
     body: JSON.stringify({ stockActual: nuevoStock , sucursalId: 1 })
   });
   if (!res.ok) throw new Error(`Error ${res.status} actualizando stock`);
-}export async function obtenerUsuariosPorTipo(tipo: 'empleados' | 'clientes'): Promise<Usuario[]> {
+}
+
+export async function obtenerUsuariosPorTipo(tipo: 'empleados' | 'clientes'): Promise<Usuario[]> {
   const url = `${API_URL}/usuarios/${tipo}`;
 
   const res = await fetch(url, {

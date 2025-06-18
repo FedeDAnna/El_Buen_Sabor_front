@@ -146,19 +146,22 @@ export default function ModalPago({ pedido, onClose, onPaid }: Props) {
              
              <div className="payment-total">
                 <table className="tabla_payment">
-                  <tr>
-                    <th>Subtotal:</th>
-                    <td>${pedido.total+pedido.descuento!}</td>
-                  </tr>
-                  <tr>
-                    <th>Descuento:</th>
-                    <td> ${pedido.descuento}</td>
-                  </tr>
-                  <tr>
-                    <th>Total: </th>
-                    <td>${total.toFixed(2)}</td>
-                  </tr>
+                  <tbody>
+                    <tr>
+                      <th>Subtotal:</th>
+                      <td>${(pedido.total + pedido.descuento!).toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                      <th>Descuento:</th>
+                      <td>−${pedido.descuento!.toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                      <th>Total:</th>
+                      <td>${total.toFixed(2)}</td>
+                    </tr>
+                  </tbody>
                 </table>
+
               
              </div>
             </section>

@@ -2,6 +2,7 @@
 
 import { Link, useLocation } from 'react-router-dom'
 import '../../estilos/SidebarCliente.css'
+import { useEffect, useState } from 'react'
 
 interface SidebarProps {
   isOpen: boolean
@@ -11,6 +12,25 @@ interface SidebarProps {
 
 export default function SidebarCliente({ isOpen, onClose, onPromocionesClick }: SidebarProps) {
   const location = useLocation()
+   // 1️⃣ Leemos y normalizamos el rol
+  const [userRole, setUserRole] = useState<string>('')
+  useEffect(() => {
+    const stored = localStorage.getItem('usuario')
+    if (stored) {
+      try {
+        const u = JSON.parse(stored)
+        const rol = typeof u.rol === 'string'
+          ? u.rol.trim().toLowerCase()
+          : ''
+        setUserRole(rol)
+      } catch {
+        setUserRole('')
+      }
+    }
+  }, [])
+
+  // 2️⃣ Roles que pueden ver el Dash Board
+  const rolesConDashboard = ['admin', 'cocinero', 'cajero', 'delivery']
 
   return (
     <div className={`sidebar-overlay ${isOpen ? 'open' : ''}`} onClick={onClose}>
@@ -25,9 +45,20 @@ export default function SidebarCliente({ isOpen, onClose, onPromocionesClick }: 
 
         <nav className="sb-nav">
           <ul>
+            {rolesConDashboard.includes(userRole) && (
+              <li>
+                <Link
+                  to="/admin/Ordenes"
+                  className={location.pathname.startsWith('/dashboard') ? 'active' : ''}
+                  onClick={onClose}
+                >
+                  <span className="sb-icon">📊</span> Dash Board
+                </Link>
+              </li>
+            )}
             <li>
               <Link
-                to="/perfil/1"
+                to="/perfil"
                 className={location.pathname.startsWith('/mi-cuenta') ? 'active' : ''}
                 onClick={onClose}
               >

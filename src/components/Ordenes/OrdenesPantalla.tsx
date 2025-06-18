@@ -21,11 +21,11 @@ const permisosPorRol: Record<string, (Estado | "")[]> = {
   cocinero: [
     "", 
     Estado.CONFIRMADO, Estado.EN_PREPARACION,
-    Estado.DEMORADO, Estado.LISTO,
+    Estado.DEMORADO, Estado.LISTO, Estado.RECHAZADO
   ],
   delivery: [
     "", Estado.LISTO,
-    Estado.EN_CAMINO, Estado.ENTREGADO,Estado.RECHAZADO
+    Estado.EN_CAMINO, Estado.ENTREGADO, Estado.RECHAZADO
   ],
   cajero: [
     "", Estado.PENDIENTE, Estado.CONFIRMADO,
@@ -64,7 +64,7 @@ export default function OrdenesPantalla() {
   const [pedidoPago, setPedidoPago] = useState<Pedido | null>(null);
   const [userRole, setUserRole] = useState<string>("");
 
-  const puedeCobrar = !(userRole === "cocinero" || userRole === "repartidor");
+  const puedeCobrar = !(userRole === "cocinero" || userRole === "delivery");
 
    useEffect(() => {
     const stored = localStorage.getItem("usuario");
@@ -100,8 +100,8 @@ export default function OrdenesPantalla() {
   console.log("ESTADOOS", estadosVisibles)  //ESTO TRAE EL ESTADO VACIO
   // Al final de la sección de hooks, justo tras estadosVisibles:
   const estadosAMostrar = estadosVisibles.filter(est => {
-    // si es el botón "Todos" (value === "") y el rol es cocinero o repartidor, lo quitamos
-    if (est.value === "" && (userRole === "cocinero" || userRole === "repartidor")) {
+    // si es el botón "Todos" (value === "") y el rol es cocinero o delivery, lo quitamos
+    if (est.value === "" && (userRole === "cocinero" || userRole === "delivery")) {
       return false;
     }
     return true;
