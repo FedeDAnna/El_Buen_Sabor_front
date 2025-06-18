@@ -1,8 +1,8 @@
 // src/components/Layout/Header.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FaShoppingCart, FaUserCircle } from 'react-icons/fa';
 import '../../estilos/Header.css';
-import { User, ClipboardList, LogOut } from 'lucide-react';
+import { User, ClipboardList, LogOut, House } from 'lucide-react';
 import { useCart, type CartItem } from '../CartContext';
 import { Link } from 'react-router-dom';
 
@@ -14,13 +14,32 @@ export default function Header() {
 
   const { cartItems, total, removeFromCart, updateQuantity } = useCart();
 
+  const cartRef    = useRef<HTMLDivElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      // si el carrito está abierto y el click no fue dentro de cartRef, lo cerramos
+      if (cartOpen && cartRef.current && !cartRef.current.contains(e.target as Node)) {
+        setCartOpen(false);
+      }
+      // idem para perfil
+      if (profileOpen && profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setProfileOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [cartOpen, profileOpen]);
   return (
     <header className="header">
       
       <div className="titulo">EL BUEN SABOR</div>
 
       {/* Carrito */}
-      <div className="header-cart-container">
+      <div ref={cartRef}  className="header-cart-container">
         <button
           className="header-cart-btn"
           onClick={() => setCartOpen(open => !open)}
@@ -141,7 +160,7 @@ export default function Header() {
       </div>
 
       {/* Perfil */}
-      <div className="header-profile-container">
+      <div ref={profileRef}  className="header-profile-container">
         <button
           className="header-profile-btn"
           onClick={() => setProfileOpen(open => !open)}
@@ -155,7 +174,14 @@ export default function Header() {
             <h4>Mi Cuenta</h4>
             <ul>
               <li>
-                <User size={20} /> Datos personales
+                <Link to={`/perfil/1`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <User size={20} /> Datos personales
+                </Link>
+              </li>
+              <li>
+                <Link to={`/domicilios/1`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <House size={20} /> Mis Domicilios
+                </Link>
               </li>
               <Link to="/historial-pedidos" className="menu-link">
               <li>

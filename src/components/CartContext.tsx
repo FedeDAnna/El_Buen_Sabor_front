@@ -15,15 +15,11 @@ export type CartItem =
     }
   | {
       kind: 'promocion'
-      promocion: Promocion
+      promocion: Promocion  
       cantidad: number
       subtotal: number
     }
 
-/**
- * Interfaz que define qué métodos y valores
- * expone nuestro CartContext para el consumo.
- */
 export interface CartContextType {
   cartItems: CartItem[]
   total: number

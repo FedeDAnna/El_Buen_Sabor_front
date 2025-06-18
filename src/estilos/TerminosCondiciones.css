@@ -1,0 +1,45 @@
+.terminos-container {
+  max-width: 1200px;
+  margin: 5rem auto;
+  padding: 20px 5rem;
+  background-color: #fefefe;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  color: #333;
+  line-height: 1.6;
+}
+
+.terminos-title {
+  font-size: 2.2rem;
+  margin-bottom: 25px;
+  text-align: center;
+  color: #8B1414;
+}
+
+.terminos-container h2 {
+  font-size: 1.4rem;
+  margin-top: 25px;
+  color: #8B1414;
+}
+
+.terminos-container ul {
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+.terminos-container li {
+  margin-bottom: 8px;
+  list-style-type: disc;
+}
+
+.terminos-container p {
+  margin-top: 10px;
+}
+
+.terminos-fecha {
+  text-align: right;
+  font-size: 0.9rem;
+  color: #999;
+  margin-top: 30px;
+  font-style: italic;
+}

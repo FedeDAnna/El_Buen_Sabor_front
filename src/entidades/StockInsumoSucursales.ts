@@ -3,10 +3,10 @@ import type Sucursal from "./Sucursal";
 
 export default class StockInsumoSucursales {
     id?: number;
-    precioCompra: number =0;
-    sotckActual: number = 0;
-    stockMaximo: number = 0;
-    stockMinimo: number = 0;
+    precio_compra: number =0;
+    stock_actual: number = 0;
+    stock_maximo: number = 0;
+    stock_minimo: number = 0;
 
     sucursal?: Sucursal;
     articulo_insumo?: ArticuloInsumo;

@@ -13,6 +13,7 @@ import {
 } from '../../services/FuncionesApi'
 import { DateTime } from 'luxon'
 import type Articulo from '../../entidades/Articulo'
+import Swal from 'sweetalert2'
 
 interface Props {
   initialData?: Promocion
@@ -112,10 +113,39 @@ export default function PromocionModal({
     console.log(promo)
     try {
     const promocion : Promocion = await postPromocion(promo)
-    onSave(promocion)        // aquí onSave solo cierra el modal o recarga padre
+    onSave(promocion)
+    const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 4000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                              toast.onmouseenter = Swal.stopTimer;
+                              toast.onmouseleave = Swal.resumeTimer;
+                            }
+      });
+      Toast.fire({
+        icon: "success",
+        title: "Promoción creada/editada con exito"
+      });
   } catch (err) {
     console.error(err)
-    alert('Falló al guardar la promoción')
+    const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 4000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                              toast.onmouseenter = Swal.stopTimer;
+                              toast.onmouseleave = Swal.resumeTimer;
+                            }
+      });
+      Toast.fire({
+        icon: "error",
+        title: "Error al crear/editar la Promoción"
+      });
   }
 
   }
