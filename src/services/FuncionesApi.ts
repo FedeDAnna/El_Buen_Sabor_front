@@ -1,3 +1,5 @@
+import { useToken } from "../components/Auth0/AuthTokenContext"; // según tu ruta real
+
 import { DateTime } from "luxon";
 import type ArticuloInsumo from "../entidades/ArticuloInsumo";
 import type ArticuloManufacturado from "../entidades/ArticuloManufacturado";
@@ -13,465 +15,246 @@ import type Usuario from "../entidades/Usuario";
 import type { PedidoHistorialDTO } from "../DTOs/DTO/PedidoHistorialDTO";
 
 const API_URL = "http://localhost:8080";
-const basic   = btoa(`admin:admin123`);
 
-// GET
-export async function fetchCategoriaById(idCategoria: number): Promise<Categoria> {
-  const res = await fetch(`${API_URL}/categorias/${idCategoria}`, {
+let tokenGetter: () => Promise<string>;
+
+export function setTokenGetter(getter: () => Promise<string>) {
+  tokenGetter = getter;
+}
+
+async function securedFetch(url: string, options: RequestInit = {}): Promise<Response> {
+  if (!tokenGetter) throw new Error("Token getter no configurado");
+  const token = await tokenGetter();
+  return fetch(`${API_URL}${url}`, {
+    ...options,
     credentials: 'include',
-    headers: { 'Authorization': `Basic ${basic}` }
-  })
-  if (!res.ok)throw new Error(`Error ${res.status} al traer la categoria`)
-  return res.json()
+    headers: {
+      ...(options.headers || {}),
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+}
+
+export async function fetchCategoriaById(idCategoria: number): Promise<Categoria> {
+  const res = await securedFetch(`/categorias/${idCategoria}`);
+  if (!res.ok) throw new Error(`Error ${res.status} al traer la categoria`);
+  return res.json();
 }
 
 export async function fetchUnidadesDeMedida(): Promise<UnidadDeMedida[]> {
-  const res = await fetch(`${API_URL}/unidades_de_medidas`, {
-    credentials: 'include',
-    headers: { 'Authorization': `Basic ${basic}` }
-  })
-  if (!res.ok)throw new Error(`Error ${res.status} al traer la categoria`)
-  return res.json()
+  const res = await securedFetch(`/unidades_de_medidas`);
+  if (!res.ok) throw new Error(`Error ${res.status} al traer unidades`);
+  return res.json();
 }
 
 export async function fetchDomiciliosUsuario(): Promise<Domicilio[]> {
-  const res = await fetch(`${API_URL}/domicilios`, {
-    credentials: 'include',
-    headers: { Authorization: `Basic ${basic}` }
-  });
+  const res = await securedFetch(`/domicilios`);
   if (!res.ok) throw new Error(`Error ${res.status} cargando domicilios`);
   return res.json();
 }
 
 export async function getUsuarioById(idUsuario: number): Promise<Usuario> {
-  const res = await fetch(`${API_URL}/usuarios/${idUsuario}`, {
-    credentials: 'include',
-    headers: { 'Authorization': `Basic ${basic}` }
-  })
-  if (!res.ok)throw new Error(`Error ${res.status} al traer el usuario`)
-  return res.json()
+  const res = await securedFetch(`/usuarios/${idUsuario}`);
+  if (!res.ok) throw new Error(`Error ${res.status} al traer el usuario`);
+  return res.json();
 }
 
-export async function getSucursalById(idSucuarsal: number): Promise<Sucursal> {
-  const res = await fetch(`${API_URL}/sucursales/${idSucuarsal}`, {
-    credentials: 'include',
-    headers: { 'Authorization': `Basic ${basic}` }
-  })
-  if (!res.ok)throw new Error(`Error ${res.status} al traer la sucursal`)
-  return res.json()
+export async function getSucursalById(idSucursal: number): Promise<Sucursal> {
+  const res = await securedFetch(`/sucursales/${idSucursal}`);
+  if (!res.ok) throw new Error(`Error ${res.status} al traer la sucursal`);
+  return res.json();
 }
 
-export async function getArticulosManufacturadoPorCategoria(idCategoria: number): Promise<ArticuloManufacturado[]>{
-    
-    const res = await fetch(`${API_URL}/articulos_manufacturados/byCategoria/${idCategoria}`,
-    {
-    method: 'GET',
-    credentials: 'include',  
-    headers: {
-      'Authorization': `Basic ${basic}`,
-      'Content-Type': 'application/json'
-    }
-  }
-  );
+export async function getArticulosManufacturadoPorCategoria(idCategoria: number): Promise<ArticuloManufacturado[]> {
+  const res = await securedFetch(`/articulos_manufacturados/byCategoria/${idCategoria}`);
   if (!res.ok) throw new Error("Error al obtener articulos");
-  const data = await res.json();
-  
-
-  return data.map((inst: ArticuloManufacturado) => ({
-    ...inst,
-    id: inst.id
-  }));
+  return res.json();
 }
 
-export async function getArticulosInsumoPorCategoria(idCategoria: number): Promise<ArticuloInsumo[]>{
-    
-    const res = await fetch(`${API_URL}/articulos_insumos/byCategoria/${idCategoria}`,
-    {
-    method: 'GET',
-    credentials: 'include',  
-    headers: {
-      'Authorization': `Basic ${basic}`,
-      'Content-Type': 'application/json'
-    }
-  }
-  );
+export async function getArticulosInsumoPorCategoria(idCategoria: number): Promise<ArticuloInsumo[]> {
+  const res = await securedFetch(`/articulos_insumos/byCategoria/${idCategoria}`);
   if (!res.ok) throw new Error("Error al obtener articulos");
-  const data = await res.json();
-  
-
-  return data.map((inst: ArticuloInsumo) => ({
-    ...inst,
-    id: inst.id
-  }));
+  return res.json();
 }
 
-export async function getArticulosManufacturados(): Promise<ArticuloManufacturado[]>{
-    
-    const res = await fetch(`${API_URL}/articulos_manufacturados`,
-    {
-    method: 'GET',
-    credentials: 'include',  
-    headers: {
-      'Authorization': `Basic ${basic}`,
-      'Content-Type': 'application/json'
-    }
-  }
-  );
+export async function getArticulosManufacturados(): Promise<ArticuloManufacturado[]> {
+  const res = await securedFetch(`/articulos_manufacturados`);
   if (!res.ok) throw new Error("Error al obtener articulos");
-  const data = await res.json();
-  
-
-  return data.map((inst: ArticuloManufacturado) => ({
-    ...inst,
-    id: inst.id
-  }));
+  return res.json();
 }
 
 export async function fetchInsumos(): Promise<ArticuloInsumo[]> {
-  const res = await fetch(`${API_URL}/articulos_insumos`, {
-    credentials: 'include',
-    headers: { 'Authorization': `Basic ${basic}` }
-  });
+  const res = await securedFetch(`/articulos_insumos`);
   if (!res.ok) throw new Error(`Error ${res.status} cargando insumos`);
   return res.json();
 }
 
-export async function findCategoriaParaVentas(): Promise<Categoria[]>{
-
-  const res = await fetch(`${API_URL}/categorias/ventas`,
-     {
-     method: 'GET',
-     credentials: 'include',  
-     headers: {
-       'Authorization': `Basic ${basic}`,
-       'Content-Type': 'application/json'
-    }
-  }
-  );
+export async function findCategoriaParaVentas(): Promise<Categoria[]> {
+  const res = await securedFetch(`/categorias/ventas`);
   if (!res.ok) throw new Error("Error al obtener categorias");
-  const data = await res.json();
-
-  return data.map((inst: Categoria) => ({
-    ...inst,
-    id: inst.id
-  }));
-}
-
-export async function getCategoriasByTipo(idTipo: number): Promise<Categoria[]> {
-   const res = await fetch(`${API_URL}/categorias/manufacturados/${idTipo}`,
-     {
-     method: 'GET',
-     credentials: 'include',  
-     headers: {
-       'Authorization': `Basic ${basic}`,
-       'Content-Type': 'application/json'
-    }
-  }
-  );
-  if (!res.ok) throw new Error("Error al obtener categorias");
-  const data = await res.json();
-
-  return data.map((inst: Categoria) => ({
-    ...inst,
-    id: inst.id
-  }));
-}
-
-export async function getArticuloManufacturadoById(
-  id: number
-): Promise<ArticuloManufacturado> {
-  const res = await fetch(`${API_URL}/articulos_manufacturados/${id}`, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Authorization': `Basic ${basic}`,
-      'Content-Type': 'application/json',
-    },
-  });
-  if (!res.ok) {
-    throw new Error(`Error ${res.status} obteniendo el artículo Manufacturado con ID ${id}`);
-  }
   return res.json();
 }
 
-export async function getArticuloInsumoById(
-  id: number
-): Promise<ArticuloInsumo> {
-  const res = await fetch(`${API_URL}/articulos_insumos/${id}`, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Authorization': `Basic ${basic}`,
-      'Content-Type': 'application/json',
-    },
-  });
-  if (!res.ok) {
-    throw new Error(`Error ${res.status} obteniendo el artículo Insumo con ID ${id}`);
-  }
+export async function getCategoriasByTipo(idTipo: number): Promise<Categoria[]> {
+  const res = await securedFetch(`/categorias/manufacturados/${idTipo}`);
+  if (!res.ok) throw new Error("Error al obtener categorias");
+  return res.json();
+}
+
+export async function getArticuloManufacturadoById(id: number): Promise<ArticuloManufacturado> {
+  const res = await securedFetch(`/articulos_manufacturados/${id}`);
+  if (!res.ok) throw new Error(`Error ${res.status} obteniendo el artículo Manufacturado con ID ${id}`);
+  return res.json();
+}
+
+export async function getArticuloInsumoById(id: number): Promise<ArticuloInsumo> {
+  const res = await securedFetch(`/articulos_insumos/${id}`);
+  if (!res.ok) throw new Error(`Error ${res.status} obteniendo el artículo Insumo con ID ${id}`);
   return res.json();
 }
 
 export async function getTiposPromociones(): Promise<TipoPromocion[]> {
-  const res = await fetch(`${API_URL}/tipo_promociones`, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Authorization': `Basic ${basic}`,
-      'Content-Type': 'application/json',
-    },
-  });
-  if (!res.ok) {
-    throw new Error(`Error ${res.status} obteniendo los tipos de promociones`);
-  }
+  const res = await securedFetch(`/tipo_promociones`);
+  if (!res.ok) throw new Error(`Error ${res.status} obteniendo los tipos de promociones`);
   return res.json();
 }
 
 export async function getTipoPromocionById(id: number): Promise<TipoPromocion> {
-  const res = await fetch(`${API_URL}/tipo_promociones/${id}`, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Authorization': `Basic ${basic}`,
-      'Content-Type': 'application/json',
-    },
-  });
-  if (!res.ok) {
-    throw new Error(`Error ${res.status} obteniendo el tipo de promocion con ID ${id}`);
-  }
+  const res = await securedFetch(`/tipo_promociones/${id}`);
+  if (!res.ok) throw new Error(`Error ${res.status} obteniendo el tipo de promocion con ID ${id}`);
   return res.json();
 }
 
 export async function getPromocionById(id: number): Promise<Promocion> {
-  const res = await fetch(`${API_URL}/promociones/${id}`, {
-    credentials: 'include',
-    headers: { 'Authorization': `Basic ${basic}` }
-  })
-  if (!res.ok) throw new Error(`Error ${res.status}`)
-  const raw = await res.json()
+  const res = await securedFetch(`/promociones/${id}`);
+  if (!res.ok) throw new Error(`Error ${res.status}`);
+  const raw = await res.json();
   return {
     ...raw,
-    // transformar cadenas en instancias
     fecha_desde: new Date(raw.fecha_desde),
     fecha_hasta: new Date(raw.fecha_hasta),
     hora_desde: DateTime.fromISO(raw.hora_desde),
     hora_hasta: DateTime.fromISO(raw.hora_hasta),
-  }
+  };
 }
 
-export async function getPromocionesPorTipoPromocion(idTipoPromocion: number): Promise<Promocion[]>{
-    const res = await fetch(`${API_URL}/promociones/byTipoPromocion/${idTipoPromocion}`,
-    {
-    method: 'GET',
-    credentials: 'include',  
-    headers: {
-      'Authorization': `Basic ${basic}`,
-      'Content-Type': 'application/json'
-    }
-  }
-  );
-  const raw: any[] = await res.json()
+export async function getPromocionesPorTipoPromocion(idTipoPromocion: number): Promise<Promocion[]> {
+  const res = await securedFetch(`/promociones/byTipoPromocion/${idTipoPromocion}`);
+  const raw: any[] = await res.json();
   return raw.map(p => ({
     ...p,
     fecha_desde: new Date(p.fecha_desde),
     fecha_hasta: new Date(p.fecha_hasta),
     hora_desde: DateTime.fromISO(p.hora_desde),
     hora_hasta: DateTime.fromISO(p.hora_hasta),
-  }))
+  }));
 }
 
 export async function fetchTiposCategoria(): Promise<TipoCategoria[]> {
-  const res = await fetch(`${API_URL}/tipo_categorias`, {
-    credentials: 'include',
-    headers: { 'Authorization': `Basic ${basic}` }
-  })
-  if (!res.ok)throw new Error(`Error ${res.status} cargando tipos`)
-  return res.json()
+  const res = await securedFetch(`/tipo_categorias`);
+  if (!res.ok) throw new Error(`Error ${res.status} cargando tipos`);
+  return res.json();
 }
 
 export async function fetchHistorialPedidosClientes(pagina: number): Promise<PedidoHistorialDTO[]> {
-  const res = await fetch(`${API_URL}/pedidos/byClientes/1?page=${pagina}&size=16`, {
-    credentials: 'include',
-    headers: { 'Authorization': `Basic ${basic}` }
-  });
+  const res = await securedFetch(`/pedidos/byClientes/1?page=${pagina}&size=16`);
   if (!res.ok) throw new Error(`Error ${res.status} cargando historial`);
   return res.json();
 }
 
-// POST
-
 export async function postTipoPromocion(tipoPromocion: TipoPromocion): Promise<TipoPromocion> {
-const res = await fetch(`${API_URL}/tipo_promociones`,{
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Authorization': `Basic ${basic}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(tipoPromocion),
-    }
-  );
+  const res = await securedFetch(`/tipo_promociones`, {
+    method: 'POST',
+    body: JSON.stringify(tipoPromocion),
+  });
   if (!res.ok) throw new Error(`Error ${res.status} guardando el tipo promocion`);
   return res.json();
 }
 
 export async function savePedido(pedido: Pedido): Promise<Pedido> {
-  const res = await fetch(`${API_URL}/pedidos`, {
+  const res = await securedFetch(`/pedidos`, {
     method: 'POST',
-    credentials: 'include',
-    headers: {
-      Authorization: `Basic ${basic}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(pedido)
+    body: JSON.stringify(pedido),
   });
   if (!res.ok) throw new Error(`Error ${res.status} guardando pedido`);
   return res.json();
 }
 
 export async function savePedidoMP(pedido: Pedido): Promise<{ url: string }> {
-  const res = await fetch(`${API_URL}/pagos/preference`, {
+  const res = await securedFetch(`/pagos/preference`, {
     method: 'POST',
-    credentials: 'include',
-    headers: {
-      Authorization: `Basic ${basic}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(pedido)
+    body: JSON.stringify(pedido),
   });
   if (!res.ok) throw new Error(`Error ${res.status} guardando pedido`);
   return res.json();
 }
 
 export async function saveArticuloManufacturado(articulo: ArticuloManufacturado): Promise<ArticuloManufacturado> {
-
-  const payload = {
-    _type: 'manufacturado' as const,
-    ...articulo
-  }
-
-  const res = await fetch(
-    `${API_URL}/articulos_manufacturados`,
-    {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Authorization': `Basic ${basic}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    }
-  );
+  const payload = { _type: 'manufacturado' as const, ...articulo };
+  const res = await securedFetch(`/articulos_manufacturados`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
   if (!res.ok) throw new Error(`Error ${res.status} guardando producto`);
   return res.json();
 }
 
 export async function saveArticuloInsumo(articulo: ArticuloInsumo): Promise<ArticuloInsumo> {
-
-  const payload = {
-    _type: 'insumo' as const,
-    ...articulo
-  }
-
-  const res = await fetch(
-    `${API_URL}/articulos_insumos`,
-    {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Authorization': `Basic ${basic}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    }
-  );
+  const payload = { _type: 'insumo' as const, ...articulo };
+  const res = await securedFetch(`/articulos_insumos`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
   if (!res.ok) throw new Error(`Error ${res.status} guardando el insumo`);
   return res.json();
 }
 
-export async function guardarCategoriaConHijos(
-  categoria: Categoria
-): Promise<Categoria> {
-  const res = await fetch(`${API_URL}/categorias`, {
+export async function guardarCategoriaConHijos(categoria: Categoria): Promise<Categoria> {
+  const res = await securedFetch(`/categorias`, {
     method: 'POST',
-    credentials: 'include',
-    headers: {
-      'Authorization': `Basic ${basic}`,
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify(categoria),
   });
   if (!res.ok) throw new Error(`Error ${res.status} guardando categorías`);
-  // Sólo parseamos JSON una vez
-  const data = await res.json();
-  return data;
+  return res.json();
 }
 
 export async function postPromocion(promo: Promocion): Promise<Promocion> {
-  const res = await fetch(`${API_URL}/promociones`, {
+  const res = await securedFetch(`/promociones`, {
     method: 'POST',
-    credentials: 'include',
-    headers: {
-      Authorization: `Basic ${basic}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(promo)
+    body: JSON.stringify(promo),
   });
   if (!res.ok) throw new Error(`Error ${res.status} guardando la promocion`);
-  
-  const raw = await res.json()
+  const raw = await res.json();
   return {
     ...raw,
     fecha_desde: new Date(raw.fecha_desde),
     fecha_hasta: new Date(raw.fecha_hasta),
     hora_desde: DateTime.fromISO(raw.hora_desde),
     hora_hasta: DateTime.fromISO(raw.hora_hasta),
-  }
+  };
 }
 
-
-//DELETE
-
-export async function deleteProductosById(idProduc :Number): Promise<boolean> {
-  const res = await fetch(`${API_URL}/articulos_manufacturados/${idProduc}`, {
-    method: 'DELETE',
-    credentials: 'include',
-    headers: { 'Authorization': `Basic ${basic}` }
-  })
-  if (!res.ok)throw new Error(`Error ${res.status} al borrar el producto manufacturado`)
-  return res.json()
+export async function deleteProductosById(idProduc: Number): Promise<boolean> {
+  const res = await securedFetch(`/articulos_manufacturados/${idProduc}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error(`Error ${res.status} al borrar el producto manufacturado`);
+  return res.json();
 }
 
-export async function deleteTipoPromocionById(idTipoProm :Number): Promise<boolean> {
-  const res = await fetch(`${API_URL}/tipo_promociones/${idTipoProm}`, {
-    method: 'DELETE',
-    credentials: 'include',
-    headers: { 'Authorization': `Basic ${basic}` }
-  })
-  if (!res.ok)throw new Error(`Error ${res.status} al borrar el tipos de promocion`)
-  return res.json()
+export async function deleteTipoPromocionById(idTipoProm: Number): Promise<boolean> {
+  const res = await securedFetch(`/tipo_promociones/${idTipoProm}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error(`Error ${res.status} al borrar el tipo de promoción`);
+  return res.json();
 }
 
-export async function deletePromocionById(idProm :Number): Promise<boolean> {
-  const res = await fetch(`${API_URL}/promociones/${idProm}`, {
-    method: 'DELETE',
-    credentials: 'include',
-    headers: { 'Authorization': `Basic ${basic}` }
-  })
-  if (!res.ok)throw new Error(`Error ${res.status} al borrar la promocion`)
-  return res.json()
+export async function deletePromocionById(idProm: Number): Promise<boolean> {
+  const res = await securedFetch(`/promociones/${idProm}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error(`Error ${res.status} al borrar la promoción`);
+  return res.json();
 }
 
-export async function deleteCategoriaById(idCategoria :Number): Promise<boolean> {
-  const res = await fetch(`${API_URL}/categorias/${idCategoria}`, {
-    method: 'DELETE',
-    credentials: 'include',
-    headers: { 'Authorization': `Basic ${basic}` }
-  })
-  if (!res.ok)throw new Error(`Error ${res.status} al borrar la categoria`)
-  return res.json()
+export async function deleteCategoriaById(idCategoria: Number): Promise<boolean> {
+  const res = await securedFetch(`/categorias/${idCategoria}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error(`Error ${res.status} al borrar la categoría`);
+  return res.json();
 }
-
-
-
-
-
