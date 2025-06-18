@@ -23,12 +23,14 @@
 
 /* Cada ítem del carrusel */
 .cc-item {
-  min-width: 120px;
-  max-width: 120px;
+  /* ↑ aquí aumentas el ancho fijo de cada tarjeta */
+  min-width: 200px;   /* antes 120px */
+  max-width: 200px;   /* antes 120px */
   background: #fff;
   border-radius: 8px;
   text-align: center;
-  padding: 0.8rem 0.5rem;
+  /* ↑ y aquí puedes darle más “espacio” dentro de la tarjeta */
+  padding: 1rem 0.75rem;  /* antes 0.8rem 0.5rem */
   text-decoration: none;
   color: #333;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
@@ -46,18 +48,21 @@
 }
 
 .cc-icon {
-  width: 48px;
-  height: 48px;
+  /* ↑ más grande el círculo con la letra */
+  width: 80px;        /* antes 48px */
+  height: 80px;       /* antes 48px */
   margin: 0 auto 0.5rem;
   border-radius: 50%;
   background: #f1f1f1;
-  font-size: 1.5rem;
-  line-height: 48px;
+  /* ↑ y su línea de base para centrar el caracter */
+  line-height: 75px;  /* antes 48px */
+  font-size: 2.5rem;  /* antes 1.5rem */
   color: #888;
 }
 
 .cc-name {
-  font-size: 0.95rem;
+  /* ↑ también puedes incrementar un poco el tamaño de letra */
+  font-size: 1.2rem;    /* antes 0.95rem */
   font-weight: 500;
 }
 
@@ -81,22 +86,22 @@
   margin-left: 0.5rem;
 }
 
-/* Responsive: hacemos ítems más pequeños en móviles */
+/* Responsive: en móviles también ajustar para que escale */
 @media (max-width: 480px) {
   .cc-item {
-    min-width: 100px;
-    max-width: 100px;
-    padding: 0.6rem 0.4rem;
+    min-width: 120px;   /* antes 100px */
+    max-width: 120px;   /* antes 100px */
+    padding: 0.8rem 0.6rem; /* antes 0.6rem 0.4rem */
   }
   .cc-icon {
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
-    font-size: 1.2rem;
+    width: 50px;       /* antes 40px */
+    height: 50px;      /* antes 40px */
+    line-height: 50px; /* antes 40px */
+    font-size: 1.5rem; /* antes 1.2rem */
   }
   .cc-arrow {
-    font-size: 1.2rem;
-    padding: 0.2rem 0.4rem;
+    font-size: 1.3rem; /* antes 1.2rem */
+    padding: 0.25rem 0.5rem; /* antes 0.2rem 0.4rem */
   }
 }
 

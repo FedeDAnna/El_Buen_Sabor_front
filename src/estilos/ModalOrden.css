@@ -356,6 +356,9 @@ table th, table td {
   display: flex;
   gap: 3px;
 }
+.tabla_payment{
+  font-size: 18px;
+}
 
 
 

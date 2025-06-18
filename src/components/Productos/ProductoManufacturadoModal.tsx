@@ -323,6 +323,7 @@ const [unidades, setUnidades] = useState<UnidadDeMedida[]>([])
             </tbody>
           </table>
         </div>
+        
         <footer className="pm-footer">
           
           <button className="btn-cancel" onClick={onClose}>

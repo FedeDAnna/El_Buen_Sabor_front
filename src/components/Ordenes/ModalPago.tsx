@@ -33,7 +33,7 @@ export default function ModalPago({ pedido, onClose, onPaid }: Props) {
 
   useEffect(() => {
   const fetchDetalles = async () => {
-    if (pedido.id == null) return; // 👈 valida que tenga ID
+    if (pedido.id == null) return; 
 
     try {
       const data = await getProductosPorPedido(pedido.id);
@@ -145,8 +145,21 @@ export default function ModalPago({ pedido, onClose, onPaid }: Props) {
              {/* Total destacado abajo a la derecha */}
              
              <div className="payment-total">
-              <label>Total:   </label>
-               ${total.toFixed(2)}
+                <table className="tabla_payment">
+                  <tr>
+                    <th>Subtotal:</th>
+                    <td>${pedido.total+pedido.descuento!}</td>
+                  </tr>
+                  <tr>
+                    <th>Descuento:</th>
+                    <td> ${pedido.descuento}</td>
+                  </tr>
+                  <tr>
+                    <th>Total: </th>
+                    <td>${total.toFixed(2)}</td>
+                  </tr>
+                </table>
+              
              </div>
             </section>
           {/* </section> */}

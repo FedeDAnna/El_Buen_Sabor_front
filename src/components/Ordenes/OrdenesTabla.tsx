@@ -23,6 +23,7 @@ function TablaPedidos({ pedidos , onSeleccionar, onEstadoChange,onCobrar}: Props
           <th>ORDEN</th>
           <th>CLIENTE</th>
           <th>FECHA</th>
+          <th>TIPO DE ENVIO</th>
           <th>HORA ESTIMADA</th>
           <th>ESTADO</th>
           <th>ACCIONES</th>

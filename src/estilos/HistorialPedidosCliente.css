@@ -1,0 +1,101 @@
+.contenedor-historial {
+  padding: 1rem;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.titulo-historial {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.grilla-pedidos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 1rem;
+}
+
+.card-pedido {
+  background: #fff;
+  border-radius: 15px;
+  padding: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.card-pedido:hover {
+  transform: scale(1.01);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-title {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.estado {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.estado-pendiente { background: grey; color: #ececec; }
+.estado-confirmado { background: #039ed5; color: #ececec; }
+.estado-preparacion { background: #d1de02; color: #ececec; }
+.estado-demorado { background: #ffab03; color: #ececec; }
+.estado-listo { background: #5ee50b; color: #ececec; }
+.estado-rechazado { background: #ff0000; color: #ececec; }
+.estado-encamino { background: #a80f9c; color: #ececec; }
+.estado-entregado { background: #0a06fa; color: #ececec; }
+
+.card-time {
+  display: flex;
+  align-items: center;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.icono-reloj {
+  margin-right: 5px;
+}
+
+.card-fecha {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 2px;
+}
+
+.card-productos {
+  margin-top: 0.5rem;
+  padding-left: 1rem;
+  font-size: 0.95rem;
+  color: #111;
+}
+
+.paginacion {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  gap: 0.5rem;
+}
+
+.btn-pagina {
+  padding: 6px 12px;
+  background: #e0e0e0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.pagina-activa {
+  background: #ffc107;
+  font-weight: bold;
+}

@@ -19,11 +19,13 @@ export default class Pedido{
     repartidor?:Usuario;
     detalles: PedidoDetalle[]=[];
     forma_pago?: FormaPago;
+    descuento?: number ;
     fecha_pedido : DateTime =  DateTime.now();
     domicilio?: Domicilio;
     sucursal?: Sucursal;
     usuario?: Usuario;
     factura?: Factura;
+    
 
     /**  
    * Este método será llamado automáticamente por JSON.stringify(obj)
@@ -38,7 +40,9 @@ export default class Pedido{
       estado_pedido: this.estado_pedido,
       tipo_envio: this.tipo_envio,
       forma_pago: this.forma_pago,
+      descuento: this.descuento,
       fecha_pedido: this.fecha_pedido.toISODate(),        // "YYYY-MM-DD"
+      repartidor: this.repartidor ? {id: this.repartidor.id} : undefined,
       domicilio: this.domicilio ? { id: this.domicilio.id } : undefined,
       sucursal: this.sucursal ? { id: this.sucursal.id } : undefined,
       usuario: this.usuario ? { id: this.usuario.id } : undefined,
@@ -49,8 +53,9 @@ export default class Pedido{
         articulo: {
           _type: d.articulo instanceof ArticuloManufacturado ? 'manufacturado' : 'insumo',
           id: d.articulo!.id,
-
-        }   
+          denominacion: d.articulo!.denominacion,
+          precio_venta: d.articulo!.precio_venta
+          }   
       })),
     }
   }

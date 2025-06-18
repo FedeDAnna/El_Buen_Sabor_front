@@ -1,0 +1,111 @@
+/* src/estilos/PromocionDetalle.css */
+
+.pd-main {
+  padding: 1rem;
+}
+
+.pd-back {
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.pd-container {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+/* ======= IZQUIERDA ======= */
+.pd-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pd-img {
+  width: 100%;
+  max-width: 300px;
+  border-radius: 8px;
+}
+
+.pd-noimg {
+  width: 300px;
+  height: 180px;
+  background: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+}
+
+.pd-precio-cantidad {
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+}
+
+.pd-quantity-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.pd-btn-qty {
+  padding: 0.25rem 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+}
+
+.pd-qty {
+  margin: 0 0.5rem;
+  font-weight: bold;
+}
+
+.pd-precio {
+  display: block;
+  font-size: 1.5rem;
+  color: #e63946;
+  margin: 0.5rem 0;
+}
+
+.pd-btn-addcart {
+  background: #f4a261;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* ======= DERECHA ======= */
+.pd-right {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pd-nombre {
+  margin: 0;
+}
+
+.pd-descripcion h3 {
+  margin: 0 0 0.25rem 0;
+}
+
+.pd-descripcion p {
+  margin: 0;
+}
+
+.pd-fechas,
+.pd-tiempo {
+  margin: 0.5rem 0;
+}

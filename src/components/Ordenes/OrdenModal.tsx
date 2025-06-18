@@ -4,7 +4,19 @@ import Pedido from "../../entidades/Pedido";
 import { updateEstadoPedido } from "../../services/FuncionesApi";
 import { Estado } from "../../entidades/Estado";
 import "../../estilos/ModalOrden.css";
+import type ArticuloInsumo from "../../entidades/ArticuloInsumo";
+import type ArticuloManufacturado from "../../entidades/ArticuloManufacturado";
+import type Articulo from "../../entidades/Articulo";
+import type PedidoDetalle from "../../entidades/PedidoDetalle";
+import { InvoiceButton } from "../InvoiceButton";
 
+function isInsumo(a: Articulo): a is ArticuloInsumo {
+  return 'stock_insumo_sucursales' in a;
+}
+
+function isManufacturado(a: Articulo): a is ArticuloManufacturado {
+  return 'detalles' in a;
+}
 type Props = {
   pedido: Pedido;
   onClose: () => void;
@@ -13,10 +25,12 @@ type Props = {
 };
 
 export default function ModalOrden({ pedido, onClose, onEstadoChange,onCobrar }: Props) {
+  console.log("pedido",pedido);
   const [pestañaActiva, setPestañaActiva] = useState<
     "detalles" | "productos" | "factura"
   >("detalles");
   const [loading, setLoading] = useState(false);
+  const [facturaUrl, setFacturaUrl] = useState<string | null>(null);
 
   // Determina siguiente estado y etiqueta de botón
   const { nextEstado, label } = useMemo(() => {
@@ -185,38 +199,79 @@ export default function ModalOrden({ pedido, onClose, onEstadoChange,onCobrar }:
                     <th>Subtotal</th>
                   </tr>
                 </thead>
-                <tbody>
-                  {pedido.detalles.map((prod, i) => (
-                    
+               <tbody>
+                {pedido.detalles.map((det, i) => {
+                  const art = det.articulo;
+                  if (!art) return null; // si por alguna razón viene sin artículo
+                  return (
                     <tr key={i}>
-                      <td>{prod.articulo?.denominacion}</td>
-                      {/* <td>{prod.articulo.}</td> */}
-                      <td>{prod.cantidad}</td>
-                      <td>${prod.subtotal}</td>
+                      <td>{art.denominacion}</td>
+                      <td>
+                        {isManufacturado(art)
+                          ? art.preparacion         // si es manufacturado, muestro preparación
+                          : "No tiene preparación" // si es insumo (o cualquier otro), muestro mensaje
+                        }
+                      </td>
+                      <td>{det.cantidad}</td>
+                      <td>${det.subtotal}</td>
                     </tr>
-                  ))}
-                </tbody>
+                  );
+                })}
+              </tbody>
+
+
+
               </table>
             </section>
           )}
 
           {pestañaActiva === "factura" && (
-            <section className="seccion">
-              <h3>📄 Factura</h3>
-              <table>
+            <section className="seccion factura-section">
+              <h2>Factura - Orden #{pedido.id}</h2>
+
+              <div className="factura-header">
+                <div className="factura-info-left">
+                  <p>Fecha: {new Date(pedido.fecha_pedido.toJSDate()).toLocaleDateString()}</p>
+                  <p>Cliente: {pedido.usuario?.nombre} {pedido.usuario?.apellido}</p>
+                  <p>Forma de Pago: {pedido.forma_pago}</p>
+                </div>
+                <div className="factura-info-right">
+                  <p>Hora Estimada: {pedido.hora_estimada_finalizacion.toFormat("HH:mm:ss")}</p>
+                  <p>Tipo de Envío: {pedido.tipo_envio}</p>
+                </div>
+              </div>
+
+              <table className="factura-table">
                 <thead>
                   <tr>
-                    <th>Detalle</th>
-                    <th>Valor</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Subtotal</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>Factura pendiente</td>
-                    <td>–</td>
-                  </tr>
+                  {pedido.detalles.map((det: PedidoDetalle, i: number) => {
+                    const art = det.articulo;
+                    if (!art) return null;
+                    const precioUnit = det.subtotal / det.cantidad;
+                    return (
+                      <tr key={i}>
+                        <td>{art.denominacion}</td>
+                        <td>{det.cantidad}</td>
+                        <td>${precioUnit.toFixed(2)}</td>
+                        <td>${det.subtotal.toFixed(2)}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
+
+              <p className="factura-total">Total: ${pedido.total.toFixed(2)}</p>
+
+              {pedido.id != null && (
+                <InvoiceButton pedidoId={pedido.id} />
+              )}
             </section>
           )}
         </div>

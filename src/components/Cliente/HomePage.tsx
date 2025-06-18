@@ -1,9 +1,13 @@
 // src/components/HomePage/HomePage.tsx
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import SidebarCliente from './SidebarCliente'
 import '../../estilos/HomePage.css'
 import CarruselCategorias from './CarruselCategorias'
+import type TipoPromocion from '../../entidades/TipoPromocion'
+import type Promocion from '../../entidades/Promocion'
+import { getPromocionesPorTipoPromocion, getTiposPromociones } from '../../services/FuncionesApi'
+import BuenSaborIcono from '../../assets/BuenSaborIcono.png'   // <<– aquí
 
 // Icono de hamburguesa (puedes cambiarlo por un SVG más bonito si quieres)
 const HamburgerIcon = () => (
@@ -13,6 +17,23 @@ const HamburgerIcon = () => (
 export default function HomePage() {
   // Estado de sidebar abierto/cerrado
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false)
+  const [promoGroups, setPromoGroups] = useState<
+    { tipo: TipoPromocion; promos: Promocion[] }[]
+  >([])
+
+  useEffect(() => {
+    getTiposPromociones()
+      .then(tipos =>
+        Promise.all(
+          tipos.map(async tipo => ({
+            tipo,
+            promos: await getPromocionesPorTipoPromocion(tipo.id!),
+          }))
+        )
+      )
+      .then(setPromoGroups)
+      .catch(console.error)
+  }, [])
 
   return (
     <>
@@ -30,7 +51,7 @@ export default function HomePage() {
         {/* Hero section */}
         <section className="hp-hero">
           <img
-            src="/assets/hero-hamburguesa.jpg"
+            src={BuenSaborIcono}
             alt="El Buen Sabor - ¡La mejor comida!"
             className="hp-hero-img"
           />
@@ -48,9 +69,44 @@ export default function HomePage() {
           </div>
         </section>
 
+        <h2>Mira Nuestras Categorias y Apurate a Pedir 😁🍗</h2>
+
         <section className="hp-carrusel-wrapper">
           <CarruselCategorias />
         </section>
+
+        <h2>Las Mejores Promociones 💲🍟🥓🍗</h2>
+
+        {promoGroups.map(({ tipo, promos }) => (
+          <section key={tipo.id} className="hp-promos-section">
+            <h2 className="hp-promos-title">{tipo.descripcion}</h2>
+            <div className="hp-promos-grid">
+              {promos.map(p => (
+                <Link
+                  key={p.id}
+                  to={`/promociones/${p.id}`}
+                  className="hp-promo-card"
+                >
+                  {p.imagen?.src ? (
+                    <img
+                      src={p.imagen.src}
+                      alt={p.denominacion}
+                      className="hp-promo-img"
+                    />
+                  ) : (
+                    <div className="hp-promo-noimg">Sin imagen</div>
+                  )}
+                  <div className="hp-promo-body">
+                    <strong>{p.denominacion}</strong>
+                    <p className="hp-promo-desc">
+                      {p.descripcion_descuento}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        ))}
       </main>
     </>
   )

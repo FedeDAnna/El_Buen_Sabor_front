@@ -7,10 +7,11 @@ import '../../estilos/ProductoDetalleCliente.css'
 import { useCart } from '../CartContext'
 import type ArticuloInsumo from '../../entidades/ArticuloInsumo'
 
-function isManufacturado(p: ArticuloManufacturado | ArticuloInsumo):
-p is ArticuloManufacturado {
-  return p instanceof ArticuloManufacturado;
-}
+function isManufacturado(
+    p: ArticuloManufacturado | ArticuloInsumo
+  ): p is ArticuloManufacturado {
+    return 'tiempo_estimado_en_minutos' in p
+  }
 
 type LocationState = { tipo: 'manufacturado' | 'insumo' }
 
@@ -54,7 +55,7 @@ export default function ProductoEnDetalleCliente() {
 
  const handleAgregarAlCarrito = () => {
    if (!articulo) return
-   addToCart(articulo, cantidad)
+   addToCart(articulo, "articulo", cantidad)
    // Opcional: podrías mostrar un toast o mensaje breve
    alert(`Se agregaron ${cantidad} × "${articulo.denominacion}" al carrito.`)
  }

@@ -1,0 +1,17 @@
+.dashboard-charts-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.chart-box {
+  flex: 1 1 48%;
+  min-width: 300px;
+}
+
+.chart-container {
+  flex: 1 1 50%;
+  min-width: 300px;
+}
