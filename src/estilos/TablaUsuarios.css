@@ -165,12 +165,12 @@
   cursor: pointer;
 }
 
-.usuario-modal-boton.guardar {
+.usuario-modal-boton.guardarModal {
   background-color: #FFC107;
   color: #000;
 }
 
-.usuario-modal-boton.cerrar {
+.usuario-modal-boton.cerrarModal {
   background-color: #ccc;
   color: #000;
 }
