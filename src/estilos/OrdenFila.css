@@ -1,0 +1,53 @@
+/* Celda general de estado */
+.estado-chip {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  min-width: 90px;
+  text-align: center;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* Centrado de contenido dentro del <td> */
+td.estado-chip {
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* Por estado */
+.estado-pendiente {
+  background: grey;
+  color: #ececec;
+}
+.estado-confirmado {
+  background: #039ed5;
+  color: #ececec;
+}
+.estado-preparacion {
+  background: #aeba00;
+  color: #ececec;
+}
+.estado-demorado {
+  background: #a80f9c;
+  color:#ececec;
+}
+.estado-listo {
+  background: #5ee50b;
+  color: #ececec;
+}
+.estado-encamino {
+  background: #ffab03;
+  color: #ececec;
+}
+.estado-entregado {
+  background: #0a06fa;
+  color: #ececec;
+}
+.estado-rechazado {
+  background: #ff0000;
+  color: #ececec;
+}

@@ -10,8 +10,12 @@ import type TipoCategoria from "../entidades/TipoCategoria";
 import type TipoPromocion from "../entidades/TipoPromocion";
 import type UnidadDeMedida from "../entidades/UnidadDeMedida";
 import type Usuario from "../entidades/Usuario";
+<<<<<<< HEAD
 import type Localidad from "../entidades/Localidad";
 import type { PedidoHistorialDTO } from "../DTOs/DTO/PedidoHistorialDTO";
+=======
+import type { Estado } from "../entidades/Estado";
+>>>>>>> ailen
 
 const API_URL = "http://localhost:8080";
 const basic   = btoa(`admin:admin123`);
@@ -676,13 +680,74 @@ export async function eliminarUsuario(idUsuario: number): Promise<void> {
   const res = await fetch(url, {
     method: 'DELETE',
     credentials: 'include',
+<<<<<<< HEAD
+=======
+    headers: { 'Authorization': `Basic ${basic}` }
+  })
+  if (!res.ok)throw new Error(`Error ${res.status} al traer la sucursal`)
+  return res.json()
+}
+
+export async function getPedidos(): Promise<Pedido[]>{
+    
+    const res = await fetch(`${API_URL}/pedidos`,
+    {
+    method: 'GET',
+    credentials: 'include',  
+    headers: {
+      'Authorization': `Basic ${basic}`,
+      'Content-Type': 'application/json'
+    }
+  }
+  );
+  if (!res.ok) throw new Error("Error al obtener pedidos");
+ const raw: any[] = await res.json()
+  return raw.map(p => ({
+    ...p,
+    fecha_pedido: DateTime.fromISO(p.fecha_pedido),
+    hora_estimada_finalizacion: DateTime.fromISO(p.hora_estimada_finalizacion)
+  }));
+}
+
+export async function updateEstadoPedido(
+  id: number,
+  nuevoEstado: Estado
+): Promise<void> {
+  const res = await fetch(`${API_URL}/pedidos/pedido/${id}`, {
+    method: "PATCH",                // o PUT si tu API lo espera
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      estadoPedido: nuevoEstado,   // campo según tu modelo
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Error ${res.status} actualizando pedido`);
+  }
+
+}
+
+export async function getProductosPorPedido(pedidoId: number): Promise<any[]> {
+  const res = await fetch(`${API_URL}/pedidos/manufacturados/${pedidoId}`, {
+    method: 'GET',
+    credentials: 'include',
+>>>>>>> ailen
     headers: {
       'Authorization': `Basic ${basic}`,
       'Content-Type': 'application/json'
     }
   });
 
+<<<<<<< HEAD
   if (!res.ok) {
     throw new Error(`Error ${res.status} al eliminar usuario`);
   }
 }
+=======
+  if (!res.ok) throw new Error(`Error ${res.status} al traer los productos`);
+  return res.json();
+}
+>>>>>>> ailen
