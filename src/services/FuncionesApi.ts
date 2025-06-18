@@ -13,6 +13,9 @@ import type Usuario from "../entidades/Usuario";
 import type { Estado } from "../entidades/Estado";
 import type Localidad from "../entidades/Localidad";
 import type { PedidoHistorialDTO } from "../DTOs/DTO/PedidoHistorialDTO";
+import type RegistroDTO from "../entidades/RegistroDTO";
+
+
 
 const API_URL = "http://localhost:8080";
 const basic   = btoa(`admin:admin123`);
@@ -761,4 +764,42 @@ export async function getPedidoPorId(id: number): Promise<Pedido> {
     fecha_pedido: DateTime.fromISO(data.fecha_pedido),
     hora_estimada_finalizacion: DateTime.fromISO(data.hora_estimada_finalizacion),
   };
+}
+export async function loginUsuario(email: string, password: string): Promise<Usuario> {
+  const res = await fetch(`${API_URL}/usuarios/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email, password }),
+  });
+
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || `Error ${res.status} al intentar iniciar sesión`);
+  }
+
+  return res.json();
+}
+
+//fiuncion para el regitrreo
+export async function registrarUsuario(dto: RegistroDTO): Promise<void> {
+  const res = await fetch(`${API_URL}/usuarios/registro`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(dto),
+  });
+
+  if (!res.ok) {
+    let errorMessage = `Error ${res.status} al registrar usuario`;
+    try {
+      const error = await res.json();
+      errorMessage = error.message || errorMessage;
+    } catch {
+      // El backend no devolvió JSON (ej: 500 sin body)
+    }
+    throw new Error(errorMessage);
+  }
 }

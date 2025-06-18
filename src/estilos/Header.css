@@ -214,3 +214,57 @@
 .header-profile-menu li span {
   margin-left: 0.5rem;
 }
+
+.profile-menu-btn {
+  background: none;
+  border: none;
+  font: inherit;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* Estilo uniforme y moderno para botones del menú de perfil */
+.profile-menu-btn {
+  background-color: #f5f5f5;
+  color: #333;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  margin: 0.4rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.6rem;
+  width: 100%;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.profile-menu-btn:hover {
+  background-color: #ffe082;
+  transform: scale(1.02);
+}
+
+.profile-menu-btn:active {
+  transform: scale(0.98);
+}
+
+/* Iconos dentro del botón */
+.profile-menu-btn svg {
+  color: #7a0019;
+}
+
+.profile-menu-btn.logout-btn {
+  background-color: #b71c1c !important;
+  color: #fff !important;
+}
+
+.profile-menu-btn.logout-btn:hover {
+  background-color: #d32f2f !important;
+  color: #fff !important;
+}
+
