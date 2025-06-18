@@ -12,7 +12,7 @@ type Props = {
   pedido: Pedido;
   onSeleccionar: (pedido: Pedido) => void;
   onEstadoChange: () => void;
-  onCobrar: (pedido: Pedido) => void; 
+  onCobrar?: (pedido: Pedido) => void;
 };
 
 export default function OrdenFila({
@@ -154,7 +154,7 @@ export default function OrdenFila({
           )}
 
           {/* Si está LISTO y es TAKE_AWAY: Cobrar */}
-          {(pedido.estado_pedido === Estado.LISTO && pedido.tipo_envio === "TAKE_AWAY") && (
+          {onCobrar && pedido.estado_pedido === Estado.LISTO && pedido.tipo_envio === "TAKE_AWAY" && (
             <button
               onClick={e => {
                 e.stopPropagation();
