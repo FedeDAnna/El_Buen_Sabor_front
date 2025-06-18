@@ -330,7 +330,6 @@ export default function DetallePago() {
     pedido.sucursal = sucursal!;
     pedido.usuario = usuario!;
     pedido.repartidor = undefined;
-    pedido.factura = undefined;
     pedido.detalles = detalles;
     return pedido;
   } 
