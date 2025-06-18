@@ -9,6 +9,32 @@ import TablaPedidos from "./OrdenesTabla";
 import ModalOrden from "./OrdenModal";
 import ModalPago from "./ModalPago";
 
+
+// 1) Map de estados permitidos por rol
+const permisosPorRol: Record<string, (Estado | "")[]> = {
+  admin: [
+    "", Estado.PENDIENTE, Estado.CONFIRMADO,
+    Estado.EN_PREPARACION, Estado.DEMORADO,
+    Estado.LISTO, Estado.EN_CAMINO,
+    Estado.ENTREGADO, Estado.RECHAZADO
+  ],
+  cocinero: [
+    "", 
+    Estado.CONFIRMADO, Estado.EN_PREPARACION,
+    Estado.DEMORADO, Estado.LISTO
+  ],
+  repartidor: [
+    "", Estado.LISTO,
+    Estado.EN_CAMINO, Estado.ENTREGADO
+  ],
+  cajero: [
+    "", Estado.PENDIENTE, Estado.CONFIRMADO,
+    Estado.EN_PREPARACION, Estado.DEMORADO,
+    Estado.LISTO, Estado.EN_CAMINO,
+    Estado.ENTREGADO, Estado.RECHAZADO
+  ]
+};
+
 // 1) Incluimos "Todos" con value vacío
 const estadosDisponibles: { label: string; value: Estado | "" }[] = [
   { label: "Todos", value: "" },
@@ -36,12 +62,31 @@ export default function OrdenesPantalla() {
 
   const [modalPagoOpen, setModalPagoOpen] = useState(false);
   const [pedidoPago, setPedidoPago] = useState<Pedido | null>(null);
+  const [userRole, setUserRole] = useState<string>("");
+
+   useEffect(() => {
+    const stored = localStorage.getItem("usuario");
+    console.log("storrr",stored);
+    if (stored) {
+      try {
+        const u = JSON.parse(stored);
+        setUserRole(u.rol ?? u.role ?? "");
+      } catch {
+        setUserRole("");
+      }
+    }
+  }, []);
 
   useEffect(() => { cargarPedidos(); }, []);
   const cargarPedidos = async () => {
     const data = await getPedidos();
     setPedidos(data);
   };
+
+  // 5) Filtrar qué estados mostrar según rol
+  const estadosVisibles = estadosDisponibles.filter(est =>
+    permisosPorRol[userRole]?.includes(est.value)
+  );
 
   // 3) Si estadoSeleccionado es "", no filtramos por estado
   const pedidosFiltrados = pedidos.filter(p =>
@@ -99,7 +144,7 @@ export default function OrdenesPantalla() {
       <h2>📋 Pedidos</h2>
       <div className="barra-superior">
         <div className="filtros">
-          {estadosDisponibles.map(est => (
+          {estadosVisibles.map(est => (
             <button
               key={String(est.value)}
               onClick={() => setEstadoSeleccionado(est.value)}

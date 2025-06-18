@@ -17,7 +17,7 @@ function TablaPedidos({ pedidos , onSeleccionar, onEstadoChange,onCobrar}: Props
 
   return (
     <>
-      <table>
+      <table className="tabla-ordenes">
       <thead>
         <tr>
           <th>ORDEN</th>
