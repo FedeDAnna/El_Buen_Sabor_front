@@ -43,9 +43,6 @@ export default function App() {
 
             <Route path="/articulo/:id" element={<ProductoEnDetalleCliente/>} />
             <Route path="/carrito" element={<CarritoPage />} />
-
-            <Route path='/faq' element={<PreguntasFrecuentes />} />
-            <Route path="/terminos" element={<TerminosCondiciones />} />
             
             <Route path="/perfil/:usuarioId" element={<DatosPersonales />} />
             <Route path="/perfil/:usuarioId/editar" element={<EditarDatosPersonales />} />
@@ -65,6 +62,8 @@ export default function App() {
   
             <Route path="/historial-pedidos" element={<HistorialPedidos />} />
 
+            <Route path="/faq" element={<PreguntasFrecuentes />} />
+            <Route path="/terminos" element={<TerminosCondiciones />} />  
 
             <Route
               path="/admin/estadisticas"

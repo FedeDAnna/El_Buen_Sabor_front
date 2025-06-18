@@ -108,7 +108,7 @@ export async function getArticulosInsumoPorCategoria(idCategoria: number): Promi
 
 export async function getArticulosManufacturados(): Promise<ArticuloManufacturado[]>{
     
-    const res = await fetch(`${API_URL}/articulos_manufacturados/getAll`,
+    const res = await fetch(`${API_URL}/articulos_manufacturados`,
     {
     method: 'GET',
     credentials: 'include',  
