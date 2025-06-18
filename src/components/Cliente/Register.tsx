@@ -18,7 +18,9 @@ export default function Register() {
   const [fechaNacimiento, setFechaNacimiento] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
+
   const navigate = useNavigate();
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +37,7 @@ export default function Register() {
         telefono,
         email,
         fecha_nacimiento: fechaNacimiento,
-        password,
+        password,        
       });
 
       alert('Registro exitoso');
@@ -51,7 +53,11 @@ export default function Register() {
         <HamburgerIcon />
       </button>
 
-      <SidebarCliente isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <SidebarCliente
+              isOpen={sidebarOpen}
+              onClose={() => setSidebarOpen(false)}
+              onPromocionesClick={() => {navigate("/promociones");}}
+            />
 
       <main className="hp-main login-main">
         <section className="login-hero">

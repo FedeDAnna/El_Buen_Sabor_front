@@ -293,6 +293,7 @@ export async function fetchTiposCategoria(): Promise<TipoCategoria[]> {
   return res.json()
 }
 
+
 export async function getDomiciliosPorUsuario(idUsuario: number): Promise<Domicilio[]>{
     const res = await fetch(`${API_URL}/domicilios/ByUsuario/${idUsuario}`,
       {
@@ -326,8 +327,8 @@ export async function getSucursales(): Promise<Sucursal[]> {
   return res.json();
 }
 
-export async function fetchHistorialPedidosClientes(pagina: number): Promise<PedidoHistorialDTO[]> {
-  const res = await fetch(`${API_URL}/pedidos/byClientes/1?page=${pagina}&size=16`, {
+export async function fetchHistorialPedidosClientes(pagina: number, idUser: number): Promise<PedidoHistorialDTO[]> {
+  const res = await fetch(`${API_URL}/pedidos/byClientes/${idUser}?page=${pagina}&size=16`, {
     credentials: 'include',
     headers: { 'Authorization': `Basic ${basic}` }
   });
@@ -576,6 +577,48 @@ export async function deleteSucursalById(idSucuarsal :Number): Promise<boolean> 
 
 // PUT o PATCH
 
+export async function getPedidos(): Promise<Pedido[]>{
+    
+    const res = await fetch(`${API_URL}/pedidos`,
+    {
+    method: 'GET',
+    credentials: 'include',  
+    headers: {
+      'Authorization': `Basic ${basic}`,
+      'Content-Type': 'application/json'
+    }
+  }
+  );
+  if (!res.ok) throw new Error("Error al obtener pedidos");
+ const raw: any[] = await res.json()
+  return raw.map(p => ({
+    ...p,
+    fecha_pedido: DateTime.fromISO(p.fecha_pedido),
+    hora_estimada_finalizacion: DateTime.fromISO(p.hora_estimada_finalizacion)
+  }));
+}
+
+export async function updateEstadoPedido(
+  id: number,
+  nuevoEstado: Estado
+): Promise<void> {
+  const res = await fetch(`${API_URL}/pedidos/pedido/${id}`, {
+    method: "PATCH",                // o PUT si tu API lo espera
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      estadoPedido: nuevoEstado,   // campo segÃºn tu modelo
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Error ${res.status} actualizando pedido`);
+  }
+
+}
+
 export async function updateStockInsumo(
   insumoId: number,
   nuevoStock: number
@@ -629,14 +672,15 @@ export async function obtenerRolesEmpleados(): Promise<string[]> {
 }
 
 export async function crearUsuario(nuevoUsuario: Usuario): Promise<Usuario> {
-  const url = `${API_URL}/usuarios`;
+  const url = `${API_URL}/usuarios/registrarEncriptado`;
 
-  // Eliminar el ID si es 0 o si existe
   const usuarioSinId = { ...nuevoUsuario };
   if ('id' in usuarioSinId && (usuarioSinId.id === 0 || usuarioSinId.id === undefined || usuarioSinId.id === null)) {
     delete usuarioSinId.id;
   }
-console.log('Usuario a crear:', usuarioSinId)
+
+  console.log('Usuario a crear:', usuarioSinId);
+
   const response = await fetch(url, {
     method: 'POST',
     credentials: 'include',
@@ -648,11 +692,18 @@ console.log('Usuario a crear:', usuarioSinId)
   });
 
   if (!response.ok) {
-    throw new Error(`Error al crear usuario: ${response.statusText}`);
+    const texto = await response.text();
+    throw new Error(`Error al crear usuario: ${texto || response.statusText}`);
   }
 
-  return await response.json();
+  const contentType = response.headers.get("content-type");
+  if (contentType && contentType.includes("application/json")) {
+    return await response.json();
+  } else {
+    throw new Error("Respuesta inesperada del servidor (no es JSON).");
+  }
 }
+
 
 export async function actualizarUsuario(id: number, datosActualizados: Usuario): Promise<Usuario> {
   const url = `${API_URL}/usuarios?id=${id}`;
@@ -691,62 +742,6 @@ export async function eliminarUsuario(idUsuario: number): Promise<void> {
   }
 }
 
-
-export async function getPedidos(): Promise<Pedido[]>{
-    
-    const res = await fetch(`${API_URL}/pedidos`,
-    {
-    method: 'GET',
-    credentials: 'include',  
-    headers: {
-      'Authorization': `Basic ${basic}`,
-      'Content-Type': 'application/json'
-    }
-  }
-  );
-  if (!res.ok) throw new Error("Error al obtener pedidos");
- const raw: any[] = await res.json()
-  return raw.map(p => ({
-    ...p,
-    fecha_pedido: DateTime.fromISO(p.fecha_pedido),
-    hora_estimada_finalizacion: DateTime.fromISO(p.hora_estimada_finalizacion)
-  }));
-}
-
-export async function updateEstadoPedido(
-  id: number,
-  nuevoEstado: Estado
-): Promise<void> {
-  const res = await fetch(`${API_URL}/pedidos/pedido/${id}`, {
-    method: "PATCH",                // o PUT si tu API lo espera
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      estadoPedido: nuevoEstado,   // campo según tu modelo
-    }),
-  });
-
-  if (!res.ok) {
-    throw new Error(`Error ${res.status} actualizando pedido`);
-  }
-
-}
-
-export async function getProductosPorPedido(pedidoId: number): Promise<any[]> {
-  const res = await fetch(`${API_URL}/pedidos/manufacturados/${pedidoId}`, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Authorization': `Basic ${basic}`,
-      'Content-Type': 'application/json'
-    }
-  });
-
-  if (!res.ok) throw new Error(`Error ${res.status} al traer los productos`);
-  return res.json();
-}
 
 export async function getPedidoPorId(id: number): Promise<Pedido> {
   const res = await fetch(`${API_URL}/pedidos/${id}`, {
@@ -793,13 +788,20 @@ export async function registrarUsuario(dto: RegistroDTO): Promise<void> {
   });
 
   if (!res.ok) {
-    let errorMessage = `Error ${res.status} al registrar usuario`;
-    try {
-      const error = await res.json();
-      errorMessage = error.message || errorMessage;
-    } catch {
-      // El backend no devolvió JSON (ej: 500 sin body)
-    }
-    throw new Error(errorMessage);
+    throw new Error(`Error ${res.status} al eliminar usuario`);
   }
+}
+
+export async function getProductosPorPedido(pedidoId: number): Promise<any[]> {
+  const res = await fetch(`${API_URL}/pedidos/manufacturados/${pedidoId}`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Authorization': `Basic ${basic}`,
+      'Content-Type': 'application/json'
+    }
+  });
+
+  if (!res.ok) throw new Error(`Error ${res.status} al traer los productos`);
+  return res.json();
 }
