@@ -21,11 +21,11 @@ const permisosPorRol: Record<string, (Estado | "")[]> = {
   cocinero: [
     "", 
     Estado.CONFIRMADO, Estado.EN_PREPARACION,
-    Estado.DEMORADO, Estado.LISTO
+    Estado.DEMORADO, Estado.LISTO,
   ],
-  repartidor: [
+  delivery: [
     "", Estado.LISTO,
-    Estado.EN_CAMINO, Estado.ENTREGADO
+    Estado.EN_CAMINO, Estado.ENTREGADO,Estado.RECHAZADO
   ],
   cajero: [
     "", Estado.PENDIENTE, Estado.CONFIRMADO,
@@ -108,14 +108,11 @@ export default function OrdenesPantalla() {
   });
 
 
-  // 3) Si estadoSeleccionado es "", no filtramos por estado
   const pedidosFiltrados = pedidos.filter(p =>
-    (estadoSeleccionado === "" || p.estado_pedido === estadoSeleccionado) &&
-    `${p.usuario?.nombre ?? ""} ${p.usuario?.apellido ?? ""}`
-      .toLowerCase()
-      .includes(busqueda.toLowerCase())
-  );
-
+  (estadoSeleccionado === "" || p.estado_pedido === estadoSeleccionado) &&
+  (`${p.usuario?.nombre ?? ""} ${p.usuario?.apellido ?? ""}`.toLowerCase()
+    .includes(busqueda.toLowerCase()))
+);
   const totalPaginas = Math.ceil(pedidosFiltrados.length / ELEMENTOS_POR_PAGINA);
   const pedidosPaginados = pedidosFiltrados.slice(
     (paginaActual - 1) * ELEMENTOS_POR_PAGINA,

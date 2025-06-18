@@ -1,6 +1,6 @@
 import { useMemo, useEffect } from "react";
 import Pedido from "../../entidades/Pedido";
-import { updateEstadoPedido } from "../../services/FuncionesApi";
+import { updateEstadoPedido, updateRepartidorPedido } from "../../services/FuncionesApi";
 import { Estado } from "../../entidades/Estado";
 import '../../estilos/OrdenFila.css';
 import Swal from 'sweetalert2';
@@ -22,6 +22,13 @@ export default function OrdenFila({
   onCobrar
 }: Props) {
 
+  const usuarioJson = localStorage.getItem("usuario");
+  const userRole = usuarioJson ? JSON.parse(usuarioJson).rol : "";
+  console.log("esteeeeeeee"+userRole);
+  if (userRole === "DELIVERY" && pedido.tipo_envio !== "DELIVERY") {
+    return null;
+  }
+  
   useEffect(() => {
     if (pedido.estado_pedido === Estado.EN_PREPARACION) {
       const now = DateTime.local();
@@ -103,6 +110,10 @@ export default function OrdenFila({
   const handleNext = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!pedido.id || nextEstado === null) return;
+    // Antes de avanzar a EN_CAMINO, asigno repartidor
+    if (nextEstado === Estado.EN_CAMINO) {
+      await updateRepartidorPedido(pedido.id);
+    }
     await updateEstadoPedido(pedido.id, nextEstado);
     onEstadoChange();
   };

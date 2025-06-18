@@ -805,3 +805,30 @@ export async function getProductosPorPedido(pedidoId: number): Promise<any[]> {
   if (!res.ok) throw new Error(`Error ${res.status} al traer los productos`);
   return res.json();
 }
+
+//ver lo del localstorage
+export async function updateRepartidorPedido(pedidoId: number): Promise<Pedido> {
+  const usuarioJson = localStorage.getItem("usuario");
+  console.log("usuario: ",usuarioJson);
+  const idUsuario = usuarioJson ? JSON.parse(usuarioJson).id :0;
+  if (!usuarioJson) {
+    throw new Error("No hay usuario en localStorage bajo la clave 'usuario'");
+  }
+  //const { id: repartidorId } = JSON.parse(usuarioJson);
+
+  const res = await fetch(`${API_URL}/pedidos/pedido/repartidor`,{
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Basic ${basic}`,
+    },
+    body: JSON.stringify({ idPedido: pedidoId , idDelivery:idUsuario}),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Error ${res.status} al asignar repartidor al pedido`);
+  }
+
+  return res.json();
+}
