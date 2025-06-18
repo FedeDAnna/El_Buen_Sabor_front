@@ -10,6 +10,7 @@ import {
   deleteCategoriaById,
 } from '../../services/FuncionesApi'
 import type Categoria from '../../entidades/Categoria'
+import Swal from 'sweetalert2'
 
 export default function Productos() {
   const { idTipo } = useParams();
@@ -37,9 +38,40 @@ export default function Productos() {
       console.log("Categoria en HandleSave", cat)
       await guardarCategoriaConHijos(cat)
       await reload()
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: "success",
+        title: "Categoria creada/editada con exito"
+      });
     } catch (e) {
       console.error(e)
-      alert('Falló al guardar la categoría')
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: "error",
+        title: "Error al crear/editar la Categoria"
+      });
+      
+
     } finally {
       setModalAbierto(false)
       setCategoriaEnModal(undefined)

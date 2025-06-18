@@ -12,6 +12,9 @@ import type TipoCategoria from "../entidades/TipoCategoria";
 import type TipoPromocion from "../entidades/TipoPromocion";
 import type UnidadDeMedida from "../entidades/UnidadDeMedida";
 import type Usuario from "../entidades/Usuario";
+import type RegistroDTO from "../entidades/RegistroDTO";
+
+
 import type { PedidoHistorialDTO } from "../DTOs/DTO/PedidoHistorialDTO";
 
 const API_URL = "http://localhost:8080";
@@ -257,4 +260,47 @@ export async function deleteCategoriaById(idCategoria: Number): Promise<boolean>
   const res = await securedFetch(`/categorias/${idCategoria}`, { method: 'DELETE' });
   if (!res.ok) throw new Error(`Error ${res.status} al borrar la categoría`);
   return res.json();
+}
+
+
+// PUT o PATCH
+
+export async function updateStockInsumo(
+  insumoId: number,
+  nuevoStock: number
+): Promise<void> {
+  const res = await securedFetch(`/articulos_insumos/${insumoId}/stock`, {
+    method: 'PATCH',
+    body: JSON.stringify({ stockActual: nuevoStock, sucursalId: 1 })
+  });
+  if (!res.ok) throw new Error(`Error ${res.status} actualizando stock`);
+}
+
+export async function loginUsuario(email: string, password: string) {
+  const res = await fetch(`${API_URL}/usuarios/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+
+  if (!res.ok) {
+    const error = await res.json().catch(() => null);
+    throw new Error(error?.message || `Error ${res.status} al iniciar sesión`);
+  }
+
+  return res.json();
+}
+
+// registro: también sin token
+export async function registrarUsuario(dto: RegistroDTO) {
+  const res = await fetch(`${API_URL}/usuarios/registro`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(dto),
+  });
+
+  if (!res.ok) {
+    const error = await res.json().catch(() => null);
+    throw new Error(error?.message || `Error ${res.status} al registrar`);
+  }
 }

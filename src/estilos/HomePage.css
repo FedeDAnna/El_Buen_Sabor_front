@@ -1,6 +1,4 @@
-/* HomePage.css */
-
-/* Contenedor principal: ancho máximo y centrado */
+/* Contenedor principal */
 .hp-main {
   max-width: 1200px;
   margin: 0 auto;
@@ -8,14 +6,23 @@
   box-sizing: border-box;
 }
 
-/* Hero */
+/* Hero en fila: imagen izquierda, texto derecha */
 .hp-hero {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 2rem;
   margin-bottom: 3rem;
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
+
+.hp-hero.fade-out {
+  opacity: 0;
+  transform: scale(1.1);
+}
+
+/* Imagen */
 .hp-hero-img {
   flex: 1 1 320px;
   max-width: 480px;
@@ -23,8 +30,11 @@
   border-radius: 0.5rem;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
+
+/* Texto */
 .hp-hero-text {
   flex: 1 1 320px;
+  max-width: 500px;
 }
 .hp-hero-text h1 {
   margin: 0;
@@ -39,6 +49,7 @@
 .hp-hero-buttons {
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 .hp-btn {
   padding: 0.75rem 1.5rem;
@@ -59,13 +70,13 @@
   color: #222;
 }
 
-/* Carrusel de Categorías */
+/* Carrusel */
 .hp-carrusel-wrapper {
   max-width: 800px;
   margin: 0 auto 4rem;
 }
 
-/* Sección de Promociones por Tipo */
+/* Promociones */
 .hp-promos-section {
   margin-bottom: 4rem;
 }
@@ -77,15 +88,11 @@
   border-bottom: 2px solid #eee;
   padding-bottom: 0.5rem;
 }
-
-/* Grid de tarjetas de promoción */
 .hp-promos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 1.5rem;
 }
-
-/* Tarjeta de promoción */
 .hp-promo-card {
   background-color: #fff;
   border-radius: 0.5rem;
@@ -133,13 +140,35 @@
   margin: 0;
 }
 
-/* Responsivo menor ancho */
+/* Responsive */
 @media (max-width: 768px) {
   .hp-hero {
     flex-direction: column;
+    text-align: center;
   }
-  .hp-hero-img,
-  .hp-hero-text {
+  .hp-hero-text,
+  .hp-hero-img {
     max-width: 100%;
+  }
+  .hp-hero-text h1 {
+    font-size: 2rem;
+  }
+  .hp-hero-text p {
+    font-size: 1rem;
+  }
+}
+/* Animación de salida para el hero */
+.hp-hero.zoom-out {
+  animation: fadeZoomOut 0.6s ease forwards;
+}
+
+@keyframes fadeZoomOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
   }
 }

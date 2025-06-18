@@ -46,6 +46,8 @@ export default function Header() {
   const { isAuthenticated } = useAuth0();
   const { cartItems, total, removeFromCart, updateQuantity } = useCart();
 
+  const navigate = useNavigate();
+
   return (
     <header className="header">
       <div className="titulo">EL BUEN SABOR</div>
@@ -178,6 +180,40 @@ export default function Header() {
           <div className="header-profile-menu">
             <h4>Mi Cuenta</h4>
             <ul>
+              <li>
+                <button
+                  onClick={() => {
+                    setProfileOpen(false); // cerrar el menú
+                    navigate("/perfil");   // redirigir
+                  }}
+                  className="profile-menu-btn"
+                >
+                  <User size={20} /> Datos personales
+                </button>
+              </li>
+
+              <li>
+                <button
+                  onClick={() => {
+                    setProfileOpen(false); // cerrar el menú
+                    navigate("/perfil");   // redirigir
+                  }}
+                  className="profile-menu-btn"
+                >
+                  <User size={20} /> Historial de pedidos
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    setProfileOpen(false); // cerrar el menú
+                    navigate("/perfil");   // redirigir
+                  }}
+                  className="profile-menu-btn logout-btn"
+                >
+                  <User size={20} /> Cerrar Sesion
+                </button>
+              </li>
               {isAuthenticated ? (
                 <>
                   <li><ProfileButton /></li>
@@ -190,6 +226,7 @@ export default function Header() {
                 <li><LoginButton /></li>
               )}
             </ul>
+
           </div>
         )}
       </div>

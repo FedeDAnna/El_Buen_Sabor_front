@@ -12,6 +12,12 @@ import PedidoConfirmado from './components/Cliente/PedidoConfirmado';
 import TipoPromocionesTabla from './components/Promociones/TipoPromocionesTabla';
 import PromocionTabla from './components/Promociones/PromocionTabla';
 import PromocionEnDetalle from './components/Promociones/PromocionEnDetalle';
+import Login from './components/Cliente/Login';
+import Register from './components/Cliente/Register';
+import RutaProtegida from "./components/RutaProtegida";
+import { UserProvider } from "./contexts/UserContext";
+import Perfil from './components/Perfil';
+
 import Dashboard from './components/Estadisticas/Dashboard';
 import HistorialPedidos from './components/Cliente/HistorialPedidos';
 import InsumosCategoria from './components/Insumos/InsumosCategoria';
@@ -80,6 +86,16 @@ export default function App() {
               <AdminPantalla><PromocionTabla /></AdminPantalla>
             </AuthenticationGuard>
           } />
+
+          {/* Rutas Mauri Ver */}
+          <Route path="/perfil" element={
+            <AuthenticationGuard>
+                  <Perfil />
+            </AuthenticationGuard>
+          } />
+          {/* Login / Registro */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/registro" element={<Register />} />
           {/* Ruta por defecto */}
           <Route path="*" element={<p>Página no encontrada</p>} />
         </Routes>

@@ -39,11 +39,39 @@
   align-items: center;
 }
 
+.adp-img-wrapper {
+  position: relative;
+  display: inline-block;
+  
+}
+
 .adp-img {
   width: 100%;
   border-radius: 8px;
   object-fit: cover;
   margin-bottom: 1rem;
+}
+
+
+/* Cuando no hay stock */
+.adp-img-wrapper.no-stock-img img {
+  opacity: 0.4;
+}
+
+.adp-img-wrapper.no-stock-img::after {
+  content: "SIN STOCK 😢";
+  
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.5em 1em;
+  font-weight: bold;
+  color: #c00;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  pointer-events: none;
 }
 
 .adp-placeholder-img {
@@ -164,3 +192,4 @@
     width: 100%;
   }
 }
+

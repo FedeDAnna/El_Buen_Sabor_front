@@ -13,7 +13,8 @@ function isManufacturado(
     return 'tiempo_estimado_en_minutos' in p
   }
 
-type LocationState = { tipo: 'manufacturado' | 'insumo' }
+type LocationState = { tipo: 'manufacturado' | 'insumo', hasStock: boolean }
+
 
 export default function ProductoEnDetalleCliente() {
 
@@ -21,6 +22,7 @@ export default function ProductoEnDetalleCliente() {
   const { state } = useLocation() as { state: LocationState }
 
   console.log("TIPO", state.tipo)
+  console.log("hasStock", state.hasStock)
   const navigate = useNavigate()  
 
   const [articulo, setArticulo] = useState<ArticuloManufacturado | ArticuloInsumo>()
@@ -81,11 +83,13 @@ export default function ProductoEnDetalleCliente() {
             {/* Izquierda: imagen + precio + cantidad + botón */}
             <div className="adp-left">
               {articulo.imagen?.src ? (
-                <img
-                  src={articulo.imagen.src}
-                  alt={articulo.imagen.alt || articulo.denominacion}
-                  className="adp-img"
-                />
+                <div className={`adp-img-wrapper ${!state.hasStock ? 'no-stock-img' : ''}`}>
+                  <img
+                    src={articulo.imagen.src}
+                    alt={articulo.imagen.alt || articulo.denominacion}
+                    className="adp-img"
+                  />
+                </div>
               ) : (
                 <div className="adp-placeholder-img">
                   No hay imagen disponible
@@ -94,14 +98,15 @@ export default function ProductoEnDetalleCliente() {
 
               <div className="adp-precio-cantidad">
                 <div className="adp-quantity-selector">
-                  <button onClick={decrementar} className="adp-btn-qty">–</button>
+                  <button disabled={!state.hasStock} onClick={decrementar} className="adp-btn-qty">–</button>
                   <span className="adp-qty">{cantidad}</span>
-                  <button onClick={incrementar} className="adp-btn-qty">+</button>
+                  <button disabled={!state.hasStock} onClick={incrementar} className="adp-btn-qty">+</button>
                 </div>
                 <span className="adp-precio">
                   ${articulo.precio_venta.toLocaleString()}
                 </span>
                 <button
+                  disabled={!state.hasStock}
                   className="adp-btn-addcart"
                   onClick={handleAgregarAlCarrito}
                 >
