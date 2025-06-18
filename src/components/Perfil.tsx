@@ -9,11 +9,16 @@ export default function Perfil() {
 
   if (!user) return <p>Cargando...</p>;
 
+
+
   const cerrarSesion = () => {
     localStorage.removeItem('usuario');
     setUser(null);
     navigate('/Homepage');
   };
+
+
+  
 
   return (
     <div className="perfil-card">

@@ -5,6 +5,7 @@ import '../../estilos/Header.css';
 import { User, ClipboardList, LogOut, House } from 'lucide-react';
 import { useCart, type CartItem } from '../CartContext';
 import { Link } from 'react-router-dom';
+import { useUser } from '../../contexts/UserContext';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -13,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 export default function Header() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
-
+  const { user, setUser } = useUser();
   const { cartItems, total, removeFromCart, updateQuantity } = useCart();
 
   const navigate = useNavigate();
@@ -37,6 +38,12 @@ export default function Header() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [cartOpen, profileOpen]);
+
+  const cerrarSesion = () => {
+    localStorage.removeItem('usuario');
+    setUser(null);
+    navigate('/Homepage');
+  };
   return (
     <header className="header">
       
@@ -211,7 +218,7 @@ export default function Header() {
                 <button
                   onClick={() => {
                     setProfileOpen(false); // cerrar el menú
-                    navigate("/perfil");   // redirigir
+                    cerrarSesion();  // redirigir
                   }}
                   className="profile-menu-btn logout-btn"
                 >

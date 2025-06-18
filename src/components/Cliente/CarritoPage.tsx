@@ -10,8 +10,16 @@ export default function CarritoPage() {
   
 
   const handleSiguiente = () => {
-    navigate('/pedido/pago')
+  const user = localStorage.getItem('usuario');
+  if (!user) {
+    alert('Debés iniciar sesión para continuar con el pedido.');
+    navigate('/login');
+    return;
   }
+
+  navigate('/pedido/pago');
+};
+
 
   if (cartItems.length === 0) {
   return (

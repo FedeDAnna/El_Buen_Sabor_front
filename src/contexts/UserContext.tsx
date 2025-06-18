@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import Usuario from "../entidades/Usuario"; // ✅ importás tu clase con todos los campos
+import Usuario from "../entidades/Usuario"; // importás tu clase con todos los campos
 
 // Tipo del contexto
 type UserContextType = {
