@@ -445,6 +445,8 @@ export default function DetallePago() {
       const insumo = await getArticuloInsumoById(insumoId);
       const stockPrev = insumo.stock_insumo_sucursales?.[0]?.stock_actual ?? 0;
       const nuevoStock = stockPrev - qtyUsed;
+      console.log("Pre", stockPrev)
+      console.log("Nuevo",nuevoStock)
       // Llamo a tu endpoint de actualización de stock
       return updateStockInsumo(insumoId,nuevoStock);
     })

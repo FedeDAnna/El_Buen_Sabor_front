@@ -19,9 +19,7 @@ export default function TablaUsuarios({ tipo }: TipoUsuario) {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [rolesEmpleado, setRolesEmpleado] = useState<string[]>([]);
   const [modalAbierto, setModalAbierto] = useState(false);
-  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState<
-    Usuario | undefined
-  >(undefined);
+  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState<Usuario | undefined>(undefined);
   const [soloLectura, setSoloLectura] = useState(false);
   const [busqueda, setBusqueda] = useState("");
 
@@ -126,9 +124,34 @@ export default function TablaUsuarios({ tipo }: TipoUsuario) {
   }
 };
 
+  const validarFormulario = (): boolean => {
+
+    if (!usuarioSeleccionado) return false;
+    const camposRequeridos = [
+      usuarioSeleccionado.nombre,
+      usuarioSeleccionado.apellido,
+      usuarioSeleccionado.telefono,
+      usuarioSeleccionado.fecha_nacimiento,
+      usuarioSeleccionado.email,
+      ];
+    if (camposRequeridos.some((campo) => !campo || campo.toString().trim() === "")) {
+      return false;
+    }
+    if (tipo === "empleados" && !soloLectura && !usuarioSeleccionado.id) {
+      // Al crear un empleado, requiere contraseña y rol
+      if ( !usuarioSeleccionado.rol) {
+        return false;
+      }
+    }
+    return true;
+  };
+
 const guardarCambios = async () => {
   if (!usuarioSeleccionado) return;
-
+  if (!validarFormulario()) {
+      await Swal.fire({ icon: "warning", title: "Campos incompletos", text: "Por favor completa todos los campos requeridos." });
+      return;
+    }
   try {
     let usuarioGuardado: Usuario;
 
@@ -247,6 +270,7 @@ const guardarCambios = async () => {
                     value={usuarioSeleccionado?.nombre ?? ""}
                     onChange={handleInputChange}
                     readOnly={soloLectura}
+                    required
                   />
                 </label>
                 <label className="usuario-modal-label">
@@ -257,6 +281,7 @@ const guardarCambios = async () => {
                     value={usuarioSeleccionado?.apellido ?? ""}
                     onChange={handleInputChange}
                     readOnly={soloLectura}
+                    required
                   />
                 </label>
                 <label className="usuario-modal-label">
@@ -267,6 +292,7 @@ const guardarCambios = async () => {
                     value={usuarioSeleccionado?.telefono ?? ""}
                     onChange={handleInputChange}
                     readOnly={soloLectura}
+                    required
                   />
                 </label>
                 <label className="usuario-modal-label">
@@ -284,6 +310,7 @@ const guardarCambios = async () => {
                     }
                     onChange={handleInputChange}
                     readOnly={soloLectura}
+                    required
                   />
                 </label>
                 <label className="usuario-modal-label">
@@ -291,9 +318,11 @@ const guardarCambios = async () => {
                   <input
                     className="usuario-modal-input"
                     name="email"
+                    type="email"
                     value={usuarioSeleccionado?.email ?? ""}
                     onChange={handleInputChange}
                     readOnly={soloLectura}
+                    required
                   />
                 </label>
                 {tipo === "empleados" &&

@@ -81,12 +81,7 @@ export default function App() {
                 </RutaProtegida>
               } />
 
-              <Route path="/perfil/:usuarioId" element={
-                <RutaProtegida>
-                  <DatosPersonales />
-                </RutaProtegida>
-              } />
-
+              
             <Route path="/perfil/:usuarioId/editar" element={
               <RutaProtegida>
                 <EditarDatosPersonales />
@@ -95,7 +90,7 @@ export default function App() {
 
             <Route path="/perfil" element={
               <RutaProtegida>
-                <Perfil />
+                <DatosPersonales />
               </RutaProtegida>
             } />
 
@@ -113,7 +108,9 @@ export default function App() {
             
             <Route path="/admin/Ordenes" element={
               <RutaProtegida rol={[Rol.ADMIN, Rol.CAJERO, Rol.DELIVERY,Rol.COCINERO]}>
-                <OrdenesPantalla/>
+                <AdminPantalla>
+                  <OrdenesPantalla/>
+                </AdminPantalla>                
               </RutaProtegida>
             } />
 
@@ -126,7 +123,7 @@ export default function App() {
             } />
 
             <Route path="/admin/productos" element={
-              <RutaProtegida rol={[Rol.ADMIN]}>
+              <RutaProtegida rol={[Rol.ADMIN, Rol.COCINERO]}>
                 <AdminPantalla>
                   <Productos />
                 </AdminPantalla>
@@ -135,7 +132,7 @@ export default function App() {
           />
 
             <Route path="/admin/insumos/:categoriaId" element={
-              <RutaProtegida rol={[Rol.ADMIN]}>
+              <RutaProtegida rol={[Rol.ADMIN, Rol.COCINERO]}>
                 <AdminPantalla>
                   <InsumosCategoria />
                 </AdminPantalla>
@@ -143,7 +140,7 @@ export default function App() {
             } />
 
             <Route path="/admin/categorias/:idTipo" element={
-              <RutaProtegida rol={[Rol.ADMIN]}>
+              <RutaProtegida rol={[Rol.ADMIN, Rol.COCINERO]}>
                 <AdminPantalla>
                   <Productos />
                 </AdminPantalla>
@@ -151,7 +148,7 @@ export default function App() {
             } />
 
             <Route path="/admin/productos/:categoriaId" element={
-              <RutaProtegida rol={[Rol.ADMIN]}>
+              <RutaProtegida rol={[Rol.ADMIN, Rol.COCINERO]}>
                 <AdminPantalla>
                   <ProductosCategoria />
                 </AdminPantalla>
@@ -159,7 +156,7 @@ export default function App() {
             } />
 
             <Route path="/admin/tipoPromociones" element={
-              <RutaProtegida rol={[Rol.ADMIN]}>
+              <RutaProtegida rol={[Rol.ADMIN, Rol.COCINERO]}>
                 <AdminPantalla>
                   <TipoPromocionesTabla />
                 </AdminPantalla>
@@ -175,7 +172,7 @@ export default function App() {
             }/>
 
             <Route path="/admin/promocion/:tipoPromocionId" element={
-              <RutaProtegida rol={[Rol.ADMIN]}>
+              <RutaProtegida rol={[Rol.ADMIN, Rol.CAJERO]}>
                 <AdminPantalla>
                   <PromocionTabla />
                 </AdminPantalla>
