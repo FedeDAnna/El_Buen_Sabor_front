@@ -22,14 +22,13 @@ export default function Login() {
     e.preventDefault();
     try {
       const usuario = await loginUsuario(email, password);
-      localStorage.setItem("usuario", JSON.stringify(usuario)); // guarda en localStorage
-      setUser(usuario); // si usás context, también actualizás el estado global
-      navigate("/Homepage"); // redirige a pantalla protegida
+      localStorage.setItem("usuario", JSON.stringify(usuario)); 
+      setUser(usuario); 
+      navigate("/Homepage"); 
     } catch (error) {
       alert("Email o contraseña incorrectos");
     }
   };
-
 
   return (
     <>
@@ -37,7 +36,11 @@ export default function Login() {
         <HamburgerIcon />
       </button>
 
-      <SidebarCliente isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <SidebarCliente
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        onPromocionesClick={() => {navigate("/promociones");}}
+      />
 
       <main className="hp-main login-main">
         <section className="login-hero">

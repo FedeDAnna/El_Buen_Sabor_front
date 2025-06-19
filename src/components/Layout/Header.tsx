@@ -5,16 +5,18 @@ import '../../estilos/Header.css';
 import { User, ClipboardList, LogOut, House } from 'lucide-react';
 import { useCart, type CartItem } from '../CartContext';
 import { Link } from 'react-router-dom';
+import { useUser } from '../../contexts/UserContext';
 
 import { useNavigate } from 'react-router-dom';
+//import { useUser } from '../../contexts/UserContext';
 
 
 
 export default function Header() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
-
-  const { cartItems, total, removeFromCart, updateQuantity } = useCart();
+  const { user, setUser } = useUser();
+  const { cartItems, total, removeFromCart, updateQuantity, clearCart } = useCart();
 
   const navigate = useNavigate();
 
@@ -37,10 +39,23 @@ export default function Header() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [cartOpen, profileOpen]);
+  
+    const cerrarSesion = () => {
+    localStorage.removeItem('usuario');
+    setUser(null);
+    navigate('/Homepage');
+    };
   return (
+    
     <header className="header">
       
-      <div className="titulo">EL BUEN SABOR</div>
+      <div
+        className="titulo"
+        style={{ cursor: 'pointer' }}
+        onClick={() => navigate('/HomePage')}
+      >
+        EL BUEN SABOR
+      </div>
 
       {/* Carrito */}
       <div ref={cartRef}  className="header-cart-container">
@@ -178,7 +193,7 @@ export default function Header() {
             <h4>Mi Cuenta</h4>
             <ul>
               <li>             
-                  <button
+                <button
                   onClick={() => {
                     setProfileOpen(false); // cerrar el menú
                     navigate("/perfil");   // redirigir
@@ -211,7 +226,8 @@ export default function Header() {
                 <button
                   onClick={() => {
                     setProfileOpen(false); // cerrar el menú
-                    navigate("/perfil");   // redirigir
+                    clearCart();
+                    cerrarSesion();
                   }}
                   className="profile-menu-btn logout-btn"
                 >

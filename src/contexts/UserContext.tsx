@@ -1,43 +1,63 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import type { ReactNode } from "react";
-import Usuario from "../entidades/Usuario"; // ✅ importás tu clase con todos los campos
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
+import Usuario from "../entidades/Usuario";
+import { Rol } from "../entidades/Rol";
 
 // Tipo del contexto
 type UserContextType = {
   user: Usuario | null;
+  loading: boolean;
   setUser: (user: Usuario | null) => void;
 };
 
-// Creamos el contexto tipado
+// Contexto
 const UserContext = createContext<UserContextType | null>(null);
 
-// Props que recibe el provider (los hijos de la app)
 type Props = {
   children: ReactNode;
 };
 
 export const UserProvider = ({ children }: Props) => {
   const [user, setUser] = useState<Usuario | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Al iniciar la app, intenta cargar el usuario desde localStorage
   useEffect(() => {
-    const userFromStorage = localStorage.getItem("usuario");
-    if (userFromStorage) {
-      const usuarioParseado = JSON.parse(userFromStorage);
-      usuarioParseado.fechaNacimiento = new Date(usuarioParseado.fechaNacimiento); // por si querés usarlo como Date
-      setUser(usuarioParseado);
+    try {
+      const raw = localStorage.getItem("usuario");
+      if (raw) {
+        const usuario = JSON.parse(raw);
+
+        // Normalizar campos importantes
+        usuario.fecha_nacimiento = new Date(usuario.fecha_nacimiento);
+
+        const rolNormalizado = usuario.rol?.toUpperCase();
+        usuario.rol = Object.values(Rol).includes(rolNormalizado as Rol)
+          ? (rolNormalizado as Rol)
+          : null;
+
+        console.log("✅ Usuario cargado desde localStorage:", usuario);
+        setUser(usuario);
+      }
+    } catch (error) {
+      console.error("❌ Error al parsear el usuario desde localStorage:", error);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, loading }}>
       {children}
     </UserContext.Provider>
   );
 };
 
-// Hook para usar el contexto
-export const useUser = () => {
+export const useUser = (): UserContextType => {
   const context = useContext(UserContext);
   if (!context) throw new Error("useUser debe usarse dentro de <UserProvider>");
   return context;

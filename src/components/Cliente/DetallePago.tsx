@@ -98,11 +98,16 @@ export default function DetallePago() {
     setHorarioOk(abierto)
   }
   
+  const usuarioJSON = localStorage.getItem('usuario');
+  // Convertir el string JSON en un objeto JavaScript
+  const usuarioLog = JSON.parse(usuarioJSON!);
+  // Acceder al id del usuario
+  const idUsuario = usuarioLog.id;
 
   useEffect(() => {
     async function cargarDatos() {
       try {
-        const user = await getUsuarioById(1);
+        const user = await getUsuarioById(idUsuario);
         setUsuario(user);
         setDomicilios(user.domicilios);
         if (user.domicilios.length > 0) setSelectedDomId(user.domicilios[0].id);
@@ -330,7 +335,6 @@ export default function DetallePago() {
     pedido.sucursal = sucursal!;
     pedido.usuario = usuario!;
     pedido.repartidor = undefined;
-    pedido.factura = undefined;
     pedido.detalles = detalles;
     return pedido;
   } 
@@ -338,19 +342,40 @@ export default function DetallePago() {
   
   const handleFinalizar = async () => {
 
-    await CheckearHorario();
+     const now = DateTime.local();
 
-    if(!horarioOk){
-      Swal.fire({
-        title: "Local Cerrado!",
-        text: "Lo sentimos, usted se encuentra fuera del horario de atencion de la Sucursal",
-        imageUrl: "/imagenes/Cerrado.png",
-        imageWidth: 400,
-        imageHeight: 200,
-        imageAlt: "Custom image"
-      });
-      return
-    }
+      // sacamos strings "HH:mm:ss" de apertura y cierre
+      const aperturaStr =
+        typeof sucursal!.horario_apertura === 'string'
+          ? sucursal!.horario_apertura
+          : DateTime.fromJSDate(sucursal!.horario_apertura).toFormat('HH:mm:ss');
+      const cierreStr =
+        typeof sucursal!.horario_cierre === 'string'
+          ? sucursal!.horario_cierre
+          : DateTime.fromJSDate(sucursal!.horario_cierre).toFormat('HH:mm:ss');
+
+      // parseamos horas y minutos
+      const [hA, mA] = aperturaStr.split(':').map(Number);
+      const [hC, mC] = cierreStr.split(':').map(Number);
+
+      // clonamos now con esas horas
+      const apertura = now.set({ hour: hA, minute: mA, second: 0, millisecond: 0 });
+      const cierre = now.set({ hour: hC, minute: mC, second: 0, millisecond: 0 });
+
+      const abierto = now >= apertura && now <= cierre;
+
+      if (!abierto) {
+        // --- 2) si está cerrado, mostramos mensaje y NO prosigue ---
+        return Swal.fire({
+          title: "Local Cerrado!",
+          text: `Lo sentimos, estamos fuera del horario de atención (${aperturaStr}–${cierreStr}).`,
+          icon: "warning",
+          imageUrl: "/imagenes/Cerrado.png",
+          imageWidth: 400,
+          imageHeight: 200,
+          imageAlt: "Sucursal cerrada"
+        });
+      }
    
     
     const pedido = generarPedido();
@@ -420,6 +445,8 @@ export default function DetallePago() {
       const insumo = await getArticuloInsumoById(insumoId);
       const stockPrev = insumo.stock_insumo_sucursales?.[0]?.stock_actual ?? 0;
       const nuevoStock = stockPrev - qtyUsed;
+      console.log("Pre", stockPrev)
+      console.log("Nuevo",nuevoStock)
       // Llamo a tu endpoint de actualización de stock
       return updateStockInsumo(insumoId,nuevoStock);
     })
@@ -434,7 +461,7 @@ export default function DetallePago() {
   };
 
   return (
-    <section className="dp-container">
+    <section className="dp-container-final">
       <h2>Detalle del pago</h2>
       {stockLoading && <p>Validando stock…</p>}
       {!stockOk && !stockLoading && (

@@ -8,7 +8,7 @@ type Props = {
   pedidos: Pedido[];
   onSeleccionar: (pedido: Pedido) => void;
   onEstadoChange: () => void;
-  onCobrar: (p: Pedido) => void; 
+  onCobrar?: (p: Pedido) => void;
 };
 
 function TablaPedidos({ pedidos , onSeleccionar, onEstadoChange,onCobrar}: Props) {
@@ -17,7 +17,7 @@ function TablaPedidos({ pedidos , onSeleccionar, onEstadoChange,onCobrar}: Props
 
   return (
     <>
-      <table>
+      <table className="tabla-ordenes">
       <thead>
         <tr>
           <th>ORDEN</th>
