@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Usuario from "../entidades/Usuario";
-import { useCart, type CartItem } from '../components/CartContext';
 import {
   obtenerUsuariosPorTipo,
   obtenerRolesEmpleados,

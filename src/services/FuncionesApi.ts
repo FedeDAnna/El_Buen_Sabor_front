@@ -574,7 +574,6 @@ export async function deleteSucursalById(idSucuarsal :Number): Promise<boolean> 
   return res.json()
 }
 
-
 // PUT o PATCH
 
 export async function getPedidos(): Promise<Pedido[]>{
@@ -744,7 +743,6 @@ export async function eliminarUsuario(idUsuario: number): Promise<void> {
     throw new Error(`Error ${res.status} al eliminar usuario`);
   }
 }
-
 
 export async function getPedidoPorId(id: number): Promise<Pedido> {
   const res = await fetch(`${API_URL}/pedidos/${id}`, {
