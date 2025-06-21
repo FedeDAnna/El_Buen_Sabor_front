@@ -19,12 +19,11 @@ const permisosPorRol: Record<string, (Estado | "")[]> = {
     Estado.ENTREGADO, Estado.RECHAZADO
   ],
   cocinero: [
-    "", 
     Estado.CONFIRMADO, Estado.EN_PREPARACION,
     Estado.DEMORADO, Estado.LISTO, Estado.RECHAZADO
   ],
   delivery: [
-    "", Estado.LISTO,
+     Estado.LISTO,
     Estado.EN_CAMINO, Estado.ENTREGADO, Estado.RECHAZADO
   ],
   cajero: [
@@ -82,7 +81,16 @@ export default function OrdenesPantalla() {
       }
     }
   }, []);
-
+   // Al cambiar userRole, establecer filtro inicial solo para cocinero y delivery
+  useEffect(() => {
+    if (estadoSeleccionado === "") {
+      if (userRole === "cocinero") {
+        setEstadoSeleccionado(Estado.CONFIRMADO);
+      } else if (userRole === "delivery") {
+        setEstadoSeleccionado(Estado.LISTO);
+      }
+    }
+  }, [userRole]);
   useEffect(() => { cargarPedidos(); }, []);
   const cargarPedidos = async () => {
     const data = await getPedidos();
@@ -97,7 +105,6 @@ export default function OrdenesPantalla() {
   const estadosVisibles = estadosDisponibles.filter(est =>
     permisosPorRol[userRole]?.includes(est.value)
   );
-  console.log("ESTADOOS", estadosVisibles)  //ESTO TRAE EL ESTADO VACIO
   // Al final de la sección de hooks, justo tras estadosVisibles:
   const estadosAMostrar = estadosVisibles.filter(est => {
     // si es el botón "Todos" (value === "") y el rol es cocinero o delivery, lo quitamos
@@ -108,11 +115,15 @@ export default function OrdenesPantalla() {
   });
 
 
-  const pedidosFiltrados = pedidos.filter(p =>
-  (estadoSeleccionado === "" || p.estado_pedido === estadoSeleccionado) &&
-  (`${p.usuario?.nombre ?? ""} ${p.usuario?.apellido ?? ""}`.toLowerCase()
-    .includes(busqueda.toLowerCase()))
-);
+    const pedidosFiltrados = pedidos.filter(p => {
+    const matchEstado = estadoSeleccionado === "" || p.estado_pedido === estadoSeleccionado;
+    const termino = busqueda.toLowerCase();
+    const nombre = `${p.usuario?.nombre ?? ""} ${p.usuario?.apellido ?? ""}`.toLowerCase();
+    const matchNombre = nombre.includes(termino);
+    const matchId = p.id?.toString().includes(termino);
+    return matchEstado && (matchNombre || matchId);
+  });
+
   const totalPaginas = Math.ceil(pedidosFiltrados.length / ELEMENTOS_POR_PAGINA);
   const pedidosPaginados = pedidosFiltrados.slice(
     (paginaActual - 1) * ELEMENTOS_POR_PAGINA,
@@ -151,7 +162,7 @@ export default function OrdenesPantalla() {
         <div className="buscador">
           <input
             type="text"
-            placeholder="Buscar cliente..."
+            placeholder="Buscar pedido..."
             value={busqueda}
             onChange={e => setBusqueda(e.target.value)}
           />
