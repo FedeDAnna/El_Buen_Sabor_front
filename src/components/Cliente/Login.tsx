@@ -22,14 +22,13 @@ export default function Login() {
     e.preventDefault();
     try {
       const usuario = await loginUsuario(email, password);
-      localStorage.setItem("usuario", JSON.stringify(usuario)); // guarda en localStorage
-      setUser(usuario); // si usás context, también actualizás el estado global
-      navigate("/Homepage"); // redirige a pantalla protegida
+      localStorage.setItem("usuario", JSON.stringify(usuario)); 
+      setUser(usuario); 
+      navigate("/Homepage"); 
     } catch (error) {
       alert("Email o contraseña incorrectos");
     }
   };
-
 
   return (
     <>
