@@ -573,7 +573,6 @@ export async function deleteSucursalById(idSucuarsal :Number): Promise<boolean> 
   return res.json()
 }
 
-
 // PUT o PATCH
 
 export async function getPedidos(): Promise<Pedido[]>{
@@ -622,6 +621,7 @@ export async function updateStockInsumo(
   insumoId: number,
   nuevoStock: number
 ): Promise<void> {
+  console.log(insumoId , nuevoStock)
   const res = await fetch(`${API_URL}/articulos_insumos/${insumoId}/stock`, {
     method: 'PATCH',
     credentials: 'include',
@@ -632,7 +632,9 @@ export async function updateStockInsumo(
     body: JSON.stringify({ stockActual: nuevoStock , sucursalId: 1 })
   });
   if (!res.ok) throw new Error(`Error ${res.status} actualizando stock`);
-}export async function obtenerUsuariosPorTipo(tipo: 'empleados' | 'clientes'): Promise<Usuario[]> {
+}
+
+export async function obtenerUsuariosPorTipo(tipo: 'empleados' | 'clientes'): Promise<Usuario[]> {
   const url = `${API_URL}/usuarios/${tipo}`;
 
   const res = await fetch(url, {
@@ -741,7 +743,6 @@ export async function eliminarUsuario(idUsuario: number): Promise<void> {
   }
 }
 
-
 export async function getPedidoPorId(id: number): Promise<Pedido> {
   const res = await fetch(`${API_URL}/pedidos/${id}`, {
     method: 'GET',
@@ -808,19 +809,21 @@ export async function getProductosPorPedido(pedidoId: number): Promise<any[]> {
 //ver lo del localstorage
 export async function updateRepartidorPedido(pedidoId: number): Promise<Pedido> {
   const usuarioJson = localStorage.getItem("usuario");
+  console.log("usuario: ",usuarioJson);
+  const idUsuario = usuarioJson ? JSON.parse(usuarioJson).id :0;
   if (!usuarioJson) {
     throw new Error("No hay usuario en localStorage bajo la clave 'usuario'");
   }
-  const { id: repartidorId } = JSON.parse(usuarioJson);
+  //const { id: repartidorId } = JSON.parse(usuarioJson);
 
-  const res = await fetch(`${API_URL}/pedidos/${pedidoId}`, {
+  const res = await fetch(`${API_URL}/pedidos/pedido/repartidor`,{
     method: "PUT",
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Basic ${basic}`,
     },
-    body: JSON.stringify({ repartidorId }),
+    body: JSON.stringify({ idPedido: pedidoId , idDelivery:idUsuario}),
   });
 
   if (!res.ok) {

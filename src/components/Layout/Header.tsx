@@ -5,9 +5,10 @@ import '../../estilos/Header.css';
 import { User, ClipboardList, LogOut, House } from 'lucide-react';
 import { useCart, type CartItem } from '../CartContext';
 import { Link } from 'react-router-dom';
+import { useUser } from '../../contexts/UserContext';
 
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../../contexts/UserContext';
+//import { useUser } from '../../contexts/UserContext';
 
 
 
