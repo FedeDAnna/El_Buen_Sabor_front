@@ -1,7 +1,6 @@
 import { useMemo, useEffect } from "react";
 import Pedido from "../../entidades/Pedido";
 import { updateEstadoPedido, updateRepartidorPedido } from "../../services/FuncionesApi";
-import { updateEstadoPedido, updateRepartidorPedido } from "../../services/FuncionesApi";
 import { Estado } from "../../entidades/Estado";
 import '../../estilos/OrdenFila.css';
 import Swal from 'sweetalert2';
@@ -30,12 +29,7 @@ export default function OrdenFila({
     return null;
   }
   
-  const usuarioJson = localStorage.getItem("usuario");
-  const userRole = usuarioJson ? JSON.parse(usuarioJson).rol : "";
-  console.log("esteeeeeeee"+userRole);
-  if (userRole === "DELIVERY" && pedido.tipo_envio !== "DELIVERY") {
-    return null;
-  }
+ 
   
   useEffect(() => {
     if (pedido.estado_pedido === Estado.EN_PREPARACION) {
