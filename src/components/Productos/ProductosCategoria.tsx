@@ -18,7 +18,7 @@ export default function ProductosCategoria() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [editable, setEditable] = useState<boolean>();
-
+  const [busqueda, setBusqueda] = useState("");
   const [prodModalOpen, setProdModalOpen] = useState(false);
   const [modalProducto, setModalProductoId] = useState<ArticuloManufacturado | undefined>(undefined);
   const [categoria, setCategoria] = useState<Categoria | undefined>();
@@ -73,9 +73,21 @@ export default function ProductosCategoria() {
         });
     };
   }
-
+  const articulosFiltrados = articulos.filter(p =>
+    p.denominacion.toLowerCase().includes(busqueda.trim().toLowerCase())
+  );
   return (
     <section className="products-page">
+      <div className="buscador-contenedor">
+        <div className="buscador">
+          <input
+            type="text"
+            placeholder="Buscar producto..."
+            value={busqueda}
+            onChange={e => setBusqueda(e.target.value)}
+          />
+        </div>
+      </div>
       <div className="header">
         <h2>Productos de: {categoria?.denominacion}</h2>
         <button onClick={() => openModal(true,true)}>Agregar +</button>
@@ -93,7 +105,7 @@ export default function ProductosCategoria() {
           </tr>
         </thead>
         <tbody>
-          {articulos.map((a) => (
+          {articulosFiltrados.map((a) => (
             <tr key={a.id}>
               <td>{a.id}</td>
               <td>{a.denominacion}</td>

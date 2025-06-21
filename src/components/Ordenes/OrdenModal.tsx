@@ -25,7 +25,10 @@ type Props = {
 };
 
 export default function ModalOrden({ pedido, onClose, onEstadoChange,onCobrar }: Props) {
-  console.log("pedido",pedido);
+  // Obtener rol del usuario logueado
+  const usuarioJson = localStorage.getItem("usuario");
+  const userRole: string = usuarioJson ? JSON.parse(usuarioJson).rol : "";
+
   const [pestañaActiva, setPestañaActiva] = useState<
     "detalles" | "productos" | "factura"
   >("detalles");
@@ -276,34 +279,35 @@ export default function ModalOrden({ pedido, onClose, onEstadoChange,onCobrar }:
           )}
         </div>
 
-        {/* Footer con acciones */}
-        <div className="modal-footer">
-          <div>
-            {nextEstado && (
-              <button disabled={loading} onClick={handleNext}>
-                {label}
-              </button>
-            )}
-            {/* Si está LISTO y es TAKE_AWAY: Cobrar */}
-          {(pedido.estado_pedido === Estado.LISTO && pedido.tipo_envio === "TAKE_AWAY") && (
-            <button
-              onClick={e => {
-                onClose();
-                e.stopPropagation();
-                onCobrar(pedido);
-              }}
-              className="primary"
-            >
-              Cobrar
-            </button>
-          )}
-            {pedido.estado_pedido !== Estado.RECHAZADO && (
-              <button disabled={loading} className="danger" onClick={onClose}>
-                Cancelar
-              </button>
-            )}
+        {/* Footer con acciones: ocultar si es COCINERO */}
+        {userRole !== "COCINERO" && (
+          <div className="modal-footer">
+            <div>
+              {nextEstado && (
+                <button disabled={loading} onClick={handleNext}>
+                  {label}
+                </button>
+              )}
+              {(pedido.estado_pedido === Estado.LISTO && pedido.tipo_envio === "TAKE_AWAY") && (
+                <button
+                  onClick={e => {
+                    onClose();
+                    e.stopPropagation();
+                    onCobrar(pedido);
+                  }}
+                  className="primary"
+                >
+                  Cobrar
+                </button>
+              )}
+              {pedido.estado_pedido !== Estado.RECHAZADO && (
+                <button disabled={loading} className="danger" onClick={onClose}>
+                  Cancelar
+                </button>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
