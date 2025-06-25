@@ -14,6 +14,7 @@ import {
 import { DateTime } from 'luxon'
 import type Articulo from '../../entidades/Articulo'
 import Swal from 'sweetalert2'
+import PromocionDetalle from '../../entidades/PromocionDetalle'
 
 interface Props {
   initialData?: Promocion
@@ -23,7 +24,12 @@ interface Props {
   onSave: (promo: Promocion) => void
 }
 
-type Row = { id: string; articulo?: Articulo }
+type Row = {
+  rowId: string
+  detalleId?: number
+  articulo?: Articulo
+  cantidad: number
+}
 
 export default function PromocionModal({
   initialData,
@@ -40,12 +46,13 @@ export default function PromocionModal({
   const [horaHasta, setHoraHasta] = useState('')
   const [descripcionDescuento, setDescripcionDescuento] = useState('')
   const [imagenData, setImagenData] = useState<string>()
+  
   const [rows, setRows] = useState<Row[]>([])
   const [articulosOptions, setArticulosOptions] = useState<(ArticuloManufacturado|ArticuloInsumo)[]>([])
   const [precioProm, setPrecioProm] = useState<number>(0)
   const [sugerencia, setSugerencia] = useState<number | 'otro'>(10)
 
-  console.log("INCIAL DATA",initialData)
+  
 
   // load options & initial
   useEffect(() => {
@@ -65,7 +72,14 @@ export default function PromocionModal({
       if (initialData.imagen) setImagenData(initialData.imagen.src)
       // rows
       //! CHECKEAR
-      setRows(initialData.articulos.map(a => ({ id: uuid(), articulo: a })))
+      setRows(
+        initialData.detalles!.map(det => ({
+          rowId: uuid(),
+          detalleId: det.id,
+          articulo: det.articulo,
+          cantidad: det.cantidad,
+        }))
+      )
     }
   }, [])
 
@@ -78,19 +92,33 @@ export default function PromocionModal({
    }
   }, [rows, sugerencia])
 
-  const addRow = () => setRows(rs => [...rs, { id: uuid() }])
-  const removeRow = (id: string) => setRows(rs => rs.filter(r=>r.id!==id))
-  const updateRow = (id:string, articuloId:number) => {
-    const art = articulosOptions.find(a=>a.id===articuloId)
-    setRows(rs => rs.map(r=>r.id===id?{...r,articulo:art}:r))
+
+  const addRow = () =>
+    setRows(r => [...r, { rowId: uuid(), cantidad: 1 }])
+  const removeRow = (rowId: string) =>
+    setRows(r => r.filter(x => x.rowId !== rowId))
+  const updateArticulo = (rowId: string, artId: number) => {
+    const art = articulosOptions.find(a => a.id === artId)
+    setRows(r =>
+      r.map(x =>
+        x.rowId === rowId ? { ...x, articulo: art } : x
+      )
+    )
+  }
+  const updateCantidad = (rowId: string, qty: number) => {
+    setRows(r =>
+      r.map(x =>
+        x.rowId === rowId ? { ...x, cantidad: qty } : x
+      )
+    )
   }
 
-  const handleImage = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
     const reader = new FileReader()
-    reader.onload = ()=>{
-      if (typeof reader.result==='string') setImagenData(reader.result)
+    reader.onload = () => {
+      if (typeof reader.result === 'string') setImagenData(reader.result)
     }
     reader.readAsDataURL(file)
   }
@@ -109,8 +137,17 @@ export default function PromocionModal({
     promo.descripcion_descuento = descripcionDescuento
     promo.precio_promocional = Number(precioProm)
     if (imagenData) promo.imagen = { src: imagenData, alt: denominacion } as Imagen
-    promo.articulos = rows.map(r=>r.articulo!).filter(Boolean)
-    console.log(promo)
+
+    promo.detalles = rows
+    .filter(r => r.articulo)
+    .map(r => {
+      const det = new PromocionDetalle()
+      if (r.detalleId) det.id = r.detalleId
+      det.articulo = r.articulo
+      det.cantidad = r.cantidad
+      return det
+    })
+    console.log(promo.detalles)
     try {
     const promocion : Promocion = await postPromocion(promo)
     onSave(promocion)
@@ -154,65 +191,189 @@ export default function PromocionModal({
     <div className="pm-overlay">
       <div className="pm-modal wide">
         <header className="pm-header">
-          <h2>{initialData ? (editable?'Editar':'Ver'):'Nueva'} Promoción</h2>
-          <button className="pm-close" onClick={onClose}>×</button>
+          <h2>
+            {initialData
+              ? editable
+                ? 'Editar Promoción'
+                : 'Ver Promoción'
+              : 'Nueva Promoción'}
+          </h2>
+          <button className="pm-close" onClick={onClose}>
+            ×
+          </button>
         </header>
         <form className="pm-body" onSubmit={handleSubmit}>
-          <input value={denominacion} onChange={e=>setDenominacion(e.target.value)} placeholder="Denominación" readOnly={!editable}/>
+          <input
+            value={denominacion}
+            onChange={e => setDenominacion(e.target.value)}
+            placeholder="Denominación"
+            readOnly={!editable}
+          />
           <div className="date-time-group">
-            <input type="date" value={fechaDesde} onChange={e=>setFechaDesde(e.target.value)} readOnly={!editable}/>
-            <input type="date" value={fechaHasta} onChange={e=>setFechaHasta(e.target.value)} readOnly={!editable}/>
-            <input type="time" value={horaDesde} onChange={e=>setHoraDesde(e.target.value)} readOnly={!editable}/>
-            <input type="time" value={horaHasta} onChange={e=>setHoraHasta(e.target.value)} readOnly={!editable}/>
+            <input
+              type="date"
+              value={fechaDesde}
+              onChange={e => setFechaDesde(e.target.value)}
+              readOnly={!editable}
+            />
+            <input
+              type="date"
+              value={fechaHasta}
+              onChange={e => setFechaHasta(e.target.value)}
+              readOnly={!editable}
+            />
+            <input
+              type="time"
+              value={horaDesde}
+              onChange={e => setHoraDesde(e.target.value)}
+              readOnly={!editable}
+            />
+            <input
+              type="time"
+              value={horaHasta}
+              onChange={e => setHoraHasta(e.target.value)}
+              readOnly={!editable}
+            />
           </div>
-          <input value={descripcionDescuento} onChange={e=>setDescripcionDescuento(e.target.value)} placeholder="Descripción de Descuento" readOnly={!editable}/>
+          <input
+            value={descripcionDescuento}
+            onChange={e => setDescripcionDescuento(e.target.value)}
+            placeholder="Descripción de Descuento"
+            readOnly={!editable}
+          />
+
           <div className="pm-img-upload">
-            {imagenData && <img src={imagenData} alt="" className="preview"/>}
-            <input type="file" accept="image/*" onChange={handleImage} disabled={!editable}/>
+            {imagenData && (
+              <img src={imagenData} alt="" className="preview" />
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              disabled={!editable}
+              onChange={handleFile}
+            />
           </div>
 
-          <h3>Artículos</h3>
+          <h3>Artículos en Promoción</h3>
           <table className="pm-articles-table">
-            <thead><tr><th>Artículo</th><th></th></tr></thead>
+            <thead>
+              <tr>
+                <th>Artículo</th>
+                <th>Cantidad</th>
+                <th></th>
+              </tr>
+            </thead>
             <tbody>
-              {rows.map(r=>(
-                <tr key={r.id}>
+              {rows.map(r => (
+                <tr key={r.rowId}>
                   <td>
-                    <select disabled={!editable} value={r.articulo?.id||''} onChange={e=>updateRow(r.id,Number(e.target.value))}>
-                      <option value="" disabled>Seleccione...</option>
-                      {articulosOptions.map(a=>(
-                        <option key={a.id} value={a.id}>{a.denominacion}</option>
+                    <select
+                      disabled={!editable}
+                      value={r.articulo?.id || ''}
+                      onChange={e =>
+                        updateArticulo(r.rowId, Number(e.target.value))
+                      }
+                    >
+                      <option value="" disabled>
+                        Seleccione...
+                      </option>
+                      {articulosOptions.map(a => (
+                        <option key={a.id} value={a.id}>
+                          {a.denominacion}
+                        </option>
                       ))}
                     </select>
                   </td>
-                  <td><button type="button" disabled={!editable} onClick={()=>removeRow(r.id)}>🗑️</button></td>
+                  <td>
+                    <input
+                      type="number"
+                      min={1}
+                      value={r.cantidad}
+                      onChange={e =>
+                        updateCantidad(r.rowId, Number(e.target.value))
+                      }
+                      readOnly={!editable}
+                    />
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      disabled={!editable}
+                      onClick={() => removeRow(r.rowId)}
+                    >
+                      🗑️
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          {editable && <button type="button" className="btn-add-article" onClick={addRow}>Ingresar Artículo</button>}
+          {editable && (
+            <button
+              type="button"
+              className="btn-add-article"
+              onClick={addRow}
+            >
+              + Agregar Artículo
+            </button>
+          )}
 
           <div className="pm-price-group">
             <div>
-              <label>Total artículos: </label><span>${rows.reduce((s,r)=>(s+r.articulo?.precio_venta!||0),0)}</span>
+              <label>Total artículos:</label>
+              <span>
+                $
+                {rows.reduce(
+                  (s, r) =>
+                    s + (r.articulo?.precio_venta || 0) * r.cantidad,
+                  0
+                )}
+              </span>
             </div>
             <div>
               <label>Descuento:</label>
-              <select disabled={!editable} value={sugerencia} onChange={e=>setSugerencia(e.target.value==='otro'?'otro':Number(e.target.value))}>
-                {[10,15,20,30,50].map(p=> <option key={p} value={p}>{p}%</option>)}
+              <select
+                disabled={!editable}
+                value={sugerencia}
+                onChange={e =>
+                  setSugerencia(
+                    e.target.value === 'otro'
+                      ? 'otro'
+                      : Number(e.target.value)
+                  )
+                }
+              >
+                {[10, 15, 20, 30, 50].map(p => (
+                  <option key={p} value={p}>
+                    {p}%
+                  </option>
+                ))}
                 <option value="otro">Otro</option>
               </select>
             </div>
             <div>
               <label>Precio promocional:</label>
-              <input type="number" value={precioProm} onChange={e=>setPrecioProm(Number(e.target.value))} readOnly={!editable && sugerencia!=='otro'} min={0} />
+              <input
+                type="number"
+                value={precioProm}
+                min={0}
+                readOnly={!editable && sugerencia !== 'otro'}
+                onChange={e => setPrecioProm(Number(e.target.value))}
+              />
             </div>
           </div>
-
         </form>
         <footer className="pm-footer">
-          <button className="btn-cancel" onClick={onClose}>Cancelar</button>
-          <button className="btn-save" disabled={!editable} onClick={handleSubmit}>Guardar</button>
+          <button className="btn-cancel" onClick={onClose}>
+            Cancelar
+          </button>
+          <button
+            className="btn-save"
+            disabled={!editable}
+            onClick={handleSubmit}
+          >
+            Guardar
+          </button>
         </footer>
       </div>
     </div>
