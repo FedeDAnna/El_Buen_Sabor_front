@@ -169,87 +169,106 @@ export default function Header() {
           onClick={() => setProfileOpen(open => !open)}
           aria-label="Abrir menú de perfil"
         >
-          <FaUserCircle size={28} />
+          {user?.imagen?.src ? (
+            <img
+              src={user.imagen.src}
+              alt={user.imagen.alt || "Perfil"}
+              className="header-profile-image"
+            />
+          ) : (
+            <FaUserCircle size={28} />
+          )}
+          {user?.nombre && (
+            <span className="header-profile-name">{user.nombre}</span>
+          )}
         </button>
 
+
         {profileOpen && (
-  <div className="header-profile-menu">
-    {user ? (
-      <>
-        <h4>Mi Cuenta</h4>
-        <ul>
-          <li>
-            <button
-              onClick={() => {
-                setProfileOpen(false);
-                navigate("/perfil");
-              }}
-              className="profile-menu-btn"
-            >
-              <User size={20} /> Datos personales
-            </button>
-          </li>
-          <li>
-            <Link to={`/domicilios/1`} style={{ textDecoration: 'none', color: 'inherit' }}>
-              <House size={20} /> Mis Domicilios
-            </Link>
-          </li>
-          <li>
-            <button
-              onClick={() => {
-                setProfileOpen(false);
-                navigate("/historial-pedidos");
-              }}
-              className="profile-menu-btn"
-            >
-              <ClipboardList size={20} /> Historial de pedidos
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => {
-                setProfileOpen(false);
-                clearCart();
-                cerrarSesion();
-              }}
-              className="profile-menu-btn logout-btn"
-            >
-              <LogOut size={20} /> Cerrar Sesión
-            </button>
-          </li>
-        </ul>
-      </>
-    ) : (
-      <>
-        <h4>Bienvenido</h4>
-        <ul>
-          <li>
-            <button
-              onClick={() => {
-                setProfileOpen(false);
-                navigate("/login");
-              }}
-              className="profile-menu-btn"
-            >
-              Iniciar Sesión
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => {
-                setProfileOpen(false);
-                navigate("/registro");
-              }}
-              className="profile-menu-btn"
-            >
-              Registrarme
-            </button>
-          </li>
-        </ul>
-      </>
-    )}
-  </div>
-)}
+          <div className="header-profile-menu">
+            {user ? (
+              <>
+                <h4>Mi Cuenta</h4>
+                <ul>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setProfileOpen(false);
+                        navigate("/perfil");
+                      }}
+                      className="profile-menu-btn"
+                    >
+                      <User size={20} /> Datos personales
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setProfileOpen(false);
+                        navigate("/domicilios/1");
+                      }}
+                      className="profile-menu-btn"
+                    >
+                      <House size={20} /> Mis Domicilios
+                    </button>
+                  </li>
+
+                  <li>
+                    <button
+                      onClick={() => {
+                        setProfileOpen(false);
+                        navigate("/historial-pedidos");
+                      }}
+                      className="profile-menu-btn"
+                    >
+                      <ClipboardList size={20} /> Historial de pedidos
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setProfileOpen(false);
+                        clearCart();
+                        cerrarSesion();
+                      }}
+                      className="profile-menu-btn logout-btn"
+                    >
+                      <LogOut size={20} /> Cerrar Sesión
+                    </button>
+                  </li>
+                </ul>
+              </>
+            ) : (
+              <>
+                <h4>Bienvenido</h4>
+                <ul>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setProfileOpen(false);
+                        navigate("/login");
+                      }}
+                      className="profile-menu-btn"
+                    >
+                      Iniciar Sesión
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setProfileOpen(false);
+                        navigate("/registro");
+                      }}
+                      className="profile-menu-btn"
+                    >
+                      Registrarme
+                    </button>
+                  </li>
+                </ul>
+              </>
+            )}
+          </div>
+        )}
 
       </div>
     </header>
