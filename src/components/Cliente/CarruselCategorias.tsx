@@ -17,13 +17,19 @@ export default function CarruselCategorias({ onCategoryClick }: Props) {
   const location = useLocation()
 
   useEffect(() => {
+    // Cargar categorías al montar
     findCategoriaParaVentas()
       .then(data => setCategorias(data))
       .catch(console.error)
       .finally(() => setLoading(false))
   }, [])
 
-  console.log("categorias ",categorias)
+  if (loading) {
+    return <div className="cc-loading">Cargando categorías...</div>
+  }
+
+  // Determinar si "Todos" está activo (ruta termina en /categorias/0)
+  const todosActive = location.pathname.endsWith('/categorias/0')
 
   const scrollLeft = () => {
     if (!carouselRef.current) return
@@ -40,21 +46,37 @@ export default function CarruselCategorias({ onCategoryClick }: Props) {
     carouselRef.current.scrollTo({ left: newPos, behavior: 'smooth' })
   }
 
-  if (loading) {
-    return <div className="cc-loading">Cargando categorías...</div>
-  }
-  
   return (
     <div className="cc-container">
       <button className="cc-arrow cc-left" onClick={scrollLeft} aria-label="Anterior">
         ←
       </button>
       <div className="cc-carousel" ref={carouselRef}>
+        {/* Primer elemento: "Todos" con id=0 */}
+        {onCategoryClick ? (
+          <div
+            key={0}
+            className={`cc-item ${todosActive ? 'active' : ''}`}
+            onClick={() => onCategoryClick({ id: 0, denominacion: 'Todos' } as Categoria)}
+          >
+            <div className="cc-icon">T</div>
+            <span className="cc-name">Todos</span>
+          </div>
+        ) : (
+          <Link
+            key={0}
+            to="/categorias/0"
+            className={`cc-item ${todosActive ? 'active' : ''}`}
+          >
+            <div className="cc-icon">T</div>
+            <span className="cc-name">Todos</span>
+          </Link>
+        )}
+
+        {/* Resto de categorías */}
         {categorias.map(cat => {
-          // Determinar si la ruta actual ya es de esta categoría, para subrayar o resaltar
           const isActive = location.pathname.endsWith(`/categorias/${cat.id}`)
 
-          // Si se pasa onCategoryClick, llamarlo; sino usamos Link por defecto
           if (onCategoryClick) {
             return (
               <div
@@ -63,7 +85,6 @@ export default function CarruselCategorias({ onCategoryClick }: Props) {
                 onClick={() => onCategoryClick(cat)}
               >
                 <div className="cc-icon">
-                  {/* Placeholder de ícono: primera letra mayúscula */}
                   {cat.denominacion.charAt(0).toUpperCase()}
                 </div>
                 <span className="cc-name">{cat.denominacion}</span>

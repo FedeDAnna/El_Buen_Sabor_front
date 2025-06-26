@@ -1,54 +1,55 @@
+// src/components/ProductosCategoriaCliente.tsx
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-//import Header from '../Layout/Header'
-//import Footer from '../Layout/Footer'
 import '../../estilos/ProductosCategoriaCliente.css'
-import ArticuloManufacturado from '../../entidades/ArticuloManufacturado'
-import { fetchCategoriaById, getArticulosInsumoPorCategoria, getArticulosManufacturadoPorCategoria, getArticulosManufacturados } from '../../services/FuncionesApi'
-import CarruselCategorias from './CarruselCategorias'
+
 import type Categoria from '../../entidades/Categoria'
+import type ArticuloManufacturado from '../../entidades/ArticuloManufacturado'
 import type ArticuloInsumo from '../../entidades/ArticuloInsumo'
+
+import CarruselCategorias from './CarruselCategorias'
+import {
+  fetchCategoriaById,
+  getArticulosInsumoPorCategoria,
+  getArticulosManufacturadoPorCategoria,
+  getArticulosManufacturadosConInsumos
+} from '../../services/FuncionesApi'
 
 export default function ProductosCategoriaCliente() {
   const { categoriaId } = useParams<{ categoriaId: string }>()
-  const [categoria, setCategoria] = useState<Categoria>();
-  
-  // Productos que vienen del backend
-  const [productos, setProductos] = useState<ArticuloManufacturado[]|ArticuloInsumo[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
+  const [categoria, setCategoria] = useState<Categoria | undefined>()
+  const [productos, setProductos] = useState<ArticuloManufacturado[] | ArticuloInsumo[]>([])
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [searchTerm, setSearchTerm] = useState('')
 
-
-  // Control del buscador
-  const [searchTerm, setSearchTerm] = useState<string>('')
-   
-
- useEffect(() => {
-    if (!categoriaId) return
+  useEffect(() => {
+    if (categoriaId == null) return
 
     const load = async () => {
       try {
         setLoading(true)
         setError(null)
 
-        let data:
-          | ArticuloManufacturado[]
-          | ArticuloInsumo[] = []
+        let data: ArticuloManufacturado[] | ArticuloInsumo[] = []
 
-        if(Number(categoriaId) != 0){
-          const cat = await fetchCategoriaById(Number(categoriaId))
+        if (+categoriaId === 0) {
+          // id=0: traemos todo (manufacturados + insumos no para elaborar)
+          data = await getArticulosManufacturadosConInsumos()
+          setCategoria(undefined)
+        } else {
+          // id≠0: por categoría
+          const cat = await fetchCategoriaById(+categoriaId)
           setCategoria(cat)
-          if(cat.tipo_categoria?.id === 1){
+          if (cat.tipo_categoria?.id === 1) {
             data = await getArticulosInsumoPorCategoria(cat.id!)
-          }else {
-          data = await getArticulosManufacturadoPorCategoria(cat.id!)
+          } else {
+            data = await getArticulosManufacturadoPorCategoria(cat.id!)
           }
-        }else{
-          data = await getArticulosManufacturados()
         }
 
         setProductos(data)
-      } catch (err) { 
+      } catch (err) {
         console.error(err)
         setError('No se pudieron cargar los productos.')
       } finally {
@@ -59,42 +60,42 @@ export default function ProductosCategoriaCliente() {
     load()
   }, [categoriaId])
 
-  console.log("Productos", productos)
-
+  // Narrowing de subtipos
   function isManufacturado(
     p: ArticuloManufacturado | ArticuloInsumo
   ): p is ArticuloManufacturado {
     return 'tiempo_estimado_en_minutos' in p
   }
 
-  function hasStock(p: ArticuloManufacturado|ArticuloInsumo): boolean {
+  // Comprueba stock disponible sin error de "detalles" indefinido
+  function hasStock(p: ArticuloManufacturado | ArticuloInsumo): boolean {
     if (!p) return false
-    // insumo: basta un único stock_insumo_sucursales[0]
+
     if (!isManufacturado(p)) {
+      // Insumo: basta un único stock_insumo_sucursales[0]
       const sis = p.stock_insumo_sucursales?.[0]
       return !!sis && sis.stock_actual > 0
     }
-    // manufacturado: debe haber stock de TODOS los insumos de su receta
-    return p.detalles.every(d => {
+
+    // Manufacturado: uniformizamos detalles a [] si viene undefined
+    const detalles = p.detalles ?? []
+    return detalles.every(d => {
       const sis = d.articulo_insumo?.stock_insumo_sucursales?.[0]
       return !!sis && sis.stock_actual >= d.cantidad
     })
   }
 
-  // Filtrar productos según searchTerm (por denominacion o descripcion, toLowerCase)
+  // Filtro de búsqueda
   const productosFiltrados = productos.filter(p => {
-    const term = searchTerm.toLowerCase();
-    const denomMatch = p.denominacion.toLowerCase().includes(term);
+    const term = searchTerm.toLowerCase()
+    const denomMatch = p.denominacion.toLowerCase().includes(term)
 
     if (isManufacturado(p)) {
-      // aquí p es ArticuloManufacturado => tiene .descripcion
-      const descMatch = p.descripcion.toLowerCase().includes(term);
-      return denomMatch || descMatch;
-    } else {
-      // aquí p es ArticuloInsumo => sólo .denominacion
-      return denomMatch;
+      const descMatch = p.descripcion?.toLowerCase().includes(term)
+      return denomMatch || descMatch
     }
-  });
+    return denomMatch
+  })
 
   if (loading) return <p className="cpp-loading">Cargando productos…</p>
   if (error)   return <p className="cpp-error">{error}</p>
@@ -102,12 +103,15 @@ export default function ProductosCategoriaCliente() {
   return (
     <main className="cpp-main">
       <section className="cpp-carrusel-wrapper">
-        <h2>Nuestras Categorias</h2>
+        <h2>Nuestras Categorías</h2>
         <CarruselCategorias />
       </section>
 
       <section className="cpp-content">
-        <h2 className="cpp-title">{categoria?.denominacion||'Productos'}</h2>
+        <h2 className="cpp-title">
+          {categoria?.denominacion || 'Todos los productos'}
+        </h2>
+
         <div className="cpp-search-bar">
           <input
             type="text"
@@ -118,39 +122,37 @@ export default function ProductosCategoriaCliente() {
         </div>
 
         <div className="cpp-grid">
-          {productosFiltrados.length > 0
-            ? productosFiltrados.map(prod => {
-                const stockOk = hasStock(prod)
-                const tipo = isManufacturado(prod) ? 'manufacturado' : 'insumo'
-                return (
-                  <Link
-                    key={prod.id}
-                    to={`/articulo/${prod.id}`}
-                    state={{ tipo, hasStock: stockOk }}
-                    className={`cpp-card ${!stockOk?'no-stock':''}`}
-                  >
-                    <div className="cpp-card-img">
-                      {prod.imagen?.src
-                        ? <img src={prod.imagen.src} alt={prod.denominacion}/>
-                        : <div className="cpp-card-noimg">No hay imagen</div>
-                      }
-                    </div>
-                    <div className="cpp-card-body">
-                      <span className="cpp-card-name">{prod.denominacion}</span>
-                      <span className="cpp-card-price">
-                        ${prod.precio_venta.toLocaleString()}
-                      </span>
-                    </div>
-                  </Link>
-                )
-              })
-            : <p className="cpp-no-results">No se encontraron resultados.</p>
-          }
-        </div>
+          {productosFiltrados.length > 0 ? (
+            productosFiltrados.map(prod => {
+              const stockOk = hasStock(prod)
+              const tipo = isManufacturado(prod) ? 'manufacturado' : 'insumo'
 
-        {/* <div style={{ textAlign:'center', margin:'2rem 0' }}>
-          <Link to="/HomePage" className="btn-add">← Volver</Link>
-        </div> */}
+              return (
+                <Link
+                  key={prod.id}
+                  to={`/articulo/${prod.id}`}
+                  state={{ tipo, hasStock: stockOk }}
+                  className={`cpp-card ${!stockOk ? 'no-stock' : ''}`}
+                >
+                  <div className="cpp-card-img">
+                    {prod.imagen?.src
+                      ? <img src={prod.imagen.src} alt={prod.denominacion}/>
+                      : <div className="cpp-card-noimg">No hay imagen</div>
+                    }
+                  </div>
+                  <div className="cpp-card-body">
+                    <span className="cpp-card-name">{prod.denominacion}</span>
+                    <span className="cpp-card-price">
+                      ${prod.precio_venta.toLocaleString()}
+                    </span>
+                  </div>
+                </Link>
+              )
+            })
+          ) : (
+            <p className="cpp-no-results">No se encontraron resultados.</p>
+          )}
+        </div>
       </section>
     </main>
   )
