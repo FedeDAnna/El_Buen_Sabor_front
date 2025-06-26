@@ -40,6 +40,16 @@ export default function ProductosChart() {
     hAxis: { slantedText: true },
   };
 
+  // Si no hay datos, mostramos un mensaje
+  if (datosOriginales.length === 0) {
+    return (
+      <div>
+        <h2>{options.title}</h2>
+        <p>No hay datos para el período cargado.</p>
+      </div>
+    );
+  }
+
   return (
     <div>
       <Chart

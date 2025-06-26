@@ -8,15 +8,15 @@ import type Usuario from "./Usuario";
 
 export default class Sucursal{
     id?: number;
-    nombre: string = "";
-    horario_apertura: Date = new Date();
-    horario_cierre: Date = new Date();
+    nombre?: string = "";
+    horario_apertura?: Date = new Date();
+    horario_cierre?: Date = new Date();
 
     domicilio?: Domicilio;
     empresa?: Empresa;
-    pedidos: Pedido[]=[];
-    categorias: Categoria[]=[];
-    promociones: Promocion[]=[];
-    stock_insumo_sucursales: StockInsumoSucursales[]=[];
-    usuario: Usuario[]=[];
+    pedidos?: Pedido[]=[];
+    categorias?: Categoria[]=[];
+    promociones?: Promocion[]=[];
+    stock_insumo_sucursales?: StockInsumoSucursales[]=[];
+    usuario?: Usuario[]=[];
 }

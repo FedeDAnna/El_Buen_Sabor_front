@@ -60,6 +60,16 @@ export default function RankingClientesChart() {
     colors: ["#1976d2"],
   };
 
+  // Mostrar mensaje si no hay datos
+  if (datosOriginales.length === 0) {
+    return (
+      <div>
+        <h2>{options.title}</h2>
+        <p>No hay datos para el período cargado.</p>
+      </div>
+    );
+  }
+
   return (
     <div>
       <Chart

@@ -18,7 +18,7 @@ export default function InsumosCategoria() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [editable, setEditable] = useState<boolean>();
-
+  const [busqueda, setBusqueda] = useState("");
   const [insumModalOpen, setInsumModalOpen] = useState(false); //check
   const [modalInsumo, setModalInsumo] = useState<ArticuloInsumo | undefined>(undefined); //check
   const [categoria, setCategoria] = useState<Categoria | undefined>(); //check
@@ -91,9 +91,21 @@ export default function InsumosCategoria() {
         });
     };
   }
-
+   const articulosFiltrados = articulos.filter(a =>
+    a.denominacion.toLowerCase().includes(busqueda.trim().toLowerCase())
+  );
   return (
     <section className="products-page">
+      <div className="buscador-contenedor">
+        <div className="buscador">
+          <input
+            type="text"
+            placeholder="Buscar insumo..."
+            value={busqueda}
+            onChange={e => setBusqueda(e.target.value)}
+          />
+        </div>
+      </div>
       <div className="header">
         <h2>Productos de: {categoria?.denominacion}</h2>
         <button onClick={() => openModal(true,true)}>Agregar +</button>
@@ -111,7 +123,7 @@ export default function InsumosCategoria() {
           </tr>
         </thead>
         <tbody>
-          {articulos.map((a) => {
+          {articulosFiltrados.map(a => {
             const stockEntry = a.stock_insumo_sucursales?.[0];
             const actual = stockEntry?.stock_actual ?? 0;
             const low = stockEntry ? actual <= (stockEntry.stock_minimo ?? 0) : false;

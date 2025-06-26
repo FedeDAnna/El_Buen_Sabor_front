@@ -327,14 +327,6 @@ export async function getSucursales(): Promise<Sucursal[]> {
   return res.json();
 }
 
-export async function fetchHistorialPedidosClientes(pagina: number, idUser: number): Promise<PedidoHistorialDTO[]> {
-  const res = await fetch(`${API_URL}/pedidos/byClientes/${idUser}?page=${pagina}&size=16`, {
-    credentials: 'include',
-    headers: { 'Authorization': `Basic ${basic}` }
-  });
-  if (!res.ok) throw new Error(`Error ${res.status} cargando historial`);
-  return res.json();
-}
 
 // POST
 
@@ -459,7 +451,14 @@ export async function guardarCategoriaConHijos(
   const data = await res.json();
   return data;
 }
-
+export async function fetchHistorialPedidosClientes(pagina: number, idUser: number): Promise<PedidoHistorialDTO[]> {
+  const res = await fetch(`${API_URL}/pedidos/byClientes/${idUser}?page=${pagina}&size=16`, {
+    credentials: 'include',
+    headers: { 'Authorization': `Basic ${basic}` }
+  });
+  if (!res.ok) throw new Error(`Error ${res.status} cargando historial`);
+  return res.json();
+}
 export async function postPromocion(promo: Promocion): Promise<Promocion> {
   const res = await fetch(`${API_URL}/promociones`, {
     method: 'POST',

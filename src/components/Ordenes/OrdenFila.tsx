@@ -24,10 +24,12 @@ export default function OrdenFila({
 
   const usuarioJson = localStorage.getItem("usuario");
   const userRole = usuarioJson ? JSON.parse(usuarioJson).rol : "";
-  console.log("esteeeeeeee"+userRole);
+
   if (userRole === "DELIVERY" && pedido.tipo_envio !== "DELIVERY") {
     return null;
   }
+  
+ 
   
   useEffect(() => {
     if (pedido.estado_pedido === Estado.EN_PREPARACION) {
@@ -80,11 +82,16 @@ export default function OrdenFila({
       case Estado.DEMORADO:
         return { nextEstado: Estado.LISTO, label: "Listo" };
       case Estado.LISTO:
-        if (pedido.tipo_envio === "DELIVERY") {
-          return { nextEstado: Estado.EN_CAMINO, label: "En camino" };
-        } else {
-          return { nextEstado: null, label: "" }; // para TAKE_AWAY se cobra
+        if(userRole === "COCINERO"){
+          return { nextEstado: null, label: "" };
+        }else{
+          if (pedido.tipo_envio === "DELIVERY") {
+            return { nextEstado: Estado.EN_CAMINO, label: "En camino" };
+          } else {
+            return { nextEstado: null, label: "" }; // para TAKE_AWAY se cobra
+          }
         }
+        
       case Estado.EN_CAMINO:
         return { nextEstado: Estado.ENTREGADO, label: "Entregado" };
       default:
@@ -110,6 +117,10 @@ export default function OrdenFila({
   const handleNext = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!pedido.id || nextEstado === null) return;
+    // Antes de avanzar a EN_CAMINO, asigno repartidor
+    if (nextEstado === Estado.EN_CAMINO) {
+      await updateRepartidorPedido(pedido.id);
+    }
     // Antes de avanzar a EN_CAMINO, asigno repartidor
     if (nextEstado === Estado.EN_CAMINO) {
       await updateRepartidorPedido(pedido.id);
@@ -159,40 +170,35 @@ export default function OrdenFila({
       </td>
       <td>
         <div className="pedido-actions">
-          {/* Avanzar estado si no es LISTO */}
-          {(pedido.estado_pedido !== Estado.LISTO && nextEstado) && (
+          {/* Botones de avance de estado, ocultos para COCINERO cuando sea LISTO */}
+          {(pedido.estado_pedido !== Estado.LISTO && nextEstado && userRole !== "COCINERO") && (
             <button onClick={handleNext}>{label}</button>
           )}
 
-          {/* Si está LISTO y es TAKE_AWAY: Cobrar */}
-          {onCobrar && pedido.estado_pedido === Estado.LISTO && pedido.tipo_envio === "TAKE_AWAY" && (
+          {/* Botón Cobrar (TAKE_AWAY) solo para roles no COCINERO */}
+          {onCobrar && pedido.estado_pedido === Estado.LISTO && pedido.tipo_envio === "TAKE_AWAY" && userRole !== "COCINERO" && (
             <button
-              onClick={e => {
-                e.stopPropagation();
-                onCobrar(pedido);
-              }}
+              onClick={e => { e.stopPropagation(); onCobrar(pedido); }}
               className="primary"
             >
               Cobrar
             </button>
           )}
 
-          {/* Si está LISTO y es DELIVERY: En camino */}
-          {(pedido.estado_pedido === Estado.LISTO && pedido.tipo_envio === "DELIVERY") && (
+          {/* Botón En camino (DELIVERY) solo para roles no COCINERO */}
+          {(pedido.estado_pedido === Estado.LISTO && pedido.tipo_envio === "DELIVERY" && userRole !== "COCINERO") && (
             <button onClick={handleNext} className="primary">
               En camino
             </button>
           )}
 
-          {/* Cancelar en todos menos RECHAZADO */}
-          {pedido.estado_pedido !== Estado.RECHAZADO &&
-            pedido.estado_pedido !== Estado.ENTREGADO&& (
+          {/* Botón Cancelar: aparece en todos los roles, excepto cuando el estado es LISTO o RECHAZADO o ENTREGADO */}
+          {pedido.estado_pedido !== Estado.RECHAZADO && pedido.estado_pedido !== Estado.ENTREGADO && pedido.estado_pedido !== Estado.LISTO && (
             <button onClick={handleCancel} className="danger">
               Cancelar pedido
             </button>
           )}
         </div>
-
       </td>
     </tr>
   );

@@ -39,6 +39,7 @@ export default function InsumoModal({
   const [stock, setStock] = useState<StockInsumoSucursales>(
     () => new StockInsumoSucursales()
   )
+  stock.sucursal = {id:1};
 
   useEffect(()=>{
     fetchUnidadesDeMedida()
