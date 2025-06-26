@@ -67,7 +67,9 @@ export default function App() {
               <Route path="/faq" element={<PreguntasFrecuentes />} />
               <Route path="/login" element={<Login />} />
               <Route path="/registro" element={<Register />} />
-              <Route path="/carrito" element={<CarritoPage /> } />              
+              <Route path="/carrito" element={<CarritoPage /> } />        
+
+                            
 
               <Route path="/pedido/pago" element={                
                 <RutaProtegida>
