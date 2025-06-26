@@ -22,6 +22,7 @@ export default function Header() {
 
   const cartRef    = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       // si el carrito está abierto y el click no fue dentro de cartRef, lo cerramos
@@ -164,13 +165,16 @@ export default function Header() {
 
       {/* Perfil */}
       <div ref={profileRef}  className="header-profile-container">
-        <button
-          className="header-profile-btn"
-          onClick={() => setProfileOpen(open => !open)}
-          aria-label="Abrir menú de perfil"
-        >
-          <FaUserCircle size={28} />
-        </button>
+        
+          <button
+            className="header-profile-btn"
+            onClick={() => setProfileOpen(open => !open)}
+            aria-label="Abrir menú de perfil"
+          >
+            <FaUserCircle size={28} />
+          </button>
+       
+        
 
         {profileOpen && (
           <div className="header-profile-menu">

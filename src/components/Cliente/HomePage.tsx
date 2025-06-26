@@ -18,6 +18,8 @@ export default function HomePage() {
   const heroRef = useRef<HTMLElement>(null);
   const navigate = useNavigate();
 
+
+
   useEffect(() => {
     getTiposPromociones()
       .then(tipos =>
@@ -71,9 +73,11 @@ export default function HomePage() {
             <h1>El Buen Sabor</h1>
             <p>La mejor comida de tu vida está a un clic</p>
             <div className="hp-hero-buttons">
-              <button className="hp-btn hp-btn-primary" onClick={handlePedirAhora}>
-                Pedí Ahora
-              </button>
+              
+                <button className="hp-btn hp-btn-primary" onClick={handlePedirAhora}>
+                  Iniciar Sesión
+                </button>
+              
               <Link to="/descargar-app" className="hp-btn hp-btn-secondary">
                 Descargá la app
               </Link>

@@ -148,9 +148,9 @@ export default function ProductosCategoriaCliente() {
           }
         </div>
 
-        <div style={{ textAlign:'center', margin:'2rem 0' }}>
+        {/* <div style={{ textAlign:'center', margin:'2rem 0' }}>
           <Link to="/HomePage" className="btn-add">← Volver</Link>
-        </div>
+        </div> */}
       </section>
     </main>
   )

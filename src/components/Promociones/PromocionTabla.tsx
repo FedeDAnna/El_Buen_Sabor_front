@@ -120,9 +120,9 @@ export default function PromocionTabla() {
                                                                                                                   <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
       <div>
         
-        <Link to={`/admin/tipoPromociones`} className="btn-add">
+        {/* <Link to={`/admin/tipoPromociones`} className="btn-add">
           ← Volver
-        </Link> 
+        </Link>  */}
       </div>
 
       {/* Aquí va la condición para pintar el modal, fuera de la función openModal */}
