@@ -30,3 +30,13 @@ export const fetchClientesRanking= async(periodo : string) => {
   if (!res.ok)throw new Error(`Error ${res.status} al traer los Productos mas vendidos: ${res.statusText}`);
   return res.json()
 }
+
+export async function exportarExcel(periodo: string): Promise<Blob> {
+  const res = await fetch(`${API_URL}/estadisticas/exportar-excel?periodo=${periodo}`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: { 'Authorization': `Basic ${basic}` }
+  });
+  if (!res.ok) throw new Error(`Error ${res.status} al generar el Excel: ${res.statusText}`);
+  return res.blob();
+}
