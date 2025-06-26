@@ -135,9 +135,9 @@ export default function ProductosCategoria() {
 
       <div>
         
-        <Link to={`/admin/categorias/${categoria?.tipo_categoria?.id}`} className="btn-add">
+        {/* <Link to={`/admin/categorias/${categoria?.tipo_categoria?.id}`} className="btn-add">
           ← Volver
-        </Link>
+        </Link> */}
       </div>
 
       {/* Aquí va la condición para pintar el modal, fuera de la función openModal */}

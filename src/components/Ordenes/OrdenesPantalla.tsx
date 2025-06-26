@@ -8,6 +8,7 @@ import Paginacion from "../Ordenes/Paginado";
 import TablaPedidos from "./OrdenesTabla";
 import ModalOrden from "./OrdenModal";
 import ModalPago from "./ModalPago";
+import { FaBars } from "react-icons/fa";
 
 
 // 1) Map de estados permitidos por rol
@@ -50,6 +51,7 @@ const estadosDisponibles: { label: string; value: Estado | "" }[] = [
 const ELEMENTOS_POR_PAGINA = 8;
 
 export default function OrdenesPantalla() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   // 2) Estado puede ser un Estado o cadena vacía para "Todos"
   const [estadoSeleccionado, setEstadoSeleccionado] = useState<Estado | "">("");
@@ -157,6 +159,7 @@ export default function OrdenesPantalla() {
   };
 
   return (
+    
     <div className="ordenes-container">
       <div className="buscador-contenedor">
         <div className="buscador">
