@@ -19,6 +19,7 @@ async function obtenerCoordenadas(direccion: string): Promise<Coords | null> {
     const loc = data.results[0].geometry.location;
     return { lat: loc.lat, lng: loc.lng };
   }
+  console.log(data.status, data.error_message);
   console.error('Geocoding error', data.status);
   return null;
 }
@@ -66,9 +67,9 @@ export default function NuestrasSucursales() {
               <div>
                 <strong>Horario:</strong> {typeof s.horario_apertura === 'string'
                                     ? s.horario_apertura  // ya es "HH:mm:ss"
-                                    : DateTime.fromJSDate(s.horario_apertura).toFormat('HH:mm')} - {typeof s.horario_cierre === 'string'
+                                    : DateTime.fromJSDate(s.horario_apertura!).toFormat('HH:mm')} - {typeof s.horario_cierre === 'string'
                     ? s.horario_cierre
-                    : DateTime.fromJSDate(s.horario_cierre).toFormat('HH:mm')}
+                    : DateTime.fromJSDate(s.horario_cierre!).toFormat('HH:mm')}
               </div>
               <div>
                 <strong>Dirección:</strong> {dir.calle} {dir.numero}, CP {dir.cp} – {dir.localidad?.nombre}
