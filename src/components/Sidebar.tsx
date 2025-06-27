@@ -46,7 +46,7 @@ export default function Sidebar({ isOpen, onClose }: Props) {
           <li><a href="/admin/clientes"><FaUserFriends/> Clientes</a></li>
         </>}
         {(isAdmin||isCocinero||isCajero||isDelivery) &&
-          <li><a href="/HomePage"><FaHome/> Home</a></li>}
+          <li><a href="/admin/ordenes"><FaHome/> Home</a></li>}
       </ul>
       <button
         className="admin-logout-btn"
