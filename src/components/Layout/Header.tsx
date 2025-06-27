@@ -51,6 +51,7 @@ export default function Header() {
       localStorage.removeItem('usuario');
       setUser(null);
       navigate('/Homepage');
+      window.location.reload();
     });
     };
   return (

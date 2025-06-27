@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: space-between;
   background-color: #8B1414;
-  padding: 0 1rem;
+  padding: .5rem 1rem;
   color: #fff;
   /* position: relative; */
   z-index: 10;
@@ -317,5 +317,5 @@
 }
 
 body, .app-content {    /* .app-content es tu contenedor principal */
-  padding-top: 60px;    /* mismo valor que el alto del header */
+  /* padding-top: 60px;    mismo valor que el alto del header */
 }

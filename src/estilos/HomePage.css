@@ -1,7 +1,7 @@
 /* Hero full-bleed ----------------------------------------------------- */
 .hp-hero {
   position: relative;
-  width: 95vw;
+  width: 99vw;
   height: 80vh; /* ajustar o usar 100vh */
   overflow: hidden;
   display: flex;
