@@ -96,18 +96,10 @@ export default function SidebarCliente({ isOpen, onClose, onPromocionesClick }: 
                   <span className="sb-icon">📜</span> Historial de Pedidos
                 </Link>
               </li>
-              <li>
-                <Link to="/HomePage" onClick={cerrarSesion}>
-                  <span className="sb-icon">🚪</span> Cerrar Sesión
-                </Link>
-              </li>
+              
             </>
             :
-            <li>
-              <Link to="/login">
-                <span className="sb-icon">🚪</span> Iniciar Sesión
-              </Link>
-            </li>
+            ''
             }
             
             <hr />
