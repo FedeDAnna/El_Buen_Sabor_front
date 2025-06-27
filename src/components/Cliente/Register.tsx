@@ -4,6 +4,7 @@ import SidebarCliente from './SidebarCliente';
 import { registrarUsuario } from '../../services/FuncionesApi';
 import BuenSaborIcono from '../../assets/BuenSaborIcono.png';
 import '../../estilos/Login.css'; // reutilizamos los estilos del login
+import Swal from 'sweetalert2';  
 
 const HamburgerIcon = () => (
   <span style={{ fontSize: '1.5rem', cursor: 'pointer' }}>☰</span>
@@ -26,7 +27,13 @@ export default function Register() {
     e.preventDefault();
 
     if (password !== repeatPassword) {
-      alert('Las contraseñas no coinciden');
+      Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Las contraseñas no coinciden',
+      showConfirmButton: false,
+      timer: 2000
+    });
       return;
     }
 
@@ -37,13 +44,28 @@ export default function Register() {
         telefono,
         email,
         fecha_nacimiento: fechaNacimiento,
-        password,        
+        password,
       });
 
-      alert('Registro exitoso');
-      navigate('/login');
+      // SweetAlert draggable en lugar de alert()
+      Swal.fire({
+        title: 'Registro exitoso',
+        icon: 'success',
+        draggable: true,
+        showConfirmButton: false,
+        timer: 2000
+      }).then(() => {
+        // navegar tras cerrar el popup
+        navigate('/login');
+      });
     } catch (error: any) {
-      alert(error.message);
+      Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: error.message || 'Algo salió mal!',
+      showConfirmButton: false,
+      timer: 2000
+    });
     }
   };
 

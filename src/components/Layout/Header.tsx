@@ -6,7 +6,7 @@ import { User, ClipboardList, LogOut, House } from 'lucide-react';
 import { useCart, type CartItem } from '../CartContext';
 import { Link } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
-
+import Swal from 'sweetalert2';  
 import { useNavigate } from 'react-router-dom';
 //import { useUser } from '../../contexts/UserContext';
 
@@ -42,9 +42,17 @@ export default function Header() {
   }, [cartOpen, profileOpen]);
   
     const cerrarSesion = () => {
-    localStorage.removeItem('usuario');
-    setUser(null);
-    navigate('/Homepage');
+    Swal.fire({
+      title: 'Sesión cerrada',
+      icon: 'success',
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true
+    }).then(() => {
+      localStorage.removeItem('usuario');
+      setUser(null);
+      navigate('/Homepage');
+    });
     };
   return (
     

@@ -5,6 +5,7 @@ import SidebarCliente from './SidebarCliente';
 import BuenSaborIcono from '../../assets/BuenSaborIcono.png'; // imagen de hamburguesa grande
 import { useUser } from '../../contexts/UserContext';
 import '../../estilos/Login.css';
+import Swal from 'sweetalert2';
 
 const HamburgerIcon = () => (
   <span style={{ fontSize: '1.5rem', cursor: 'pointer' }}>☰</span>
@@ -26,7 +27,13 @@ export default function Login() {
       setUser(usuario); 
       navigate("/Homepage"); 
     } catch (error) {
-      alert("Email o contraseña incorrectos");
+      Swal.fire({                       // <- SweetAlert2 en Catch
+        icon: "error",
+        title: "Oops...",
+        text: "Mail o contraseña incorrectos!",
+        showConfirmButton: false,
+        timer: 2000
+      });
     }
   };
 
