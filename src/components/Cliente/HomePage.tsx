@@ -105,7 +105,7 @@ export default function HomePage() {
                 className="hp-btn hp-btn-primary"
                 onClick={handlePedirAhora}
               >
-                {user ? 'Ver Categorías' : 'Pedí Ahora'}
+                {user ? 'Ver Categorías' : 'Iniciar Sesión'}
               </button>
               <Link to="/descargar-app" className="hp-btn hp-btn-secondary">
                 Descargá la app

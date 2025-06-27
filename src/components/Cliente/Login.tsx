@@ -27,12 +27,18 @@ export default function Login() {
       setUser(usuario); 
       await Swal.fire({
         icon: "success",
-        title: "¡Bienvenido!",
+        title: `¡Bienvenido/a ${usuario.nombre || ""}!`,
         text: "Inicio de sesión exitoso.",
         showConfirmButton: false,
         timer: 1500
       });
-      navigate("/Homepage"); 
+
+      if (usuario.rol === "CLIENTE") {
+        navigate("/Homepage");
+      } else {
+        navigate("/admin/ordenes");
+      }
+      
     } catch (error) {
       Swal.fire({                       // <- SweetAlert2 en Catch
         icon: "error",
