@@ -5,6 +5,7 @@ import { useCart } from '../CartContext'
 import { getPromocionById } from '../../services/FuncionesApi'
 import type Promocion from '../../entidades/Promocion'
 import '../../estilos/PromocionDetalle.css'  // ya creado
+import Swal from 'sweetalert2'
 
 export default function PromocionEnDetalle() {
   const { id } = useParams<{ id: string }>()
@@ -34,7 +35,14 @@ export default function PromocionEnDetalle() {
   const handleAgregar = () => {
     if (!promo) return
     addToCart(promo,"promocion", cantidad)
-    alert(`Añadiste ${cantidad} × "${promo.denominacion}" al carrito.`)
+    Swal.fire({
+          title: `Se agregaron ${cantidad} × "${promo.denominacion}" al carrito.`,
+          icon: 'success',
+          draggable: true,
+          showConfirmButton: false,
+          timer: 2000
+        })
+    
   }
 
   if (loading) return <p>Cargando promoción…</p>
