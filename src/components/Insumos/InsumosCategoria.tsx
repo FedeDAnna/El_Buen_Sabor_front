@@ -106,7 +106,7 @@ export default function InsumosCategoria() {
           />
         </div>
       </div> */}
-      <div className="header">
+      <div className="header-insumo-producto">
         <h2>Productos de: {categoria?.denominacion}</h2>
         <div>
           <div className="buscador-contenedor">

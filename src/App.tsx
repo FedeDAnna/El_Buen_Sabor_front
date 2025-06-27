@@ -37,6 +37,7 @@ import Alerta from "./components/ControlAcceso/Alerta";
 import { AlertaContext } from "./components/ControlAcceso/AlertaContext";
 import { Rol } from "./entidades/Rol";
 import './estilos/Global.css';
+import QuienesSomos from "./components/QuienesSomos";
 
 export default function App() {
   const [alerta, setAlerta] = useState<{
@@ -69,6 +70,7 @@ export default function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/registro" element={<Register />} />
               <Route path="/carrito" element={<CarritoPage /> } />        
+              <Route path="/quienes-somos" element={<QuienesSomos /> } />        
 
                             
 

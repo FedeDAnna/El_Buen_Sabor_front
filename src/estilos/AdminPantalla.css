@@ -7,14 +7,28 @@
 
 .admin-header {
   position: fixed;
-  top: 0; left: 0; right: 0;
+  top: 70px; left: 0; right: 0;
   height: 80px;
-  background: #fff;
-  border-bottom: 1px solid #e0e0e0;
+  background: transparent;
+  /* border-bottom: 1px solid #e0e0e0; */
   display: flex;
   align-items: center;
   padding: 0 1rem;
   z-index: 2000;
+  width: fit-content;
+}
+
+.admin-hamburger-btn {
+  background-color: transparent;
+  border: none;
+  padding: .5rem 1rem;
+  cursor: pointer;
+}
+
+.admin-hamburger-btn:hover {
+  background-color: rgba(0,0,0,0.05);
+  border-radius: 10px;
+  transition: left 0.3s ease-out;
 }
 
 .hamburger-btn {

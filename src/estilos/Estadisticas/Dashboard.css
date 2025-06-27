@@ -1,14 +1,33 @@
+.dashboard {
+  border: 1px solid red;
+  /* padding: 1rem; */
+}
+
+.dashboard h1 {
+  background-color: #8B1414;
+  color: #fff;
+  padding: 1.5rem;
+}
+
+.dashboard h2 {
+  padding:  1rem 2rem;
+}
+
 .dashboard-charts-row {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
   justify-content: space-between;
-  margin-top: 2rem;
+  margin: 2rem;
 }
 
 .chart-box {
   flex: 1 1 48%;
   min-width: 300px;
+}
+
+.chart-box p {
+  padding: 0 2rem;
 }
 
 .chart-container {
@@ -41,8 +60,9 @@
 }
 
 .dashboard-container-selector{
-    display: flex;
+  display: flex;
   align-items: center; /* Alinea verticalmente selector y botón */
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1rem;  
+  padding: 0 2rem;
 }

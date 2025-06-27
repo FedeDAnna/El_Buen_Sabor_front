@@ -10,8 +10,8 @@ import { exportarExcel } from "../../services/EstadisticasApi";
 
 export default function Dashboard() {
   return (
-    <div>
-      <h3>Reportes</h3>
+    <div className="dashboard">
+      <h1>Reportes</h1>
       <h2>Rendimiento</h2>
       <PeriodoProvider>
         <InnerDashboard />

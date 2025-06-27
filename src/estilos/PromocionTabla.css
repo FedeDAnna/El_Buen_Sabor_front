@@ -9,31 +9,35 @@
 /* CABECERA: título + botón */
 .products-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
-  z-index: 0;
+  align-items: center;
+  margin-bottom: 1rem;
+  background-color: #8b1414;
+  color: #fff;
+  padding: 1rem;
 }
 
 .products-header h2 {
   margin: 0;
   font-size: 1.5rem;
-  color: #333;
+  /* color: #333; */
 }
 
 .products-header button {
-  padding: 0.5rem 1rem;
-  background: #ffc107;
-  border: none;
-  border-radius: 20px;
-  color: #fff;
-  font-weight: 500;
+  background-color: #fff;
+  color: #8b1414;
+  border: 1px solid #8b1414;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background 0.2s;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  border-radius: 50px;
 }
 
 .products-header button:hover {
-  background: #e0a800;
+  background-color: #b12b2e;
+  color: #fff;
 }
 
 /* TABLA DE PROMOCIONES */

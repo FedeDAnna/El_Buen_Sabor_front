@@ -64,7 +64,7 @@ export default function PromocionTabla() {
 
   return (
     <section className="products-page">
-      <div className="header">
+      <div className="products-header">
         <h2>Promociones de: {tipoPromocion?.descripcion}</h2>
         <button onClick={() => openModal(true,true)}>Agregar +</button>
       </div>

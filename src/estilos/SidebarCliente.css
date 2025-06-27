@@ -41,6 +41,7 @@
   background-color: transparent;
   border: none;
   padding: .5rem 1rem;
+  cursor: pointer;
 }
 
 .hp-hamburger-btn:hover {

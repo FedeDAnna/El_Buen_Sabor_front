@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import '../../estilos/Productos.css'
 import '../../estilos/ProductosTabla.css'
+import '../../estilos/TipoPromocionesTabla.css'
 
 import {
   getTiposPromociones,
@@ -72,7 +73,7 @@ export default function TipoPromocionesTabla() {
 
   return (
     <section className="products-page">
-      <div className="header">
+      <div className="header-promociones">
         <h2>Tipos Promociones</h2>
         <button className="btn-add" onClick={() => openModal(true, true, undefined)}>
           Agregar +

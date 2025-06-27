@@ -115,7 +115,7 @@ export default function Productos() {
 
   return (
     <section className="products-page">
-      <div className="header">
+      <div className="header-insumo-producto">
         <h2>{idTipo === "2" ? 'Categorías Producto' : 'Categorías Insumo' }</h2>
         <button className="btn-add" onClick={() => openModal(true, true, undefined)}>
           Agregar +

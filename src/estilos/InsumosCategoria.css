@@ -11,20 +11,20 @@
 }
 
 /* Header Section */
-.products-page .header {
+.products-page .header-insumo-producto {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
 }
 
-.products-page .header h2 {
+.products-page .header-insumo-producto h2 {
   font-size: 1.5rem;
   color: #fff;
   margin: 0;
 }
 
-.products-page .header button {
+.products-page .header-insumo-producto button {
   background-color: #fff;
   color: #8b1414;
   border: 1px solid #8b1414;
@@ -37,7 +37,7 @@
   text-decoration: none;
 }
 
-.products-page .header button:hover {
+.products-page .header-insumo-producto button:hover {
   background-color: #b12b2e;
   color: #fff;
 }
@@ -72,7 +72,7 @@
   border-radius: 5px;
   text-decoration: none;
   color: #000;
-  text-transform: capitalize;
+  margin-right: 0.5rem;
 }
 
 /* Stock Indicators */
