@@ -268,3 +268,28 @@
   color: #fff !important;
 }
 
+.header-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: #ffc107; /* amarillo */
+  border-radius: 999px;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.header-profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+}
+
+.header-profile-name {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #fff;
+}
+
