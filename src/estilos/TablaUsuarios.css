@@ -1,3 +1,12 @@
+.usuarios-page {
+  width: 100%;
+  margin: 2rem auto;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+
 /* === CSS Encabezado === */
 .usuarios-header {
   display: flex;
@@ -79,6 +88,22 @@
 
 .usuarios-table td button:hover {
   color: #b52e31;
+}
+
+.usuarios-table thead th:nth-child(1) {
+  width: 300px;
+}
+
+.usuarios-table thead th:nth-child(2) {
+  width: 300px;
+}
+
+.usuarios-table thead th:nth-child(3) {
+  width: 300px;
+}
+
+.usuarios-table thead th:nth-child(4) {
+  width: 200px;
 }
 
 /* === CSS Modal === */

@@ -1,6 +1,12 @@
 .products-page {
-  padding: 2rem 7rem;
-  background: #fafafa;
+  /* padding: 2rem 7rem;
+  background: #fafafa; */
+  width: 100%;
+  margin: 2rem auto;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
 }
 
 .header-promociones {
@@ -92,4 +98,26 @@
   text-decoration: none;
   color: #000;
   margin-right: 0.5rem;
+}
+
+.promociones-table thead th:nth-child(1) {
+  width: 100px;
+  text-align: center;
+}
+
+.promociones-table tbody tr td:nth-child(1) {
+  text-align: center;
+}
+
+.promociones-table thead th:nth-child(2) {
+  width: 800px;
+}
+
+.promociones-table thead th:nth-child(3) {
+  width: 400px;
+  text-align: center;
+}
+
+.promociones-table tbody tr td:nth-child(3) {
+  text-align: center;
 }
