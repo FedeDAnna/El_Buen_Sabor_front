@@ -90,7 +90,7 @@ export default function SidebarCliente({ isOpen, onClose, onPromocionesClick }: 
             </li>
             <li>
               <Link
-                to="/categorias/1"
+                to="/categorias/0"
                 className={location.pathname.startsWith('/categorias') ? 'active' : ''}
                 onClick={onClose}
               >
