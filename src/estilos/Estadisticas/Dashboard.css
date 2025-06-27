@@ -1,12 +1,17 @@
 .dashboard {
-  /* border: 1px solid red; */
-  /* padding: 1rem; */
+  width: 100%;
+  margin: 2rem auto;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
 }
 
 .dashboard h1 {
   background-color: #8B1414;
   color: #fff;
   padding: 1.5rem;
+  width: 1400px;
 }
 
 .dashboard h2 {

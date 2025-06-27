@@ -204,6 +204,7 @@ export default function PromocionModal({
         </header>
         <form className="pm-body" onSubmit={handleSubmit}>
           <input
+            type='text'
             value={denominacion}
             onChange={e => setDenominacion(e.target.value)}
             placeholder="Denominación"
@@ -236,6 +237,7 @@ export default function PromocionModal({
             />
           </div>
           <input
+            type='text'
             value={descripcionDescuento}
             onChange={e => setDescripcionDescuento(e.target.value)}
             placeholder="Descripción de Descuento"

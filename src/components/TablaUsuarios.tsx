@@ -198,7 +198,7 @@ const guardarCambios = async () => {
 
 
   return (
-    <div className="products-page">
+    <section className="usuarios-page">
       <div className="usuarios-header">
         <h2>{tipo === "empleados" ? "Empleados" : "Clientes"}</h2>
         <div>
@@ -384,6 +384,6 @@ const guardarCambios = async () => {
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 }
