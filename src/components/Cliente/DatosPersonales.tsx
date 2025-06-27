@@ -59,7 +59,15 @@ export default function DatosPersonales() {
         </div>
       </div>
       <div>
-        <button onClick={() => navigate('/HomePage')} className="dp-back-btn">
+        <button onClick={() => {
+            if (user?.rol === 'CLIENTE') {
+              navigate('/HomePage');
+            } else {
+              navigate('/admin/ordenes');
+            }
+          }}
+          className="dp-back-btn"
+        >
         ← Home
         </button>
       </div>
