@@ -123,7 +123,7 @@ export default function Productos() {
       </div>
 
       {/* 8) Tabla de categorías */}
-      <table className="products-table">
+      <table className="products-productos-table">
         <thead>
           <tr>
             <th>ID</th>

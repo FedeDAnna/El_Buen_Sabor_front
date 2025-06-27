@@ -1,36 +1,36 @@
-.products-table {
+.products-productos-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
 }
 
-.products-table thead {
+.products-productos-table thead {
   background-color: #e0e0e0;
 }
 
-.products-table th,
-.products-table td {
+.products-productos-table th,
+.products-productos-table td {
   text-align: left;
   padding: 0.75rem 1rem;
 }
 
-.products-table th {
+.products-productos-table th {
   border-bottom: 2px solid #ccc;
 }
 
-.products-table tbody tr {
+.products-productos-table tbody tr {
   background-color: #f8f8f8;
 }
 
-.products-table tbody tr:nth-child(even) {
+.products-productos-table tbody tr:nth-child(even) {
   background-color: #eaeaea;
 }
 
-.products-table tbody tr:hover {
+.products-productos-table tbody tr:hover {
   background-color: #ddd;
 }
 
-.products-table td button {
+.products-productos-table td button {
   background: none;
   border: none;
   cursor: pointer;
@@ -39,6 +39,28 @@
   transition: color 0.2s;
 }
 
-.products-table td button:hover {
+.products-productos-table td button:hover {
   color: #b52e31;
+}
+
+.products-productos-table thead th:nth-child(1) {
+  width: 100px;
+  text-align: center;
+}
+
+.products-productos-table tbody tr td:nth-child(1) {
+  text-align: center;
+}
+
+.products-productos-table thead th:nth-child(2) {
+  width: 800px;
+}
+
+.products-productos-table thead th:nth-child(3) {
+  width: 400px;
+  text-align: center;
+}
+
+.products-productos-table tbody tr td:nth-child(3) {
+  text-align: center;
 }

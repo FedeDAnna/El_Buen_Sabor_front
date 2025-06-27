@@ -1,8 +1,14 @@
 .ordenes-container {
-  padding: 20px;
+  /* padding: 20px;
   max-width: 1200px;
   padding-top: 0px;
-  margin: 0 auto; /* Centra todo el contenido horizontalmente */
+  margin: 0 auto;  */
+  width: 100%;
+  margin: 2rem auto;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
 }
 
 .ordenes-header {
@@ -40,7 +46,7 @@
   color: #333;
   transition: box-shadow 0.3s ease; */
   border-radius: 50px;
-  border: 1px solid #000;
+  border: 1px solid #8B1414;
   font-size: 1rem;
   padding: 0.6rem 1rem;
   margin-right: 10px;
@@ -117,6 +123,24 @@
   background-color: #f5f5f5;
   font-weight: bold;
 }
+
+.tabla-ordenes thead tr th:nth-child(2) {
+  width: 300px;
+  text-align: left;
+}
+
+.tabla-ordenes tbody tr td:nth-child(2) {
+  text-align: left;
+}
+
+.tabla-ordenes thead tr th:nth-child(6) {
+  width: 200px;
+}
+
+.tabla-ordenes tbody tr td:nth-child(6) {
+  justify-content: left;
+}
+
 .tabla-container {
   min-height: 350px; /* Altura fija mínima */
   overflow-y: auto;  /* Scroll si hay muchas filas */
