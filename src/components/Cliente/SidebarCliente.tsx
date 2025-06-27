@@ -48,6 +48,7 @@ export default function SidebarCliente({ isOpen, onClose, onPromocionesClick }: 
       localStorage.removeItem('usuario');
       setUser(null);
       navigate('/Homepage');
+      window.location.reload();
     });
     };
 
