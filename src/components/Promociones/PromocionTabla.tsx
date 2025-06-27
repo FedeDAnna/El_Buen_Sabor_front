@@ -119,7 +119,7 @@ export default function PromocionTabla() {
           ))}
         </tbody>
       </table>
-                                                                                                                  <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+      
       <div>
         
         {/* <Link to={`/admin/tipoPromociones`} className="btn-add">

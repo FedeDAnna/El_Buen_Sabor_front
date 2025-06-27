@@ -2,7 +2,7 @@
 
 /* Contenedor principal */
 .sucursales-page {
-  max-width: 900px;
+  max-width: 100%;
   margin: 2rem auto;
   background: #fff;
   padding: 1.5rem;
@@ -84,6 +84,28 @@
 
 .sucursales-table .actions button:hover {
   color: #007bff;
+}
+
+.sucursales-table thead tr th:nth-child(1) {
+  width: 100px;
+  text-align: center;
+}
+
+.sucursales-table tbody tr td:nth-child(1) {
+  text-align: center;
+}
+
+.sucursales-table thead tr th:nth-child(2) {
+  width: 400px;
+}
+
+.sucursales-table thead tr th:nth-child(5) {
+  width: 400px;
+  text-align: left;
+}
+
+.sucursales-table thead tr th:nth-child(6) {
+  text-align: center;
 }
 
 /* Mensajes de error */
