@@ -41,19 +41,19 @@ export default function Header() {
     };
   }, [cartOpen, profileOpen]);
   
-    const cerrarSesion = () => {
-    Swal.fire({
-      title: 'Sesión cerrada',
-      icon: 'success',
-      showConfirmButton: false,
-      timer: 2000,
-      timerProgressBar: true
-    }).then(() => {
-      localStorage.removeItem('usuario');
-      setUser(null);
-      navigate('/Homepage');
-    });
-    };
+  const cerrarSesion = () => {
+  Swal.fire({
+    title: 'Sesión cerrada',
+    icon: 'success',
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true
+  }).then(() => {
+    localStorage.removeItem('usuario');
+    setUser(null);
+    navigate('/Homepage');
+  });
+  };
   return (
     
     <header className="header">
