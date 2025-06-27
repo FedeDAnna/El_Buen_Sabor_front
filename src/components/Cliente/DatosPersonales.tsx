@@ -55,7 +55,7 @@ export default function DatosPersonales() {
         </div>
         <div className="dp-row">
           <span className="dp-label">Fecha de Nacimiento</span>
-          <span className="dp-value">{new Date(user.fecha_nacimiento).toLocaleDateString()}</span>
+          <span className="dp-value">{new Date(user.fecha_nacimiento).toLocaleDateString('es-AR', { timeZone: 'UTC' })}</span>
         </div>
       </div>
       <div>

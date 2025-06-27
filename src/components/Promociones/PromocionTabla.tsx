@@ -92,8 +92,10 @@ export default function PromocionTabla() {
               <td>{p.id}</td>
               <td>{p.denominacion}</td>
               <td>{p.descripcion_descuento}</td>
-              <td>{p.fecha_desde.toLocaleDateString()}</td>
-              <td>{p.fecha_hasta.toLocaleDateString()}</td>
+              {/* <td>{p.fecha_desde.toLocaleDateString()}</td>
+              <td>{p.fecha_hasta.toLocaleDateString()}</td> */}
+              <td>{new Date(p.fecha_desde).toLocaleDateString('es-ES', { timeZone: 'UTC' })}</td>
+              <td>{new Date(p.fecha_hasta).toLocaleDateString('es-ES', { timeZone: 'UTC' })}</td>
               <td>{p.hora_desde.toFormat('HH:mm')}</td>
               <td>{p.hora_hasta.toFormat('HH:mm')}</td>
               <td>${p.precio_promocional}</td>
