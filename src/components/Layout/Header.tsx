@@ -60,7 +60,13 @@ export default function Header() {
       <div
         className="titulo"
         style={{ cursor: 'pointer' }}
-        onClick={() => navigate('/HomePage')}
+        onClick={() => {
+          if (user?.rol === 'CLIENTE') {
+            navigate('/HomePage');
+          } else {
+            navigate('/admin/ordenes');
+          }
+        }}
       >
         EL BUEN SABOR
       </div>
