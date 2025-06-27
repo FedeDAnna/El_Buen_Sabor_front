@@ -202,16 +202,16 @@ export default function Header() {
                     </button>
                   </li>
                   <li>
-                    <button
-                      onClick={() => {
-                        setProfileOpen(false);
-                        navigate("/domicilios/1");
-                      }}
-                      className="profile-menu-btn"
-                    >
-                      <House size={20} /> Mis Domicilios
-                    </button>
-                  </li>
+                  <button
+                    onClick={() => {
+                      setProfileOpen(false);
+                      navigate("/domicilios/1");
+                    }}
+                    className="profile-menu-btn"
+                  >
+                    <House size={20} /> Mis Domicilios
+                  </button>
+                </li>
 
                   <li>
                     <button
