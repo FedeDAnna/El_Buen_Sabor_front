@@ -25,6 +25,13 @@ export default function Login() {
       const usuario = await loginUsuario(email, password);
       localStorage.setItem("usuario", JSON.stringify(usuario)); 
       setUser(usuario); 
+      await Swal.fire({
+        icon: "success",
+        title: "¡Bienvenido!",
+        text: "Inicio de sesión exitoso.",
+        showConfirmButton: false,
+        timer: 1500
+      });
       navigate("/Homepage"); 
     } catch (error) {
       Swal.fire({                       // <- SweetAlert2 en Catch

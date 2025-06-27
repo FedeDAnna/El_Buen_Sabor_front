@@ -41,19 +41,18 @@ export default function Header() {
     };
   }, [cartOpen, profileOpen]);
   
-  const cerrarSesion = () => {
-  Swal.fire({
-    title: 'Sesión cerrada',
-    icon: 'success',
-    showConfirmButton: false,
-    timer: 2000,
-    timerProgressBar: true
-  }).then(() => {
-    localStorage.removeItem('usuario');
-    setUser(null);
-    navigate('/Homepage');
-  });
-  };
+    const cerrarSesion = () => {
+    Swal.fire({
+      title: '¡Hasta Luego!',
+      icon: 'success',
+      showConfirmButton: false,
+      timer: 2000
+    }).then(() => {
+      localStorage.removeItem('usuario');
+      setUser(null);
+      navigate('/Homepage');
+    });
+    };
   return (
     
     <header className="header">
@@ -173,112 +172,67 @@ export default function Header() {
 
       {/* Perfil */}
       <div ref={profileRef}  className="header-profile-container">
-        <button
-          className="header-profile-btn"
-          onClick={() => setProfileOpen(open => !open)}
-          aria-label="Abrir menú de perfil"
-        >
-          {user?.imagen?.src ? (
-            <img
-              src={user.imagen.src}
-              alt={user.imagen.alt || "Perfil"}
-              className="header-profile-image"
-            />
-          ) : (
+        
+          <button
+            className="header-profile-btn"
+            onClick={() => setProfileOpen(open => !open)}
+            aria-label="Abrir menú de perfil"
+          >
             <FaUserCircle size={28} />
-          )}
-          {user?.nombre && (
-            <span className="header-profile-name">{user.nombre}</span>
-          )}
-        </button>
-
+          </button>
+       
+        
 
         {profileOpen && (
           <div className="header-profile-menu">
-            {user ? (
-              <>
-                <h4>Mi Cuenta</h4>
-                <ul>
-                  <li>
-                    <button
-                      onClick={() => {
-                        setProfileOpen(false);
-                        navigate("/perfil");
-                      }}
-                      className="profile-menu-btn"
-                    >
-                      <User size={20} /> Datos personales
-                    </button>
-                  </li>
-                  <li>
-                  <button
-                    onClick={() => {
-                      setProfileOpen(false);
-                      navigate("/domicilios/1");
-                    }}
-                    className="profile-menu-btn"
-                  >
-                    <House size={20} /> Mis Domicilios
-                  </button>
-                </li>
+            <h4>Mi Cuenta</h4>
+            <ul>
+              <li>             
+                <button
+                  onClick={() => {
+                    setProfileOpen(false); // cerrar el menú
+                    navigate("/perfil");   // redirigir
+                  }}
+                  className="profile-menu-btn"
+                >
+                  <User size={20} /> Datos personales
+                </button>
+              </li>
+              <li>
+                <Link to={`/domicilios/1`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <House size={20} /> Mis Domicilios
+                </Link>
+              </li>
+              <Link to="/historial-pedidos" className="menu-link">
 
-                  <li>
-                    <button
-                      onClick={() => {
-                        setProfileOpen(false);
-                        navigate("/historial-pedidos");
-                      }}
-                      className="profile-menu-btn"
-                    >
-                      <ClipboardList size={20} /> Historial de pedidos
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        setProfileOpen(false);
-                        clearCart();
-                        cerrarSesion();
-                      }}
-                      className="profile-menu-btn logout-btn"
-                    >
-                      <LogOut size={20} /> Cerrar Sesión
-                    </button>
-                  </li>
-                </ul>
-              </>
-            ) : (
-              <>
-                <h4>Bienvenido</h4>
-                <ul>
-                  <li>
-                    <button
-                      onClick={() => {
-                        setProfileOpen(false);
-                        navigate("/login");
-                      }}
-                      className="profile-menu-btn"
-                    >
-                      Iniciar Sesión
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        setProfileOpen(false);
-                        navigate("/registro");
-                      }}
-                      className="profile-menu-btn"
-                    >
-                      Registrarme
-                    </button>
-                  </li>
-                </ul>
-              </>
-            )}
+              <li>
+                <button
+                  onClick={() => {
+                    setProfileOpen(false); // cerrar el menú
+                    navigate("/perfil");   // redirigir
+                  }}
+                  className="profile-menu-btn"
+                >
+                  <User size={20} /> Historial de pedidos
+                </button>
+              </li>
+              </Link>
+              <li>
+                <button
+                  onClick={() => {
+                    setProfileOpen(false); // cerrar el menú
+                    clearCart();
+                    cerrarSesion();
+                  }}
+                  className="profile-menu-btn logout-btn"
+                >
+                  <User size={20} /> Cerrar Sesion
+                </button>
+              </li>
+            </ul>
+
           </div>
         )}
-
       </div>
     </header>
   );
