@@ -194,6 +194,12 @@
   background: #007bb8;
 }
 
+.dp-pay {
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid #000;
+}
+
 /* — Responsive — */
 @media (max-width: 600px) {
   .dp-buttons {

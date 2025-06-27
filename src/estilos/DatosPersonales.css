@@ -64,3 +64,11 @@
   margin: 0 auto 1rem;
 }
         
+.dp-back-btn {
+  padding: 1rem;
+  background-color: #8B1414;
+  color: #fff;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}

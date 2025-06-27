@@ -36,6 +36,7 @@ import Perfil from './components/Perfil';
 import Alerta from "./components/ControlAcceso/Alerta";
 import { AlertaContext } from "./components/ControlAcceso/AlertaContext";
 import { Rol } from "./entidades/Rol";
+import './estilos/Global.css';
 
 export default function App() {
   const [alerta, setAlerta] = useState<{

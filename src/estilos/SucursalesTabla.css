@@ -16,27 +16,33 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  background-color: #8b1414;
+  color: #fff;
+  padding: 0 1rem;
 }
 
 .sucursales-header h2 {
   margin: 0;
   font-size: 1.75rem;
-  color: #333;
+  color: #fff;
 }
 
-.btn-add {
-  background: #28a745;
-  color: white;
-  border: none;
-  padding: 0.6rem 1.2rem;
+.sucursales-header .btn-add {
+  background-color: #fff;
+  color: #8b1414;
+  border: 1px solid #8b1414;
+  padding: 0.6rem 1rem;
   font-size: 1rem;
-  border-radius: 4px;
   cursor: pointer;
-  transition: background 0.2s;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  border-radius: 50px;
+  text-decoration: none;
 }
 
-.btn-add:hover {
-  background: #218838;
+.sucursales-header .btn-add:hover {
+  background-color: #b12b2e;
+  color: #fff;
 }
 
 /* Tabla */

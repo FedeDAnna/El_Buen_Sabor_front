@@ -161,18 +161,19 @@ export default function OrdenesPantalla() {
   return (
     
     <div className="ordenes-container">
-      <div className="buscador-contenedor">
-        <div className="buscador">
-          <input
-            type="text"
-            placeholder="Buscar pedido..."
-            value={busqueda}
-            onChange={e => setBusqueda(e.target.value)}
-          />
+      <div className="ordenes-header">
+        <h2>📋 Pedidos</h2>
+        <div className="buscador-contenedor">
+          <div className="buscador">
+            <input
+              type="text"
+              placeholder="Buscar pedido..."
+              value={busqueda}
+              onChange={e => setBusqueda(e.target.value)}
+            />
+          </div>
         </div>
       </div>
-
-      <h2>📋 Pedidos</h2>
       <div className="barra-superior">
         <div className="filtros">
           {estadosAMostrar.map(est => (

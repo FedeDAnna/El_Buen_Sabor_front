@@ -7,7 +7,7 @@
 }
 
 /* CABECERA: título + botón */
-.header {
+.products-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -15,13 +15,13 @@
   z-index: 0;
 }
 
-.header h2 {
+.products-header h2 {
   margin: 0;
   font-size: 1.5rem;
   color: #333;
 }
 
-.header button {
+.products-header button {
   padding: 0.5rem 1rem;
   background: #ffc107;
   border: none;
@@ -32,7 +32,7 @@
   transition: background 0.2s;
 }
 
-.header button:hover {
+.products-header button:hover {
   background: #e0a800;
 }
 
@@ -90,7 +90,7 @@
 }
 
 /* BOTÓN “VOLVER” */
-.btn-add {
+/* .btn-add {
   display: inline-block;
   margin-top: 1rem;
   padding: 0.5rem 1rem;
@@ -106,4 +106,4 @@
 .btn-add:hover {
   background: #ffc107;
   color: #fff;
-}
+} */

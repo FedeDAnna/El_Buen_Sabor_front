@@ -96,7 +96,7 @@ export default function InsumosCategoria() {
   );
   return (
     <section className="products-page">
-      <div className="buscador-contenedor">
+      {/* <div className="buscador-contenedor">
         <div className="buscador">
           <input
             type="text"
@@ -105,10 +105,22 @@ export default function InsumosCategoria() {
             onChange={e => setBusqueda(e.target.value)}
           />
         </div>
-      </div>
+      </div> */}
       <div className="header">
         <h2>Productos de: {categoria?.denominacion}</h2>
-        <button onClick={() => openModal(true,true)}>Agregar +</button>
+        <div>
+          <div className="buscador-contenedor">
+            <div className="buscador">
+              <input
+                type="text"
+                placeholder="Buscar insumo..."
+                value={busqueda}
+                onChange={e => setBusqueda(e.target.value)}
+              />
+            </div>
+          </div>
+          <button onClick={() => openModal(true,true)}>Agregar +</button>
+        </div>
       </div>
 
       <table className="products-table">

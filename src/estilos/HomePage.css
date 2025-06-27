@@ -1,12 +1,13 @@
 /* Hero full-bleed ----------------------------------------------------- */
 .hp-hero {
   position: relative;
-  width: 100vw;
+  width: 95vw;
   height: 80vh; /* ajustar o usar 100vh */
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 auto;
 }
 .video-container {
   position: absolute;
@@ -28,7 +29,7 @@
   position: relative;
   z-index: 1;
   display: flex;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
   align-items: center;
   gap: 2rem;
   background: rgba(255, 255, 255, 0.458);

@@ -17,6 +17,11 @@
   font-size: 1.5rem;
 }
 
+.products-page .header div {
+  display: flex;
+  gap: 1rem;
+}
+
 .products-page .btn-add {
   background-color: #fff;
   border: 2px solid #b52e31;

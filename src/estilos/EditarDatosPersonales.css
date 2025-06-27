@@ -33,8 +33,8 @@
   cursor: pointer;
 }
 .edp-actions button:first-child {
-  background: #eee;
-  color: #333;
+  background: #8B1414;
+  color: #fff;
 }
 .edp-actions button:last-child {
   background: #f0b600;

@@ -20,23 +20,26 @@
 
 .products-page .header h2 {
   font-size: 1.5rem;
-  color: #333;
+  color: #fff;
   margin: 0;
 }
 
 .products-page .header button {
-  background-color: #28a745;
-  color: #fff;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
+  background-color: #fff;
+  color: #8b1414;
+  border: 1px solid #8b1414;
+  padding: 0.6rem 1rem;
   font-size: 1rem;
-  transition: background-color 0.2s ease;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  border-radius: 50px;
+  text-decoration: none;
 }
 
 .products-page .header button:hover {
-  background-color: #218838;
+  background-color: #b12b2e;
+  color: #fff;
 }
 
 /* Table Styles */
@@ -63,6 +66,15 @@
   background-color: #f9f9f9;
 }
 
+.products-table td a {
+  border: 1px solid #333;
+  padding: .5rem;
+  border-radius: 5px;
+  text-decoration: none;
+  color: #000;
+  text-transform: capitalize;
+}
+
 /* Stock Indicators */
 .low-stock {
   background-color: rgba(255, 0, 0, 0.1) !important;
@@ -87,7 +99,7 @@
 }
 
 /* Back / Add Link */
-.btn-add {
+/* .btn-add {
   display: inline-block;
   margin-top: 0.5rem;
   padding: 0.5rem 1rem;
@@ -100,4 +112,4 @@
 
 .btn-add:hover {
   background-color: #0069d9;
-}
+} */

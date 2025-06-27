@@ -131,7 +131,7 @@
 }
 
 /* Reutiliza .btn-add para agregar insumo */
-.btn-add {
+/* .btn-add {
   background: #ffc107;
   border: none;
   padding: 0.4rem 0.8rem;
@@ -147,7 +147,7 @@
 .btn-save:hover,
 .btn-cancel:hover {
   opacity: 0.9;
-}
+} */
 
 img{
   max-width: 200px;

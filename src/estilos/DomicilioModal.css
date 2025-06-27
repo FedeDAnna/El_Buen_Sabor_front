@@ -12,7 +12,7 @@
 .dm-modal {
   background: #fff;
   border-radius: 8px;
-  width: 400px;
+  width: 500px;
   max-width: 95%;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   display: flex;
@@ -49,6 +49,7 @@
 
 .dm-body input,
 .dm-body select {
+  box-sizing: border-box;
   width: 100%;
   padding: 0.5rem;
   border: 1px solid #ccc;

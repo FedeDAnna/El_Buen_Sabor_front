@@ -85,8 +85,8 @@
 
 /* Danger */
 .modal-overlay .modal-contenido .modal-footer button.danger {
-  background-color: #ffffff;
-  color: #000000;
+  background-color: #E74C3C;
+  color: #fff;
 }
 
 /* Principal */
@@ -114,11 +114,14 @@
 }
 
 .seccion {
+  display: flex;
+  flex-direction: column;
+  gap: .8rem;
   margin-bottom: 20px;
   background: #fff8e1;
   padding: 10px;
   border-radius: 8px;
-  height: 150px;
+  height: 100%;
 }
 .seccion h3{
   margin-top: 2px;
@@ -360,5 +363,14 @@
   font-size: 18px;
 }
 
-
+.btn-generar-factura {
+  background-color: #36C000;
+  color: #fff;
+  padding: 1rem;
+  border: 1px solid #36C000;
+  border-radius: 10px;
+  cursor: pointer;
+  width: fit-content;
+  margin: 0 auto;
+}
 
