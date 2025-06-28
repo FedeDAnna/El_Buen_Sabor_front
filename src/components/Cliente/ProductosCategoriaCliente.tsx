@@ -34,11 +34,9 @@ export default function ProductosCategoriaCliente() {
         let data: ArticuloManufacturado[] | ArticuloInsumo[] = []
 
         if (+categoriaId === 0) {
-          // id=0: traemos todo (manufacturados + insumos no para elaborar)
           data = await getArticulosManufacturadosConInsumos()
           setCategoria(undefined)
         } else {
-          // id≠0: por categoría
           const cat = await fetchCategoriaById(+categoriaId)
           setCategoria(cat)
           if (cat.tipo_categoria?.id === 1) {
@@ -60,24 +58,20 @@ export default function ProductosCategoriaCliente() {
     load()
   }, [categoriaId])
 
-  // Narrowing de subtipos
   function isManufacturado(
     p: ArticuloManufacturado | ArticuloInsumo
   ): p is ArticuloManufacturado {
     return 'tiempo_estimado_en_minutos' in p
   }
 
-  // Comprueba stock disponible sin error de "detalles" indefinido
   function hasStock(p: ArticuloManufacturado | ArticuloInsumo): boolean {
     if (!p) return false
 
     if (!isManufacturado(p)) {
-      // Insumo: basta un único stock_insumo_sucursales[0]
       const sis = p.stock_insumo_sucursales?.[0]
       return !!sis && sis.stock_actual > 0
     }
 
-    // Manufacturado: uniformizamos detalles a [] si viene undefined
     const detalles = p.detalles ?? []
     return detalles.every(d => {
       const sis = d.articulo_insumo?.stock_insumo_sucursales?.[0]
@@ -85,7 +79,6 @@ export default function ProductosCategoriaCliente() {
     })
   }
 
-  // Filtro de búsqueda
   const productosFiltrados = productos.filter(p => {
     const term = searchTerm.toLowerCase()
     const denomMatch = p.denominacion.toLowerCase().includes(term)

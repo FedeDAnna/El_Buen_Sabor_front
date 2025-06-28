@@ -45,16 +45,16 @@ export default function Sidebar({ isOpen, onClose }: Props) {
           <li><a href="/admin/empleados"><FaUserTie/> Empleados</a></li>
           <li><a href="/admin/clientes"><FaUserFriends/> Clientes</a></li>
         </>}
-        {(isAdmin||isCocinero||isCajero||isDelivery) &&
-          <li><a href="/HomePage"><FaHome/> Home</a></li>}
+        {/* {(isAdmin||isCocinero||isCajero||isDelivery) &&
+          <li><a href="/HomePage"><FaHome/> Home</a></li>} */}
       </ul>
-      <button
+      {/* <button
         className="admin-logout-btn"
         onClick={onClose}          // aquí cierras el sidebar
       >
 
         <FaSignOutAlt/> Cerrar Sesión
-      </button>
+      </button> */}
     </nav>
   )
 }
