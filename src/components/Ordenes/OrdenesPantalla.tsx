@@ -10,7 +10,6 @@ import ModalOrden from "./OrdenModal";
 import ModalPago from "./ModalPago";
 import { FaBars } from "react-icons/fa";
 
-
 // 1) Map de estados permitidos por rol
 const permisosPorRol: Record<string, (Estado | "")[]> = {
   admin: [
@@ -24,7 +23,7 @@ const permisosPorRol: Record<string, (Estado | "")[]> = {
     Estado.DEMORADO, Estado.LISTO, Estado.RECHAZADO
   ],
   delivery: [
-     Estado.LISTO,
+    Estado.LISTO,
     Estado.EN_CAMINO, Estado.ENTREGADO, Estado.RECHAZADO
   ],
   cajero: [
@@ -48,12 +47,20 @@ const estadosDisponibles: { label: string; value: Estado | "" }[] = [
   { label: "Rechazado", value: Estado.RECHAZADO },
 ];
 
+// Estados que NO se filtran por fecha (traen todos sus registros)
+const EXCEPCIONES_FECHA: Estado[] = [
+  Estado.ENTREGADO,
+  Estado.RECHAZADO,
+];
+
+// Cadena con la fecha de hoy en formato YYYY-MM-DD
+const hoyStr = new Date().toISOString().slice(0, 10);
+
 const ELEMENTOS_POR_PAGINA = 8;
 
 export default function OrdenesPantalla() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
-  // 2) Estado puede ser un Estado o cadena vacía para "Todos"
   const [estadoSeleccionado, setEstadoSeleccionado] = useState<Estado | "">("");
   const [busqueda, setBusqueda] = useState("");
   const [paginaActual, setPaginaActual] = useState(1);
@@ -67,23 +74,20 @@ export default function OrdenesPantalla() {
 
   const puedeCobrar = !(userRole === "cocinero" || userRole === "delivery");
 
-   useEffect(() => {
+  useEffect(() => {
     const stored = localStorage.getItem("usuario");
-    console.log("storrr",stored);
     if (stored) {
       try {
         const u = JSON.parse(stored);
-          const rol = typeof u.rol === "string"
-            ? u.rol.trim().toLowerCase()
-            : "";
-          setUserRole(rol);
-
+        const rol = typeof u.rol === "string" ? u.rol.trim().toLowerCase() : "";
+        setUserRole(rol);
       } catch {
         setUserRole("");
       }
     }
   }, []);
-   // Al cambiar userRole, establecer filtro inicial solo para cocinero y delivery
+
+  // Al cambiar userRole, establecer filtro inicial solo para cocinero y delivery
   useEffect(() => {
     if (estadoSeleccionado === "") {
       if (userRole === "cocinero") {
@@ -93,37 +97,47 @@ export default function OrdenesPantalla() {
       }
     }
   }, [userRole]);
+
   useEffect(() => { cargarPedidos(); }, []);
   const cargarPedidos = async () => {
     const data = await getPedidos();
     setPedidos(data);
   };
 
-  console.log("ROOOL", userRole) //ESTO MUESTRA CORRECTAMENTE COCINERO
-
-  
-
-  // 5) Filtrar qué estados mostrar según rol
+  // Filtrar qué estados mostrar según rol
   const estadosVisibles = estadosDisponibles.filter(est =>
     permisosPorRol[userRole]?.includes(est.value)
   );
-  // Al final de la sección de hooks, justo tras estadosVisibles:
   const estadosAMostrar = estadosVisibles.filter(est => {
-    // si es el botón "Todos" (value === "") y el rol es cocinero o delivery, lo quitamos
     if (est.value === "" && (userRole === "cocinero" || userRole === "delivery")) {
       return false;
     }
     return true;
   });
 
-
-    const pedidosFiltrados = pedidos.filter(p => {
+  // Filtrado combinado: estado, fecha y búsqueda
+  const pedidosFiltrados = pedidos.filter(p => {
+    // 1) Estado
     const matchEstado = estadoSeleccionado === "" || p.estado_pedido === estadoSeleccionado;
+
+    // 2) Fecha: solo filtrar si no es uno de los excepciones
+    const necesitaFiltrarPorFecha =
+      !EXCEPCIONES_FECHA.includes(estadoSeleccionado as Estado);
+    const fechaPedido = (typeof p.fecha_pedido === "string"
+      ? p.fecha_pedido
+      : p.fecha_pedido.toISODate()
+    ); // Luxon DateTime to ISO date string (YYYY-MM-DD)
+    const matchFecha = necesitaFiltrarPorFecha
+      ? fechaPedido === hoyStr
+      : true;
+
+    // 3) Texto (nombre o ID)
     const termino = busqueda.toLowerCase();
     const nombre = `${p.usuario?.nombre ?? ""} ${p.usuario?.apellido ?? ""}`.toLowerCase();
     const matchNombre = nombre.includes(termino);
     const matchId = p.id?.toString().includes(termino);
-    return matchEstado && (matchNombre || matchId);
+
+    return matchEstado && matchFecha && (matchNombre || matchId);
   });
 
   const totalPaginas = Math.ceil(pedidosFiltrados.length / ELEMENTOS_POR_PAGINA);
@@ -159,7 +173,6 @@ export default function OrdenesPantalla() {
   };
 
   return (
-    
     <div className="ordenes-container">
       <div className="ordenes-header">
         <h2>📋 Pedidos</h2>
