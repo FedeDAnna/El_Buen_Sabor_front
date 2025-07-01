@@ -171,7 +171,7 @@ export default function OrdenFila({
       <td>
         <div className="pedido-actions">
           {/* Botones de avance de estado, ocultos para COCINERO cuando sea LISTO */}
-          {(pedido.estado_pedido !== Estado.LISTO && nextEstado && userRole !== "COCINERO") && (
+          {nextEstado && !(pedido.estado_pedido === Estado.LISTO && userRole === "COCINERO") && (
             <button onClick={handleNext}>{label}</button>
           )}
 
