@@ -85,10 +85,10 @@ export default function PromocionModal({
 
   // compute sum & suggestion
   useEffect(() => {
-    const sum = rows.reduce((s, r) => s + (r.articulo?.precio_venta||0), 0)
+    const sum = rows.reduce((s, r) => s + ((r.articulo?.precio_venta||0) * (r.cantidad)), 0)
     
     if (sugerencia !== 'otro') {
-    setPrecioProm(Math.round(sum * (1 - Number(sugerencia)/100)))
+    setPrecioProm(Math.round(sum * (1 - (Number(sugerencia)/100))))
    }
   }, [rows, sugerencia])
 

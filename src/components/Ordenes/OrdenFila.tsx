@@ -171,7 +171,7 @@ export default function OrdenFila({
       <td>
         <div className="pedido-actions">
           {/* Botones de avance de estado, ocultos para COCINERO cuando sea LISTO */}
-          {(pedido.estado_pedido !== Estado.LISTO && nextEstado && userRole !== "COCINERO") && (
+          {nextEstado && !(pedido.estado_pedido === Estado.LISTO && userRole === "COCINERO") && (
             <button onClick={handleNext}>{label}</button>
           )}
 
@@ -192,8 +192,8 @@ export default function OrdenFila({
             </button>
           )}
 
-          {/* Botón Cancelar: aparece en todos los roles, excepto cuando el estado es LISTO o RECHAZADO o ENTREGADO */}
-          {pedido.estado_pedido !== Estado.RECHAZADO && pedido.estado_pedido !== Estado.ENTREGADO && pedido.estado_pedido !== Estado.LISTO && (
+          {/* Botón Cancelar: aparece en todos los roles, excepto cuando el estado es RECHAZADO o ENTREGADO */}
+          {pedido.estado_pedido !== Estado.RECHAZADO && pedido.estado_pedido !== Estado.ENTREGADO && (
             <button onClick={handleCancel} className="danger">
               Cancelar pedido
             </button>

@@ -9,6 +9,11 @@
 /* =========================================
    Estilos de botones en la celda de acciones
    ========================================= */
+.pedido-actions{
+  display:flex;
+  gap: 1rem;;
+}
+
 /* Tamaño fijo para todos los botones de acción */
 .pedido-actions button {
   width: 130px;          /* ancho fijo */
