@@ -186,11 +186,11 @@ export default function OrdenFila({
           )}
 
           {/* Botón En camino (DELIVERY) solo para roles no COCINERO */}
-          {(pedido.estado_pedido === Estado.LISTO && pedido.tipo_envio === "DELIVERY" && userRole !== "COCINERO") && (
+          {/* {(pedido.estado_pedido === Estado.LISTO && pedido.tipo_envio === "DELIVERY" && userRole !== "COCINERO") && (
             <button onClick={handleNext} className="primary">
               En camino
             </button>
-          )}
+          )} */}
 
           {/* Botón Cancelar: aparece en todos los roles, excepto cuando el estado es RECHAZADO o ENTREGADO */}
           {pedido.estado_pedido !== Estado.RECHAZADO && pedido.estado_pedido !== Estado.ENTREGADO && (
