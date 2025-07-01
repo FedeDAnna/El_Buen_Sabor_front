@@ -99,7 +99,7 @@ export default function PromocionTabla() {
               <td>{p.hora_desde.toFormat('HH:mm')}</td>
               <td>{p.hora_hasta.toFormat('HH:mm')}</td>
               <td>${p.precio_promocional}</td>
-              <td>
+              <td className='tdPromociones'>
                 <button 
                   title="Ver"
                   onClick={() => openModal(false, true, p!)}

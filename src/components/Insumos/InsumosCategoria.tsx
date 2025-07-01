@@ -129,7 +129,7 @@ export default function InsumosCategoria() {
             <th>Código</th>
             <th>Nombre</th>
             <th>Es para elaborar</th>
-            <th>Precio Venta</th>
+            <th>Precio Compra</th>
             <th>Unidad Medida</th>
             <th>Acciones</th>
           </tr>
@@ -146,7 +146,7 @@ export default function InsumosCategoria() {
                 <td>{a.id}</td>
                 <td>{a.denominacion}</td>
                 <td>{a.es_para_elaborar ? 'SI' : 'NO'}</td>
-                <td>${a.precio_venta}</td>
+                <td>${a.stock_insumo_sucursales[0].precio_compra}</td>
                 <td>{a.unidad_de_medida?.denominacion}</td>
                 <td>
                   <button title="Ver" onClick={() => openModal(false, true, a)}>👁️</button>
