@@ -227,7 +227,7 @@ export default function Header() {
                     <House size={20} /> Mis Domicilios
                   </button>
                 </li>
-
+                {user?.rol  === 'CLIENTE' && (
                   <li>
                     <button
                       onClick={() => {
@@ -239,6 +239,8 @@ export default function Header() {
                       <ClipboardList size={20} /> Historial de pedidos
                     </button>
                   </li>
+                )}
+                  
                   <li>
                     <button
                       onClick={() => {
