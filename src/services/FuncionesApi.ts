@@ -829,7 +829,7 @@ export async function getProductosPorPedido(pedidoId: number): Promise<any[]> {
 }
 
 //ver lo del localstorage
-export async function updateRepartidorPedido(pedidoId: number): Promise<Pedido> {
+export async function updateRepartidorPedido(pedidoId: number): Promise<void> {
   const usuarioJson = localStorage.getItem("usuario");
   console.log("usuario: ",usuarioJson);
   const idUsuario = usuarioJson ? JSON.parse(usuarioJson).id :0;
@@ -851,6 +851,4 @@ export async function updateRepartidorPedido(pedidoId: number): Promise<Pedido> 
   if (!res.ok) {
     throw new Error(`Error ${res.status} al asignar repartidor al pedido`);
   }
-
-  return res.json();
 }

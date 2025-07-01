@@ -47,13 +47,13 @@ export default function Sidebar({ isOpen, onClose }: Props) {
         </>}
         
       </ul>
-      <button
+      {/* <button
         className="admin-logout-btn"
         onClick={onClose}          // aquí cierras el sidebar
       >
 
         <FaSignOutAlt/> Cerrar Sesión
-      </button>
+      </button> */}
     </nav>
   )
 }
