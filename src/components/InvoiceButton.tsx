@@ -20,7 +20,7 @@ export function InvoiceButton({ pedidoId }: InvoiceButtonProps) {
 
   return (
     <button className="btn-generar-factura" onClick={handleClick}>
-      <FaFileInvoice /> Generar Factura
+      <FaFileInvoice /> Generar Facturaaa
     </button>
   );
 }

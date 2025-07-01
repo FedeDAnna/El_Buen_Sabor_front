@@ -9,6 +9,7 @@ import type ArticuloManufacturado from "../../entidades/ArticuloManufacturado";
 import type Articulo from "../../entidades/Articulo";
 import type PedidoDetalle from "../../entidades/PedidoDetalle";
 import { InvoiceButton } from "../InvoiceButton";
+import { TipoEnvio } from "../../entidades/TipoEnvio";
 
 function isInsumo(a: Articulo): a is ArticuloInsumo {
   return 'stock_insumo_sucursales' in a;
@@ -271,10 +272,10 @@ export default function ModalOrden({ pedido, onClose, onEstadoChange,onCobrar }:
               </table>
 
               <p className="factura-total">Total: ${pedido.total.toFixed(2)}</p>
-
-              {pedido.id != null && (
-                <InvoiceButton pedidoId={pedido.id} />
-              )}
+              {pedido.id != null
+                && !(pedido.estado_pedido === Estado.RECHAZADO && pedido.tipo_envio === TipoEnvio.TAKE_AWAY)
+                && <InvoiceButton pedidoId={pedido.id} />
+              }
             </section>
           )}
         </div>

@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { useUser } from '../../contexts/UserContext';
 import Swal from 'sweetalert2';
 import { LiaWonSignSolid } from 'react-icons/lia';
+import { Rol } from '../../entidades/Rol';
 
 interface SidebarProps {
   isOpen: boolean
@@ -88,16 +89,17 @@ export default function SidebarCliente({ isOpen, onClose, onPromocionesClick }: 
                   <span className="sb-icon">👤</span> Mis Datos
                 </Link>
               </li>
-              <li>
-                <Link
-                  to="/historial-pedidos"
-                  className={location.pathname.startsWith('/historial-pedidos') ? 'active' : ''}
-                  onClick={onClose}
-                >
-                  <span className="sb-icon">📜</span> Historial de Pedidos
-                </Link>
-              </li>
-              
+              {user.rol === Rol.CLIENTE && (
+                <li>
+                  <Link
+                    to="/historial-pedidos"
+                    className={location.pathname.startsWith('/historial-pedidos') ? 'active' : ''}
+                    onClick={onClose}
+                    >
+                    <span className="sb-icon">📜</span> Historial de Pedidos
+                  </Link>
+                </li>
+              )}              
             </>
             :
             ''
@@ -132,11 +134,11 @@ export default function SidebarCliente({ isOpen, onClose, onPromocionesClick }: 
                 <span className="sb-icon">👥</span> Quiénes Somos
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link to="/contacto" onClick={onClose}>
                 <span className="sb-icon">✉️</span> Contacto
               </Link>
-            </li>
+            </li> */}
             <hr />
             <li>
               <Link to="/faq" onClick={onClose}>
