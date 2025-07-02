@@ -384,12 +384,24 @@ const handleFinalizar = async () => {
       imageAlt: "Sucursal cerrada"
     });
   }
-
+  
   // 2) Generar el objeto Pedido
   const pedido = generarPedido();
   if (!pedido) return;
+  
+
 
   try {
+    const localidadesPermitidas = ['GODOY CRUZ', 'CIUDAD', 'MAIPU'];
+      const nombreLocalidad = pedido?.domicilio?.localidad?.nombre?.toUpperCase() ?? '';
+      if (!localidadesPermitidas.includes(nombreLocalidad)) {
+        return Swal.fire({
+          title: "Domicilio fuera del rango!",
+          text: `Lo sentimos, estas fuera del rango de entrega de nuestra sucursal.`,
+          icon: "warning"
+        });
+      }
+
     // 3) Guardar Pedido (o abrir MP)
     const res =
       formaPago === FormaPago.MERCADO_PAGO

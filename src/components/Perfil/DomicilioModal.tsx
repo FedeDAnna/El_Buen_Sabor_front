@@ -4,6 +4,7 @@ import type Domicilio from '../../entidades/Domicilio';
 import type Localidad from '../../entidades/Localidad';
 import {getLocalidades } from '../../services/FuncionesApi';
 import '../../estilos/DomicilioModal.css';
+import Swal from 'sweetalert2';
 
 interface Props {
   mode: 'view' | 'edit' | 'create';
@@ -46,11 +47,29 @@ export default function DomicilioModal({ mode, domicilio, onClose, onSave }: Pro
   const handleSubmit = () => {
     const d = domicilio ? { ...domicilio } as Domicilio : {} as Domicilio;
     d.tipo = tipo;
-    d.calle = calle;
-    d.numero = Number(numero);
-    d.cp = Number(cp);
-    d.localidad = localidades.find(l => l.id === localidadId)!;
-    onSave(d);
+        d.calle = calle;
+        d.numero = Number(numero);
+        d.cp = Number(cp);
+        d.localidad = localidades.find(l => l.id === localidadId)!;
+        
+      if(d.calle != null && d.numero != null && d.cp != null && d.localidad != null && d.cp>0 && d.numero >0){
+      
+        onSave(d);
+        
+      }else{
+        (d.cp<0 || d.numero<0 ? Swal.fire({
+                          title: '¡Número inválido!',
+                          text: `Los datos numericos no pueden ser negativos.`, 
+                          icon: 'info',
+                        }) : Swal.fire({
+                          title: '¡Debe completar los campos!',
+                          text: `Todos los campos son obligatorios.`, 
+                          icon: 'info',
+                        }))
+          
+      }
+    
+    
   };
 
   return (
@@ -78,6 +97,7 @@ export default function DomicilioModal({ mode, domicilio, onClose, onSave }: Pro
             value={calle}
             onChange={e => setCalle(e.target.value)}
             readOnly={!editable}
+            required
           />
 
           <label>Número</label>
@@ -86,6 +106,7 @@ export default function DomicilioModal({ mode, domicilio, onClose, onSave }: Pro
             value={numero}
             onChange={e => setNumero(e.target.value)}
             readOnly={!editable}
+            required
           />
 
           <label>Código Postal</label>
@@ -94,6 +115,7 @@ export default function DomicilioModal({ mode, domicilio, onClose, onSave }: Pro
             value={cp}
             onChange={e => setCp(e.target.value)}
             readOnly={!editable}
+            required
           />
 
           <label>Localidad</label>
@@ -104,6 +126,7 @@ export default function DomicilioModal({ mode, domicilio, onClose, onSave }: Pro
               disabled={!editable}
               value={localidadId}
               onChange={e => setLocalidadId(Number(e.target.value))}
+              required
             >
               <option value="" disabled>Seleccione una localidad</option>
               {localidades.map(l => (
