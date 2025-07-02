@@ -50,9 +50,13 @@ export default function PromocionModal({
   const [rows, setRows] = useState<Row[]>([])
   const [articulosOptions, setArticulosOptions] = useState<(ArticuloManufacturado|ArticuloInsumo)[]>([])
   const [precioProm, setPrecioProm] = useState<number>(0)
-  const [sugerencia, setSugerencia] = useState<number | 'otro'>(10)
+  const [sugerencia, setSugerencia] = useState<number>(10)
 
-  
+  // calcular total de artículos para validación y límite
+  const totalArticulos = rows.reduce(
+    (s, r) => s + (r.articulo?.precio_venta || 0) * r.cantidad,
+    0
+  )
 
   // load options & initial
   useEffect(() => {
@@ -69,6 +73,7 @@ export default function PromocionModal({
       setHoraDesde(DateTime.fromJSDate(initialData.hora_desde.toJSDate()).toFormat('HH:mm'))
       setHoraHasta(DateTime.fromJSDate(initialData.hora_hasta.toJSDate()).toFormat('HH:mm'))
       setDescripcionDescuento(initialData.descripcion_descuento)
+      setSugerencia(Number(initialData.porc_descuento))
       if (initialData.imagen) setImagenData(initialData.imagen.src)
       // rows
       //! CHECKEAR
@@ -87,11 +92,10 @@ export default function PromocionModal({
   useEffect(() => {
     const sum = rows.reduce((s, r) => s + ((r.articulo?.precio_venta||0) * (r.cantidad)), 0)
     
-    if (sugerencia !== 'otro') {
-    setPrecioProm(Math.round(sum * (1 - (Number(sugerencia)/100))))
-   }
+    if (sugerencia) {
+      setPrecioProm(Math.round(sum * (1 - (Number(sugerencia)/100))))
+    }
   }, [rows, sugerencia])
-
 
   const addRow = () =>
     setRows(r => [...r, { rowId: uuid(), cantidad: 1 }])
@@ -126,6 +130,17 @@ export default function PromocionModal({
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     if (!denominacion||!fechaDesde||!fechaHasta) return
+
+    // validación: precioProm no puede exceder al total de artículos
+    if (precioProm > totalArticulos) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Precio inválido',
+        text: `El precio promocional no puede ser mayor que el total ($${totalArticulos}).`
+      })
+      return
+    }
+
     const promo = new Promocion()
     if(initialData?.id) promo.id = initialData.id;
     promo.denominacion = denominacion
@@ -136,55 +151,56 @@ export default function PromocionModal({
     promo.hora_hasta = DateTime.fromFormat(horaHasta,'HH:mm')
     promo.descripcion_descuento = descripcionDescuento
     promo.precio_promocional = Number(precioProm)
+    promo.porc_descuento = Number(sugerencia)
     if (imagenData) promo.imagen = { src: imagenData, alt: denominacion } as Imagen
 
     promo.detalles = rows
-    .filter(r => r.articulo)
-    .map(r => {
-      const det = new PromocionDetalle()
-      if (r.detalleId) det.id = r.detalleId
-      det.articulo = r.articulo
-      det.cantidad = r.cantidad
-      return det
-    })
+      .filter(r => r.articulo)
+      .map(r => {
+        const det = new PromocionDetalle()
+        if (r.detalleId) det.id = r.detalleId
+        det.articulo = r.articulo
+        det.cantidad = r.cantidad
+        return det
+      })
     console.log(promo.detalles)
-    try {
-    const promocion : Promocion = await postPromocion(promo)
-    onSave(promocion)
-    const Toast = Swal.mixin({
-                            toast: true,
-                            position: "top-end",
-                            showConfirmButton: false,
-                            timer: 4000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                              toast.onmouseenter = Swal.stopTimer;
-                              toast.onmouseleave = Swal.resumeTimer;
-                            }
-      });
-      Toast.fire({
-        icon: "success",
-        title: "Promoción creada/editada con exito"
-      });
-  } catch (err) {
-    console.error(err)
-    const Toast = Swal.mixin({
-                            toast: true,
-                            position: "top-end",
-                            showConfirmButton: false,
-                            timer: 4000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                              toast.onmouseenter = Swal.stopTimer;
-                              toast.onmouseleave = Swal.resumeTimer;
-                            }
-      });
-      Toast.fire({
-        icon: "error",
-        title: "Error al crear/editar la Promoción"
-      });
-  }
 
+    try {
+      const promocion: Promocion = await postPromocion(promo)
+      onSave(promocion)
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: 'success',
+        title: 'Promoción creada/editada con exito'
+      });
+    } catch (err) {
+      console.error(err)
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: 'error',
+        title: 'Error al crear/editar la Promoción'
+      });
+    }
   }
 
   return (
@@ -324,8 +340,7 @@ export default function PromocionModal({
             <div>
               <label>Total artículos:</label>
               <span>
-                $
-                {rows.reduce(
+                ${rows.reduce(
                   (s, r) =>
                     s + (r.articulo?.precio_venta || 0) * r.cantidad,
                   0
@@ -333,25 +348,27 @@ export default function PromocionModal({
               </span>
             </div>
             <div>
-              <label>Descuento:</label>
-              <select
-                disabled={!editable}
-                value={sugerencia}
-                onChange={e =>
-                  setSugerencia(
-                    e.target.value === 'otro'
-                      ? 'otro'
-                      : Number(e.target.value)
-                  )
-                }
-              >
-                {[10, 15, 20, 30, 50].map(p => (
-                  <option key={p} value={p}>
-                    {p}%
-                  </option>
-                ))}
-                <option value="otro">Otro</option>
-              </select>
+              <label>% Descuento:</label>
+              <input
+                  disabled={!editable}
+                  type="number"
+                  min={0}
+                  max={100}
+                  step={1}
+                  value={sugerencia}
+                  onChange={e => {
+                    const raw = Number(e.target.value);
+                    const clamped = isNaN(raw)
+                      ? 0
+                      : Math.max(0, Math.min(100, Math.round(raw)));
+                    setSugerencia(clamped);
+                  }}
+                  onBlur={() => {
+                    // refuerzo al perder foco
+                    if (sugerencia < 0) setSugerencia(0);
+                    else if (sugerencia > 100) setSugerencia(100);
+                  }}
+                />
             </div>
             <div>
               <label>Precio promocional:</label>
@@ -359,8 +376,12 @@ export default function PromocionModal({
                 type="number"
                 value={precioProm}
                 min={0}
-                readOnly={!editable && sugerencia !== 'otro'}
-                onChange={e => setPrecioProm(Number(e.target.value))}
+                max={totalArticulos}
+                readOnly={!editable}
+                onChange={e => {
+                  const val = Number(e.target.value)
+                  setPrecioProm(val > totalArticulos ? totalArticulos : val)
+                }}
               />
             </div>
           </div>
