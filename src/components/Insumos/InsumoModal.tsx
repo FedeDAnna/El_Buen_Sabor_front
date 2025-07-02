@@ -129,6 +129,7 @@ export default function InsumoModal({
     try {
       const created = await saveArticuloInsumo(art)
       onSave(created)
+      
       const Toast = Swal.mixin({
                     toast: true,
                     position: "top-end",
