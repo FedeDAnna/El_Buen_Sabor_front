@@ -1,9 +1,29 @@
+.dashboard {
+  width: 100%;
+  margin: 2rem auto;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+
+.dashboard h1 {
+  background-color: #8B1414;
+  color: #fff;
+  padding: 1.5rem;
+  width: 1400px;
+}
+
+.dashboard h2 {
+  padding:  1rem 2rem;
+}
+
 .dashboard-charts-row {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
   justify-content: space-between;
-  margin-top: 2rem;
+  margin: 2rem;
 }
 
 .chart-box {
@@ -11,7 +31,43 @@
   min-width: 300px;
 }
 
+.chart-box p {
+  padding: 0 2rem;
+}
+
 .chart-container {
   flex: 1 1 50%;
   min-width: 300px;
+}
+.btn-excel {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #034A01;
+  background-color: #ffffff;
+  border: 1px solid #217346;
+  border-radius: 10px;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  margin-bottom: 1.6rem;
+}
+
+.btn-excel:hover {
+  background-color: #e8f5e9;
+  border-color: #1b5e20;
+}
+
+.btn-excel:focus {
+  outline: none;
+  border-color: #145429;
+  box-shadow: 0 0 5px rgba(33, 115, 70, 0.4);
+}
+
+.dashboard-container-selector{
+  display: flex;
+  align-items: center; /* Alinea verticalmente selector y botón */
+  gap: 1rem;
+  margin-bottom: 1rem;  
+  padding: 0 2rem;
 }

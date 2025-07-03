@@ -36,6 +36,20 @@
   z-index: 2001;
 }
 
+/* Botón de apertura */
+.hp-hamburger-btn {
+  background-color: transparent;
+  border: none;
+  padding: .5rem 1rem;
+  cursor: pointer;
+}
+
+.hp-hamburger-btn:hover {
+  background-color: rgba(0,0,0,0.05);
+  border-radius: 10px;
+  transition: left 0.3s ease-out;
+}
+
 /* Botón para cerrar (la X) */
 .sb-close-btn {
   position: absolute;
@@ -95,13 +109,24 @@
   border-top: 1px solid #eee;
 }
 
-.sb-btn-link {
+.sb-link-btn {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
   background: none;
   border: none;
-  color: inherit;
+  color: #333;
+  font-weight: 500;
   font: inherit;
-  padding: 0;
-  cursor: pointer;
-  text-align: left;
   width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sb-link-btn:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+.sb-link-btn:active {
+  background: rgba(0,0,0,0.1);
 }

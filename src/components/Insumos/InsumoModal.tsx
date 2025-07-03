@@ -39,6 +39,7 @@ export default function InsumoModal({
   const [stock, setStock] = useState<StockInsumoSucursales>(
     () => new StockInsumoSucursales()
   )
+  stock.sucursal = {id:1};
 
   useEffect(()=>{
     fetchUnidadesDeMedida()
@@ -78,7 +79,8 @@ export default function InsumoModal({
   }, [ProductoInsumo])
 
   const canSave = () => {
-    return esParaElaborar !==null && precio > 0
+    return esParaElaborar !==null 
+    //  && precio > 0
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -124,10 +126,10 @@ export default function InsumoModal({
 
     art.stock_insumo_sucursales = [stock]
 
-
     try {
       const created = await saveArticuloInsumo(art)
       onSave(created)
+      
       const Toast = Swal.mixin({
                     toast: true,
                     position: "top-end",
@@ -192,15 +194,20 @@ export default function InsumoModal({
              <option value="true">Si</option>
             <option value="false">No</option>
           </select>
-          
-          <label>Precio Venta:</label>
+          {!esParaElaborar &&(
+            <>
+            
+            <label>Precio Venta:</label>
           <input
             type="number"
             placeholder="Precio Venta"
             value={precio || ''}
             onChange={(e) => setPrecio(Number(e.target.value))}
             readOnly={!editable}
-          />
+            />
+            </>
+          ) }
+          
           <label>Unidad de Medida:</label>
           <select
             value={selectedUnidadId}

@@ -1,13 +1,62 @@
+/* src/estilos/AdminPantalla.css */
 .admin-layout {
+  position: relative;
   display: flex;
-  height: 100vh;
-  
+  /* height: 100%; */
+}
+
+.admin-header {
+  position: fixed;
+  top: 70px; left: 0; right: 0;
+  height: 80px;
+  background: transparent;
+  /* border-bottom: 1px solid #e0e0e0; */
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  z-index: 2000;
+  width: fit-content;
+}
+
+.admin-hamburger-btn {
+  background-color: transparent;
+  border: none;
+  padding: .5rem 1rem;
+  cursor: pointer;
+}
+
+.admin-hamburger-btn:hover {
+  background-color: rgba(0,0,0,0.05);
+  border-radius: 10px;
+  transition: left 0.3s ease-out;
+}
+
+.hamburger-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.backdrop {
+  position: fixed;
+  top: 56px; bottom: 0; left: 0; right: 0;
+  background: rgba(0,0,0,0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1500;
+}
+.backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .content {
-  flex: 1;
-  padding: 1.5rem;
-  background-color: #f4f4f4;
+  position: absolute;
+  top: 80px;      /* justo debajo del header */
+  bottom: 0;      /* llegue hasta el pie */
+  left: 0; right: 0;
   overflow-y: auto;
-  width: 100%;
+  
 }
+

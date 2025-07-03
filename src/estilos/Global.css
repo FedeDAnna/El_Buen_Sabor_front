@@ -1,0 +1,28 @@
+/* src/estilos/global.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding-top: 5rem;
+}
+
+:root {
+    --color-principal: #8B1414;
+    --color-secundario: #FFC107;
+    --color-btn-principal: #8B1414;
+    --color-btn-secundario: #FFC107;
+    --color-btn-terciario: #fff;
+    --color-texto: #000;
+    --color-texto-secundario: #fff;
+    --color-texto-terciario: #8B1414;
+}

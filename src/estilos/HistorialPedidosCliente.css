@@ -99,3 +99,9 @@
   background: #ffc107;
   font-weight: bold;
 }
+.spin {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

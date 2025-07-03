@@ -42,7 +42,7 @@ export default function Productos() {
         toast: true,
         position: "top-end",
         showConfirmButton: false,
-        timer: 3000,
+        timer: 4000,
         timerProgressBar: true,
         didOpen: (toast) => {
           toast.onmouseenter = Swal.stopTimer;
@@ -59,7 +59,7 @@ export default function Productos() {
         toast: true,
         position: "top-end",
         showConfirmButton: false,
-        timer: 3000,
+        timer: 4000,
         timerProgressBar: true,
         didOpen: (toast) => {
           toast.onmouseenter = Swal.stopTimer;
@@ -70,8 +70,6 @@ export default function Productos() {
         icon: "error",
         title: "Error al crear/editar la Categoria"
       });
-      
-
     } finally {
       setModalAbierto(false)
       setCategoriaEnModal(undefined)
@@ -82,8 +80,18 @@ export default function Productos() {
   const handleDelete = (id?: number) => {
     return async () => {
       if (!id) return
-      const confirmado = window.confirm('¿Estás seguro de eliminar esta categoría?')
-      if (!confirmado) return
+      const result = await Swal.fire({
+        title: "¿Estás seguro?",
+        text: "Esta acción eliminará la categoría.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+      });
+    
+      if (!result.isConfirmed) return;
 
       try {
         await deleteCategoriaById(id)
@@ -107,7 +115,7 @@ export default function Productos() {
 
   return (
     <section className="products-page">
-      <div className="header">
+      <div className="header-insumo-producto">
         <h2>{idTipo === "2" ? 'Categorías Producto' : 'Categorías Insumo' }</h2>
         <button className="btn-add" onClick={() => openModal(true, true, undefined)}>
           Agregar +
@@ -115,7 +123,7 @@ export default function Productos() {
       </div>
 
       {/* 8) Tabla de categorías */}
-      <table className="products-table">
+      <table className="products-productos-table">
         <thead>
           <tr>
             <th>ID</th>

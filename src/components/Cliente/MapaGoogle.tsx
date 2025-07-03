@@ -1,20 +1,33 @@
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 
 const containerStyle = {
   width: '100%',
   height: '300px',
 };
 
-export default function MapaGoogle({ lat, lng }: { lat: number; lng: number }) {
+type Props = {
+  lat: number;
+  lng: number;
+};
+
+export default function MapaGoogle({ lat, lng }: Props) {
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: 'AIzaSyACTocPOlHyRgbE8MTAxfXAR_0jlYMJnXQ',
+  });
+
+  if (!isLoaded) {
+    return <p>Cargando mapa…</p>;
+  }
+
   return (
-    <LoadScript googleMapsApiKey="AIzaSyACTocPOlHyRgbE8MTAxfXAR_0jlYMJnXQ">
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={{ lat, lng }}
-        zoom={15}
-      >
-        <Marker position={{ lat, lng }} />
-      </GoogleMap>
-    </LoadScript>
+    <GoogleMap
+      mapContainerStyle={containerStyle}
+      center={{ lat, lng }}
+      zoom={16}
+    >
+      <Marker position={{ lat, lng }} />
+    </GoogleMap>
   );
 }
+

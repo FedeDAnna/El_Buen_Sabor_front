@@ -3,13 +3,22 @@ import '../../estilos/CarritoPage.css'
 import { useCart, type CartItem } from '../CartContext'
 import { Link } from 'react-router-dom'
 import CarruselCategorias from './CarruselCategorias'
+import Swal from 'sweetalert2'
 
 export default function CarritoPage() {
   const navigate = useNavigate()
   const { cartItems, total, updateQuantity, removeFromCart, clearCart } = useCart()
+  
 
   const handleSiguiente = () => {
-    navigate('/pedido/pago')
+    const user = localStorage.getItem('usuario');
+    if (!user) {
+      Swal.fire('Error','Debés iniciar sesión para continuar con el pedido.','error');
+      navigate('/login');
+      return;
+    } else {
+      navigate('/pedido/pago')
+    }
   }
 
   if (cartItems.length === 0) {
@@ -25,10 +34,13 @@ export default function CarritoPage() {
           <h2>Tu carrito está vacío</h2>
           <p>
             Explora nuestros{' '}
-            <Link to="/categorias/0" className="cart-empty-link">
+            <Link to="/categorias/1" className="cart-empty-link">
               productos
             </Link>{' '}
-            y agrégalos al carrito.
+            y agrégalos al carrito. O vuelve a nuestro{' '}
+            <Link to="/HomePage" className="cart-empty-link">
+              Home
+            </Link>{' '}
           </p>
         </div>
 
@@ -47,6 +59,9 @@ export default function CarritoPage() {
   return (
     <main className="cart-main">
       <h2>Mi Pedido</h2>
+      <button onClick={() => navigate('/HomePage')} className="dp-back-btn">
+        ← Volver
+        </button>
 
       <div className="cart-content">
         <div className="cart-items-container">
@@ -153,10 +168,6 @@ export default function CarritoPage() {
           <div className="summary-line">
             <span>Subtotal:</span>
             <span>${total.toLocaleString()}</span>
-          </div>
-          <div className="summary-line">
-            <span>Envío:</span>
-            <span>$0</span> {/* O un cálculo de envío si corresponde */}
           </div>
           <div className="summary-line total-pay">
             <span>Total:</span>

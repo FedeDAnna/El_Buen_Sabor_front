@@ -1,13 +1,12 @@
+import { DateTime } from "luxon";
 import ArticuloManufacturado from "./ArticuloManufacturado";
 import type Domicilio from "./Domicilio";
 import type { Estado } from "./Estado";
-import type Factura from "./Factura";
 import type { FormaPago } from "./FormaPago";
 import type PedidoDetalle from "./PedidoDetalle";
 import type Sucursal from "./Sucursal";
 import type { TipoEnvio } from "./TipoEnvio";
 import type Usuario from "./Usuario";
-import { DateTime } from "luxon";
 
 
 export default class Pedido{
@@ -16,15 +15,15 @@ export default class Pedido{
     total: number =0;
     estado_pedido?: Estado;
     tipo_envio?: TipoEnvio;
+    repartidor?:Usuario;
+    detalles: PedidoDetalle[]=[];
     forma_pago?: FormaPago;
     descuento?: number ;
     fecha_pedido : DateTime =  DateTime.now();
-    repartidor?: Usuario;
     domicilio?: Domicilio;
     sucursal?: Sucursal;
     usuario?: Usuario;
-    factura?: Factura;
-    detalles: PedidoDetalle[]=[];
+
     
 
     /**  
@@ -46,7 +45,6 @@ export default class Pedido{
       domicilio: this.domicilio ? { id: this.domicilio.id } : undefined,
       sucursal: this.sucursal ? { id: this.sucursal.id } : undefined,
       usuario: this.usuario ? { id: this.usuario.id } : undefined,
-      factura: this.factura ? { id: this.factura.id } : undefined,
       detalles: this.detalles.map(d => ({
         cantidad: d.cantidad,
         subtotal: d.subtotal,

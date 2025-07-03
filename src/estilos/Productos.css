@@ -1,25 +1,39 @@
 .products-page {
-  background-color: #fff;
+  /* background-color: #fff;
   border-radius: 8px;
   padding: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
+  width: 100%;
+  margin: 2rem auto;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
 }
 
-.products-page .header {
+.products-page .header-insumo-producto {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  background-color: #8B1414;
+  padding: 1rem;
 }
 
-.products-page h2 {
+.products-productos-page h2 {
   margin: 0;
   font-size: 1.5rem;
+  color: #fff;
 }
 
-.products-page .btn-add {
+.products-page .header-insumo-producto div {
+  display: flex;
+  gap: 1rem;
+}
+
+.products-page .header-insumo-producto button {
   background-color: #fff;
-  border: 2px solid #b52e31;
+  border: 1px solid #b52e31;
   color: #b52e31;
   padding: 0.5rem 1rem;
   border-radius: 50px;
@@ -28,7 +42,7 @@
   transition: background-color 0.2s, color 0.2s;
 }
 
-.products-page .btn-add:hover {
+.products-page .header-insumo-producto button:hover {
   background-color: #b52e31;
   color: #fff;
 }

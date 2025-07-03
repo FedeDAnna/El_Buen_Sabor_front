@@ -1,15 +1,57 @@
 // src/components/Layout/Sidebar.tsx
 
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import '../../estilos/SidebarCliente.css'
+import { useEffect, useState } from 'react'
+import { useUser } from '../../contexts/UserContext';
+import Swal from 'sweetalert2';
+import { LiaWonSignSolid } from 'react-icons/lia';
+import { Rol } from '../../entidades/Rol';
 
 interface SidebarProps {
   isOpen: boolean
   onClose: () => void
+  onPromocionesClick: () => void
 }
 
-export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+export default function SidebarCliente({ isOpen, onClose, onPromocionesClick }: SidebarProps) {
   const location = useLocation()
+  const navigate = useNavigate();
+   // 1️⃣ Leemos y normalizamos el rol
+  const { user, setUser } = useUser();
+  const [userRole, setUserRole] = useState<string>('')
+  useEffect(() => {
+    const stored = localStorage.getItem('usuario')
+    if (stored) {
+      try {
+        const u = JSON.parse(stored)
+        const rol = typeof u.rol === 'string'
+          ? u.rol.trim().toLowerCase()
+          : ''
+        setUserRole(rol)
+      } catch {
+        setUserRole('')
+      }
+    }
+  }, [])
+
+  // 2️⃣ Roles que pueden ver el Dash Board
+  const rolesConDashboard = ['admin', 'cocinero', 'cajero', 'delivery']
+
+  const cerrarSesion = () => {
+    Swal.fire({
+      title: 'Sesión cerrada',
+      icon: 'success',
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true
+    }).then(() => {
+      localStorage.removeItem('usuario');
+      setUser(null);
+      navigate('/Homepage');
+      window.location.reload();
+    });
+    };
 
   return (
     <div className={`sidebar-overlay ${isOpen ? 'open' : ''}`} onClick={onClose}>
@@ -24,38 +66,53 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
         <nav className="sb-nav">
           <ul>
-            <li>
-              <Link
-                to="/mi-cuenta"
-                className={location.pathname.startsWith('/mi-cuenta') ? 'active' : ''}
-                onClick={onClose}
-              >
-                <span className="sb-icon">👤</span> Mis Datos
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/historial-pedidos"
-                className={location.pathname.startsWith('/historial-pedidos') ? 'active' : ''}
-                onClick={onClose}
-              >
-                <span className="sb-icon">📜</span> Historial de Pedidos
-              </Link>
-            </li>
-            <li>
-              <Link to="/cerrar-sesion" onClick={onClose}>
-                <span className="sb-icon">🚪</span> Cerrar Sesión
-              </Link>
-            </li>
+            {rolesConDashboard.includes(userRole) && (
+              <li>
+                <Link
+                  to="/admin/Ordenes"
+                  className={location.pathname.startsWith('/dashboard') ? 'active' : ''}
+                  onClick={onClose}
+                >
+                  <span className="sb-icon">📊</span> Dash Board
+                </Link>
+              </li>
+            )}
+
+            {user ? 
+            <>
+              <li>
+                <Link
+                  to="/perfil"
+                  className={location.pathname.startsWith('/mi-cuenta') ? 'active' : ''}
+                  onClick={onClose}
+                >
+                  <span className="sb-icon">👤</span> Mis Datos
+                </Link>
+              </li>
+              {user.rol === Rol.CLIENTE && (
+                <li>
+                  <Link
+                    to="/historial-pedidos"
+                    className={location.pathname.startsWith('/historial-pedidos') ? 'active' : ''}
+                    onClick={onClose}
+                    >
+                    <span className="sb-icon">📜</span> Historial de Pedidos
+                  </Link>
+                </li>
+              )}              
+            </>
+            :
+            ''
+            }
+            
             <hr />
             <li>
-              <Link
-                to="/promociones"
-                className={location.pathname.startsWith('/promociones') ? 'active' : ''}
-                onClick={onClose}
+              <button
+                className="sb-link-btn"
+                onClick={onPromocionesClick}
               >
                 <span className="sb-icon">🏷️</span> Promociones
-              </Link>
+              </button>
             </li>
             <li>
               <Link
@@ -68,8 +125,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             </li>
             <hr />
             <li>
-              <Link to="/locales" onClick={onClose}>
-                <span className="sb-icon">📍</span> Locales
+              <Link to="/nuestrasSucursales" onClick={onClose}>
+                <span className="sb-icon">📍</span> Nuestras Sucursales
               </Link>
             </li>
             <li>
@@ -77,11 +134,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 <span className="sb-icon">👥</span> Quiénes Somos
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link to="/contacto" onClick={onClose}>
                 <span className="sb-icon">✉️</span> Contacto
               </Link>
-            </li>
+            </li> */}
             <hr />
             <li>
               <Link to="/faq" onClick={onClose}>

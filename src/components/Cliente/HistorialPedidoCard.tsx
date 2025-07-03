@@ -1,8 +1,12 @@
 // src/components/HistorialPedidoCard.tsx
-import { FaClock } from 'react-icons/fa';
+import React from 'react';
+import { FaClock, FaFileInvoice, FaSpinner } from 'react-icons/fa';
+import jsPDF from 'jspdf';
+import autoTable, { type RowInput } from 'jspdf-autotable';
 import type { PedidoHistorialDTO } from '../../DTOs/DTO/PedidoHistorialDTO';
 import { Estado } from '../../entidades/Estado';
 import '../../estilos/HistorialPedidosCliente.css';
+import { InvoiceButton } from '../InvoiceButton';
 
 interface Props {
   pedido: PedidoHistorialDTO;
@@ -20,6 +24,10 @@ const estadoColor: Record<Estado, string> = {
 };
 
 export default function HistorialPedidoCard({ pedido }: Props) {
+  const esFinalizado =
+    pedido.estado === Estado.ENTREGADO ||
+    pedido.estado === Estado.RECHAZADO;
+
   return (
     <div className="card-pedido">
       <div className="card-header">
@@ -41,6 +49,19 @@ export default function HistorialPedidoCard({ pedido }: Props) {
           <li key={idx}>{p}</li>
         ))}
       </ul>
+
+      <div className="card-actions">
+        {/* Si no está finalizado, muestro spinner */}
+        {!esFinalizado && (
+          <div className="loader">
+            <FaSpinner className="spin" /> En Proceso...
+          </div>
+        )}
+        {/* Si está entregado, muestro botón de factura */}
+        {pedido.estado === Estado.ENTREGADO && (
+          <InvoiceButton pedidoId={pedido.id} />
+        )}
+      </div>
     </div>
   );
 }

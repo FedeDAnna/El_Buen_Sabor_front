@@ -5,6 +5,7 @@ import SidebarCliente from './SidebarCliente';
 import BuenSaborIcono from '../../assets/BuenSaborIcono.png'; // imagen de hamburguesa grande
 import { useUser } from '../../contexts/UserContext';
 import '../../estilos/Login.css';
+import Swal from 'sweetalert2';
 
 const HamburgerIcon = () => (
   <span style={{ fontSize: '1.5rem', cursor: 'pointer' }}>☰</span>
@@ -22,14 +23,32 @@ export default function Login() {
     e.preventDefault();
     try {
       const usuario = await loginUsuario(email, password);
-      localStorage.setItem("usuario", JSON.stringify(usuario)); // guarda en localStorage
-      setUser(usuario); // si usás context, también actualizás el estado global
-      navigate("/Homepage"); // redirige a pantalla protegida
+      localStorage.setItem("usuario", JSON.stringify(usuario)); 
+      setUser(usuario); 
+      await Swal.fire({
+        icon: "success",
+        title: `¡Bienvenido/a ${usuario.nombre || ""}!`,
+        text: "Inicio de sesión exitoso.",
+        showConfirmButton: false,
+        timer: 1500
+      });
+
+      if (usuario.rol === "CLIENTE") {
+        navigate("/Homepage");
+      } else {
+        navigate("/admin/ordenes");
+      }
+      
     } catch (error) {
-      alert("Email o contraseña incorrectos");
+      Swal.fire({                       // <- SweetAlert2 en Catch
+        icon: "error",
+        title: "Oops...",
+        text: "Mail o contraseña incorrectos!",
+        showConfirmButton: false,
+        timer: 2000
+      });
     }
   };
-
 
   return (
     <>
@@ -37,7 +56,11 @@ export default function Login() {
         <HamburgerIcon />
       </button>
 
-      <SidebarCliente isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <SidebarCliente
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        onPromocionesClick={() => {navigate("/promociones");}}
+      />
 
       <main className="hp-main login-main">
         <section className="login-hero">

@@ -1,0 +1,117 @@
+/* src/estilos/SucursalesTabla.css */
+
+/* Contenedor principal */
+.sucursales-page {
+  max-width: 100%;
+  margin: 2rem auto;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+
+/* Encabezado con título y botón */
+.sucursales-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  background-color: #8b1414;
+  color: #fff;
+  padding: 1rem;
+}
+
+.sucursales-header h2 {
+  margin: 0;
+  font-size: 1.75rem;
+  color: #fff;
+}
+
+.sucursales-header .btn-add {
+  background-color: #fff;
+  color: #8b1414;
+  border: 1px solid #8b1414;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  border-radius: 50px;
+  text-decoration: none;
+}
+
+.sucursales-header .btn-add:hover {
+  background-color: #b12b2e;
+  color: #fff;
+}
+
+/* Tabla */
+.sucursales-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.sucursales-table th,
+.sucursales-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: left;
+}
+
+.sucursales-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+}
+
+.sucursales-table tr:hover {
+  background: #fafafa;
+}
+
+/* Columna de acciones */
+.sucursales-table .actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.sucursales-table .actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 0.25rem;
+  transition: color 0.2s;
+}
+
+.sucursales-table .actions button:hover {
+  color: #007bff;
+}
+
+.sucursales-table thead tr th:nth-child(1) {
+  width: 100px;
+  text-align: center;
+}
+
+.sucursales-table tbody tr td:nth-child(1) {
+  text-align: center;
+}
+
+.sucursales-table thead tr th:nth-child(2) {
+  width: 400px;
+}
+
+.sucursales-table thead tr th:nth-child(5) {
+  width: 400px;
+  text-align: left;
+}
+
+.sucursales-table thead tr th:nth-child(6) {
+  text-align: center;
+}
+
+/* Mensajes de error */
+.error {
+  color: #d32f2f;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 1rem;
+}

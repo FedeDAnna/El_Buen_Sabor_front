@@ -1,13 +1,16 @@
 .header {
-  
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #8B1414; /* color rojo */
-  padding: 0.5rem 1rem;
+  background-color: #8B1414;
+  padding: .5rem 1rem;
   color: #fff;
-  position: relative;
-  z-index: 2000;
+  /* position: relative; */
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
 }
 
 /* Botón hamburguesa */
@@ -31,15 +34,18 @@
 .header-cart-container {
   position: relative;
   margin-right: 1rem;
+  z-index: 2100;
 }
 
 .header-cart-btn {
-  background: transparent;
+  padding: 0.5rem 1rem;
+  background: #ffc107;
   border: none;
+  border-radius: 20px;
   color: #fff;
+  font-weight: 500;
   cursor: pointer;
-  position: relative;
-  font-size: 1.2rem;
+  transition: background 0.2s;
 }
 
 /* Badge con la cantidad total de ítems */
@@ -66,7 +72,7 @@
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   margin-top: 0.5rem;
-  z-index: 2001;
+  z-index: 5100;
   padding: 0.75rem;
 }
 
@@ -128,6 +134,19 @@
   color: #666;
 }
 
+.cart-item-controls {
+  display: flex;
+  gap: .3rem;
+}
+
+.cart-item-controls button {
+  padding: .3rem .4rem;
+  border-radius: 5px;
+  border: none;
+  background-color: #FFD700;
+  cursor: pointer;
+}
+
 /* Pie del menú del carrito */
 .cart-menu-footer {
   margin-top: 0.75rem;
@@ -165,10 +184,14 @@
 }
 
 .header-profile-btn {
-  background: transparent;
+  padding: 0.5rem 1rem;
+  background: #ffc107;
   border: none;
+  border-radius: 20px;
   color: #fff;
+  font-weight: 500;
   cursor: pointer;
+  transition: background 0.2s;
 }
 
 .header-profile-menu {
@@ -182,7 +205,7 @@
   border-radius: 4px;
   margin-top: 0.25rem;
   min-width: 180px;
-  z-index: 2001;
+  z-index: 5100;
 }
 
 .header-profile-menu h4 {
@@ -228,7 +251,7 @@
 
 /* Estilo uniforme y moderno para botones del menú de perfil */
 .profile-menu-btn {
-  background-color: #f5f5f5;
+  background-color: #FFC107;
   color: #333;
   border: none;
   border-radius: 8px;
@@ -268,3 +291,31 @@
   color: #fff !important;
 }
 
+.header-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: #ffc107; /* amarillo */
+  border-radius: 999px;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.header-profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+}
+
+.header-profile-name {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #fff;
+}
+
+body, .app-content {    /* .app-content es tu contenedor principal */
+  /* padding-top: 60px;    mismo valor que el alto del header */
+}

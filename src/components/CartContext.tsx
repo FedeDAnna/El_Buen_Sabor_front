@@ -20,10 +20,6 @@ export type CartItem =
       subtotal: number
     }
 
-/**
- * Interfaz que define qué métodos y valores
- * expone nuestro CartContext para el consumo.
- */
 export interface CartContextType {
   cartItems: CartItem[]
   total: number

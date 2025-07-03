@@ -1,0 +1,123 @@
+.products-page {
+  /* padding: 2rem 7rem;
+  background: #fafafa; */
+  width: 100%;
+  margin: 2rem auto;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+
+.header-promociones {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  background-color: #8b1414;
+  color: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.header-promociones h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.header-promociones .btn-add {
+  background-color: #fff;
+  color: #8b1414;
+  border: 1px solid #8b1414;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 50px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.header-promociones .btn-add:hover {
+  background-color: #b12b2e;
+  color: #fff;
+}
+
+.promociones-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.promociones-table th,
+.promociones-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+.promociones-table thead {
+  background: #f9f9f9;
+}
+
+.promociones-table th {
+  font-weight: 600;
+  color: #555;
+  border-bottom: 2px solid #eee;
+}
+
+.promociones-table tbody tr {
+  border-bottom: 1px solid #eee;
+}
+
+.promociones-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.promociones-table td {
+  color: #444;
+}
+
+.promociones-table td button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  margin-right: 0.5rem;
+  transition: color 0.2s;
+}
+
+.promociones-table td button:hover {
+  color: #ffc107;
+}
+
+.promociones-table td a {
+  border: 1px solid #333;
+  padding: .5rem;
+  border-radius: 5px;
+  text-decoration: none;
+  color: #000;
+  margin-right: 0.5rem;
+}
+
+.promociones-table thead th:nth-child(1) {
+  width: 100px;
+  text-align: center;
+}
+
+.promociones-table tbody tr td:nth-child(1) {
+  text-align: center;
+}
+
+.promociones-table thead th:nth-child(2) {
+  width: 800px;
+}
+
+.promociones-table thead th:nth-child(3) {
+  width: 400px;
+  text-align: center;
+}
+
+.promociones-table tbody tr td:nth-child(3) {
+  text-align: center;
+}

@@ -64,7 +64,7 @@ export default function PromocionTabla() {
 
   return (
     <section className="products-page">
-      <div className="header">
+      <div className="products-header">
         <h2>Promociones de: {tipoPromocion?.descripcion}</h2>
         <button onClick={() => openModal(true,true)}>Agregar +</button>
       </div>
@@ -92,12 +92,14 @@ export default function PromocionTabla() {
               <td>{p.id}</td>
               <td>{p.denominacion}</td>
               <td>{p.descripcion_descuento}</td>
-              <td>{p.fecha_desde.toLocaleDateString()}</td>
-              <td>{p.fecha_hasta.toLocaleDateString()}</td>
+              {/* <td>{p.fecha_desde.toLocaleDateString()}</td>
+              <td>{p.fecha_hasta.toLocaleDateString()}</td> */}
+              <td>{new Date(p.fecha_desde).toLocaleDateString('es-ES', { timeZone: 'UTC' })}</td>
+              <td>{new Date(p.fecha_hasta).toLocaleDateString('es-ES', { timeZone: 'UTC' })}</td>
               <td>{p.hora_desde.toFormat('HH:mm')}</td>
               <td>{p.hora_hasta.toFormat('HH:mm')}</td>
               <td>${p.precio_promocional}</td>
-              <td>
+              <td className='tdPromociones'>
                 <button 
                   title="Ver"
                   onClick={() => openModal(false, true, p!)}
@@ -117,12 +119,12 @@ export default function PromocionTabla() {
           ))}
         </tbody>
       </table>
-                                                                                                                  <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+      
       <div>
         
-        <Link to={`/admin/tipoPromociones`} className="btn-add">
+        {/* <Link to={`/admin/tipoPromociones`} className="btn-add">
           ← Volver
-        </Link> 
+        </Link>  */}
       </div>
 
       {/* Aquí va la condición para pintar el modal, fuera de la función openModal */}

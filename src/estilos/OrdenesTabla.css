@@ -1,0 +1,53 @@
+/* =========================================
+   Centrar todo el contenido de las celdas
+   ========================================= */
+.tabla-wrapper table th,
+.tabla-wrapper table td {
+  text-align: center;
+}
+
+/* =========================================
+   Estilos de botones en la celda de acciones
+   ========================================= */
+.pedido-actions{
+  display:flex;
+  gap: 1rem;;
+}
+
+/* Tamaño fijo para todos los botones de acción */
+.pedido-actions button {
+  width: 130px;          /* ancho fijo */
+  height: 30px;          /* alto fijo */
+  padding: 0;            /* elimina padding extra */
+  font-size: 0.9rem;     /* ajusta el tamaño de texto */
+  display: inline-flex;  /* para centrar el contenido */
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.5rem;   /* espacio entre botones */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+
+
+/* Botón rojo (cancelar pedido) */
+.pedido-actions button.danger {
+  background-color: #e74c3c;
+  color: #fff;
+}
+.pedido-actions button.danger:hover {
+  background-color: #a32a1d;
+}
+/* Todos los botones que no sean "danger" se pintan de verde */
+.pedido-actions button:not(.danger) {
+  background-color: #27ae60;
+  color: #fff;
+}
+.pedido-actions button:not(.danger):hover {
+  background-color: #219150;
+}
+
+
+

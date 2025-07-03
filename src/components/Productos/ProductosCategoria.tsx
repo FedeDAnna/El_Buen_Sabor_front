@@ -10,6 +10,7 @@ import {
 import type ArticuloManufacturado from '../../entidades/ArticuloManufacturado';
 import type Categoria from '../../entidades/Categoria';
 import ProductoManufacturadoModal from './ProductoManufacturadoModal';
+import Swal from 'sweetalert2';
 
 export default function ProductosCategoria() {
   const { categoriaId } = useParams<{ categoriaId: string }>();
@@ -17,7 +18,7 @@ export default function ProductosCategoria() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [editable, setEditable] = useState<boolean>();
-
+  const [busqueda, setBusqueda] = useState("");
   const [prodModalOpen, setProdModalOpen] = useState(false);
   const [modalProducto, setModalProductoId] = useState<ArticuloManufacturado | undefined>(undefined);
   const [categoria, setCategoria] = useState<Categoria | undefined>();
@@ -53,7 +54,18 @@ export default function ProductosCategoria() {
   // Función para eliminar
   function deleteProducto(id: number) {
     return async () => {
-      if (!window.confirm('¿Estás seguro de eliminar este producto?')) return;
+      const result = await Swal.fire({
+        title: "¿Estás seguro?",
+        text: "Esta acción eliminará el Producto.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+      });
+    
+      if (!result.isConfirmed) return;
       deleteProductosById(id)
         .then(() => setArticulos((prev) => prev.filter((a) => a.id !== id)))
         .catch((e) => {
@@ -61,12 +73,36 @@ export default function ProductosCategoria() {
         });
     };
   }
-
+  const articulosFiltrados = articulos.filter(p =>
+    p.denominacion.toLowerCase().includes(busqueda.trim().toLowerCase())
+  );
   return (
     <section className="products-page">
-      <div className="header">
+      {/* <div className="buscador-contenedor">
+        <div className="buscador">
+          <input
+            type="text"
+            placeholder="Buscar producto..."
+            value={busqueda}
+            onChange={e => setBusqueda(e.target.value)}
+          />
+        </div>
+      </div> */}
+      <div className="header-insumo-producto">
         <h2>Productos de: {categoria?.denominacion}</h2>
-        <button onClick={() => openModal(true,true)}>Agregar +</button>
+        <div>
+          <div className="buscador-contenedor">
+            <div className="buscador">
+              <input
+                type="text"
+                placeholder="Buscar producto..."
+                value={busqueda}
+                onChange={e => setBusqueda(e.target.value)}
+              />
+            </div>
+          </div>
+          <button onClick={() => openModal(true,true)}>Agregar +</button>
+        </div>
       </div>
 
       <table className="products-table">
@@ -81,7 +117,7 @@ export default function ProductosCategoria() {
           </tr>
         </thead>
         <tbody>
-          {articulos.map((a) => (
+          {articulosFiltrados.map((a) => (
             <tr key={a.id}>
               <td>{a.id}</td>
               <td>{a.denominacion}</td>
@@ -111,9 +147,9 @@ export default function ProductosCategoria() {
 
       <div>
         
-        <Link to={`/admin/categorias/${categoria?.tipo_categoria?.id}`} className="btn-add">
+        {/* <Link to={`/admin/categorias/${categoria?.tipo_categoria?.id}`} className="btn-add">
           ← Volver
-        </Link>
+        </Link> */}
       </div>
 
       {/* Aquí va la condición para pintar el modal, fuera de la función openModal */}

@@ -77,6 +77,20 @@
   font-size: 1.1rem;
 }
 
+.pm-insumos-header button {
+  padding: .6rem 1.2rem;
+  border: 2px solid #FFC107;
+  background-color: #fff;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.pm-insumos-header button:hover {
+  background-color: #FFC107;
+  color: #fff;
+}
+
 .pm-insumos-table {
   width: 100%;
   border-collapse: separate;
@@ -100,6 +114,23 @@
 
 .pm-insumos-table tbody tr:last-child td {
   border-bottom: none;
+}
+
+.pm-stock-fieldset {
+  padding: 1rem;
+}
+
+.pm-insumos-table tbody tr td button {
+  padding: .5rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background-color: #eeebeb;
+  color: #000;
+}
+
+.pm-insumos-table tbody tr td button:hover {
+  background-color: #dbdbdb;
 }
 
 .pm-footer {
@@ -131,7 +162,7 @@
 }
 
 /* Reutiliza .btn-add para agregar insumo */
-.btn-add {
+/* .btn-add {
   background: #ffc107;
   border: none;
   padding: 0.4rem 0.8rem;
@@ -147,7 +178,7 @@
 .btn-save:hover,
 .btn-cancel:hover {
   opacity: 0.9;
-}
+} */
 
 img{
   max-width: 200px;

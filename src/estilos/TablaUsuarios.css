@@ -1,0 +1,201 @@
+.usuarios-page {
+  width: 100%;
+  margin: 2rem auto;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+
+/* === CSS Encabezado === */
+.usuarios-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  background-color: #8b1414;
+  color: #fff;
+  padding: 1rem;
+}
+
+.usuarios-buscador {
+  border-radius: 50px;
+  border: 1px solid #8b1414;
+  font-size: 1rem;
+  padding: 0.6rem 1rem;
+  margin-right: 10px;
+}
+
+.usuarios-header button {
+  background-color: #fff;
+  color: #8b1414;
+  border: 1px solid #8b1414;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  border-radius: 50px;
+}
+
+.usuarios-header button:hover {
+  background-color: #b12b2e;
+  color: #fff;
+}
+
+/*  === CSS Tabla === */
+.usuarios-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1rem;
+}
+
+.usuarios-table thead {
+  background-color: #e0e0e0;
+}
+
+.usuarios-table th,
+.usuarios-table td {
+  text-align: left;
+  padding: 0.75rem 1rem;
+}
+
+.usuarios-table th {
+  border-bottom: 2px solid #ccc;
+}
+
+.usuarios-table tbody tr {
+  background-color: #f8f8f8;
+}
+
+.usuarios-table tbody tr:nth-child(even) {
+  background-color: #eaeaea;
+}
+
+.usuarios-table tbody tr:hover {
+  background-color: #ddd;
+}
+
+.usuarios-table td button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  font-size: 1.1rem;
+  transition: color 0.2s;
+}
+
+.usuarios-table td button:hover {
+  color: #b52e31;
+}
+
+.usuarios-table thead th:nth-child(1) {
+  width: 300px;
+}
+
+.usuarios-table thead th:nth-child(2) {
+  width: 300px;
+}
+
+.usuarios-table thead th:nth-child(3) {
+  width: 300px;
+}
+
+.usuarios-table thead th:nth-child(4) {
+  width: 200px;
+}
+
+/* === CSS Modal === */
+.usuario-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* z-index: 2001; */
+}
+
+.usuario-modal-contenido {
+  background: white;
+  width: 600px;
+  max-width: 90%;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.usuario-modal-header {
+  background-color: #FFC107;
+  padding: 1rem;
+  color: #000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.usuario-modal-titulo {
+  margin: 0;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.cerrar-modal {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #000;
+  cursor: pointer;
+}
+
+.usuario-modal-body {
+  padding: 2rem;
+}
+
+.usuario-modal-formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.usuario-modal-label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+}
+
+.usuario-modal-input,
+.usuario-modal-select {
+  padding: 0.6rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+}
+
+.usuario-modal-botones {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: end;
+  gap: 1rem;
+}
+
+.usuario-modal-boton {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.usuario-modal-boton.guardarModal {
+  background-color: #FFC107;
+  color: #000;
+}
+
+.usuario-modal-boton.cerrarModal {
+  background-color: #ccc;
+  color: #000;
+}

@@ -59,3 +59,13 @@ export async function fetchClientesRanking(
     `/estadisticas/clientes_ranking?periodo=${encodeURIComponent(periodo)}`
   );
 }
+
+export async function exportarExcel(periodo: string): Promise<Blob> {
+  const res = await fetch(`${API_URL}/estadisticas/exportar-excel?periodo=${periodo}`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: { 'Authorization': `Basic ${basic}` }
+  });
+  if (!res.ok) throw new Error(`Error ${res.status} al generar el Excel: ${res.statusText}`);
+  return res.blob();
+}

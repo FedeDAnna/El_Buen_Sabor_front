@@ -1,0 +1,74 @@
+.dp-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+.dp-card {
+  flex-shrink: 0;
+  text-align: center;
+}
+.dp-avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+.dp-name {
+  margin: 0.5rem 0;
+  font-size: 1.5rem;
+}
+.dp-edit-btn {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.dp-details {
+  flex: 1;
+  background: #fefcea;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+.dp-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #ddd;
+}
+.dp-row:last-child {
+  border-bottom: none;
+}
+.dp-label {
+  font-weight: 500;
+  color: #555;
+}
+.dp-value {
+  color: #333;
+}
+.dp-loading,
+.dp-error {
+  text-align: center;
+  margin: 2rem;
+}
+
+.dp-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 1rem;
+}
+        
+.dp-back-btn {
+  padding: 1rem;
+  background-color: #8B1414;
+  color: #fff;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}

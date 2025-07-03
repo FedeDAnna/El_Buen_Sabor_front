@@ -6,6 +6,7 @@ import ArticuloManufacturado from '../../entidades/ArticuloManufacturado'
 import '../../estilos/ProductoDetalleCliente.css'
 import { useCart } from '../CartContext'
 import type ArticuloInsumo from '../../entidades/ArticuloInsumo'
+import Swal from 'sweetalert2'  
 
 function isManufacturado(
     p: ArticuloManufacturado | ArticuloInsumo
@@ -59,7 +60,13 @@ export default function ProductoEnDetalleCliente() {
    if (!articulo) return
    addToCart(articulo, "articulo", cantidad)
    // Opcional: podrías mostrar un toast o mensaje breve
-   alert(`Se agregaron ${cantidad} × "${articulo.denominacion}" al carrito.`)
+   Swal.fire({
+      title: `Se agregaron ${cantidad} × "${articulo.denominacion}" al carrito.`,
+      icon: 'success',
+      draggable: true,
+      showConfirmButton: false,
+      timer: 2000
+    })
  }
 
   const incrementar = () => setCantidad(prev => prev + 1)
@@ -71,9 +78,7 @@ export default function ProductoEnDetalleCliente() {
     <>
       
       <main className="adp-main">
-        <button className="adp-back" onClick={() => navigate(-1)}>
-          ← Volver
-        </button>
+        
 
         {loading && <p className="adp-loading">Cargando artículo…</p>}
         {error && <p className="adp-error">{error}</p>}
@@ -128,7 +133,7 @@ export default function ProductoEnDetalleCliente() {
                       <strong>Tiempo estimado:</strong> {articulo.tiempo_estimado_en_minutos} min
                     </div>
                   </>
-                ) : (
+                ) : ( 
                   <>
                     <div className="adp-descripcion">
                       <h3>Descripción:</h3>
