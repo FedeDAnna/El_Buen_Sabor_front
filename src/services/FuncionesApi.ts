@@ -18,6 +18,12 @@ import type RegistroDTO from "../entidades/RegistroDTO";
 const API_URL = "http://localhost:8080";
 const basic = btoa(`admin:admin123`);
 
+let tokenGetter: () => Promise<string>;
+
+export function setTokenGetter(getter: () => Promise<string>) {
+  tokenGetter = getter;
+}
+
 async function securedFetch<T>(
   url: string,
   options: RequestInit = {}

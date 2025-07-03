@@ -34,6 +34,7 @@ import QuienesSomos from './components/QuienesSomos';
 
 import CallbackPage from './components/Auth0/CallbackPage';
 import AuthenticationGuard from './components/Auth0/AuthenticationGuard';
+import AdminPantalla from './components/AdminPantalla';
 
 export default function App() {
   return (
