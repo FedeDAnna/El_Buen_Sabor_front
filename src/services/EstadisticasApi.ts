@@ -1,5 +1,3 @@
-// src/api/estadisticasApi.ts
-
 import type { RendimientoChartProjectionDTO } from "../DTOs/ProjectionsDTO/RendimientoChartProjectionDTOImpl";
 
 const API_URL = "http://localhost:8080";
@@ -10,12 +8,15 @@ export function setTokenGetter(getter: () => Promise<string>) {
   tokenGetter = getter;
 }
 
-async function securedFetch(url: string, options: RequestInit = {}): Promise<Response> {
+async function securedFetch(
+  url: string,
+  options: RequestInit = {}
+): Promise<Response> {
   if (!tokenGetter) throw new Error("Token getter no configurado");
   const token = await tokenGetter();
   return fetch(`${API_URL}${url}`, {
     ...options,
-    credentials: 'include',
+    credentials: "include",
     headers: {
       ...(options.headers || {}),
       Authorization: `Bearer ${token}`,
@@ -24,20 +25,37 @@ async function securedFetch(url: string, options: RequestInit = {}): Promise<Res
   });
 }
 
-export async function fetchRendimientos(periodo: string): Promise<RendimientoChartProjectionDTO> {
-  const res = await securedFetch(`/estadisticas/rendimiento?periodo=${periodo}`);
-  if (!res.ok) throw new Error(`Error ${res.status} al traer los rendimientos: ${res.statusText}`);
+async function securedGet<T>(url: string): Promise<T> {
+  const res = await securedFetch(url);
+  if (!res.ok) {
+    const errorText = await res.text().catch(() => "");
+    throw new Error(
+      `Error ${res.status} en GET ${url}: ${res.statusText}. ${errorText}`
+    );
+  }
   return res.json();
 }
 
-export const fetchProductosMasVendidos = async (periodo: string) => {
-  const res = await securedFetch(`/estadisticas/productos_mas_vendidos?periodo=${periodo}`);
-  if (!res.ok) throw new Error(`Error ${res.status} al traer los productos más vendidos: ${res.statusText}`);
-  return res.json();
-};
+export async function fetchRendimientos(
+  periodo: string
+): Promise<RendimientoChartProjectionDTO> {
+  return securedGet<RendimientoChartProjectionDTO>(
+    `/estadisticas/rendimiento?periodo=${encodeURIComponent(periodo)}`
+  );
+}
 
-export const fetchClientesRanking = async (periodo: string) => {
-  const res = await securedFetch(`/estadisticas/clientes_ranking?periodo=${periodo}`);
-  if (!res.ok) throw new Error(`Error ${res.status} al traer el ranking de clientes: ${res.statusText}`);
-  return res.json();
-};
+export async function fetchProductosMasVendidos(
+  periodo: string
+): Promise<any[]> {
+  return securedGet<any[]>(
+    `/estadisticas/productos_mas_vendidos?periodo=${encodeURIComponent(periodo)}`
+  );
+}
+
+export async function fetchClientesRanking(
+  periodo: string
+): Promise<any[]> {
+  return securedGet<any[]>(
+    `/estadisticas/clientes_ranking?periodo=${encodeURIComponent(periodo)}`
+  );
+}

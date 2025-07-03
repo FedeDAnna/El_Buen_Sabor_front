@@ -7,6 +7,9 @@ const AuthTokenContext = createContext<() => Promise<string>>(async () => "");
 export const AuthTokenProvider = ({ children }: { children: React.ReactNode }) => {
   const { getAccessTokenSilently } = useAuth0();
 
+/*   // Llamada DIRECTA en la renderización
+  setTokenGetter(getAccessTokenSilently); */
+
   useEffect(() => {
     setTokenGetter(() => getAccessTokenSilently());
   }, [getAccessTokenSilently]);

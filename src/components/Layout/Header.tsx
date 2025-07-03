@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FaShoppingCart, FaUserCircle } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { User, ClipboardList, LogOut } from 'lucide-react';
 import { useCart } from '../CartContext';
 import '../../estilos/Header.css';
