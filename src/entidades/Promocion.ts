@@ -17,6 +17,7 @@ export default class Promocion {
     precio_promocional: number = 0;
     tipo_promocion?: TipoPromocion;
     detalles?: PromocionDetalle[]=[];
+    porc_descuento: Number = 0; 
 
     
     sucursales: Sucursal[]=[];
@@ -34,6 +35,7 @@ export default class Promocion {
       hora_hasta: this.hora_hasta.toFormat('HH:mm:ss'),
       descripcion_descuento: this.descripcion_descuento,
       precio_promocional: this.precio_promocional,
+      porc_descuento: this.porc_descuento,
       tipo_promocion: this.tipo_promocion ? { id: this.tipo_promocion.id } : undefined,
       sucursales: this.sucursales.map(s => ({ id: s.id })),
       imagen: this.imagen ? { src: this.imagen.src, alt: this.imagen.alt } : undefined,
