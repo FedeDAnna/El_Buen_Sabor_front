@@ -59,3 +59,12 @@ export async function fetchClientesRanking(
     `/estadisticas/clientes_ranking?periodo=${encodeURIComponent(periodo)}`
   );
 }
+
+export async function exportarExcel(periodo: string): Promise<Blob> {
+  const res = await securedFetch(`/estadisticas/exportar-excel?periodo=${periodo}`, {
+    method: 'GET'
+  });
+
+  // Ojo: securedFetch devuelve JSON por defecto, así que no uses `.json()` aquí.
+  return res.blob();
+}
